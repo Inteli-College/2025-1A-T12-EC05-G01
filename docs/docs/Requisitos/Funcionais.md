@@ -6,9 +6,11 @@ slug: /
 
 # Requisitos
 
+&nbsp;&nbsp;&nbsp;&nbsp;Requisitos representam as características, funcionalidades e restrições que um sistema deve possuir para atender às necessidades dos usuários e stakeholders. Eles servem como a fundação do projeto de software, orientando o desenvolvimento, garantindo a qualidade do produto final e alinhando as expectativas entre clientes, desenvolvedores e demais envolvidos no processo.
+
 ## Requisitos Funcionais
 
-Requisitos funcionais são funcionalidades específicas que o sistema automatizado de separação de medicamentos deve possuir. Esses requisitos definem as ações que o software e o hardware (incluindo o robô Dobot) devem executar para atender às necessidades do Hospital de Clínicas da Unicamp.
+&nbsp;&nbsp;&nbsp;&nbsp;Requisitos funcionais são funcionalidades específicas que um sistema precisa ter. Em resumo, segundo a Revista Quero¹, deve-se tratar individualmente de todas as ações que o software deve ser capaz de fazer para atender às necessidades e expectativas do usuário. Dessa forma, a primeira etapa é separar todas as funcionalidades desejadas e em ordem cronológica. Com isso, é importante detalhá-las, isso é feito na aba de "Descrição". Por fim, são expostas as regras de negócios, que explicam como o sistema deve fazer o que foi planejado no requisito (Quadro 4).
 
 <br>
 <div align="center">
@@ -28,7 +30,9 @@ Requisitos funcionais são funcionalidades específicas que o sistema automatiza
 <sup>Fonte: Material produzido pelo grupo Dose Certa (2025)</sup>
 </div>
 
-Esses requisitos garantirão que o sistema atenda tanto às necessidades operacionais quanto às expectativas de usabilidade e segurança do hospital.
+&nbsp;&nbsp;&nbsp;&nbsp;A definição desses requisitos funcionais estabelece uma base sólida para o desenvolvimento de um sistema automatizado que não apenas automatiza processos, mas também melhora a precisão e a segurança na administração de medicamentos. Ao garantir que cada etapa do processo esteja delineada, o sistema contribuirá para reduzir erros, otimizar o tempo de trabalho e garantir a rastreabilidade completa das operações, resultando em um ambiente hospitalar mais eficiente e seguro, objetivo final do parceiro com esse projeto. 
 
+## Referências
 
+[1] Requisitos funcionais e não funcionais: o que são, diferenças e exemplos. Disponível em: https://querobolsa.com.br/revista/requisitos-funcionais-e-nao-funcionais.
 
