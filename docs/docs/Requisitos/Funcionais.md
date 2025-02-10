@@ -12,7 +12,7 @@ slug: /
 
 &nbsp;&nbsp;&nbsp;&nbsp;Requisitos funcionais são funcionalidades específicas que um sistema precisa ter. Em resumo, segundo a Revista Quero¹, deve-se tratar individualmente de todas as ações que o software deve ser capaz de fazer para atender às necessidades e expectativas do usuário. Dessa forma, a primeira etapa é separar todas as funcionalidades desejadas e em ordem cronológica. Com isso, é importante detalhá-las, isso é feito na aba de "Descrição". Por fim, são expostas as regras de negócios, que explicam como o sistema deve fazer o que foi planejado no requisito (Quadro 4).
 
-<br>
+
 <div align="center">
 <sup>Quadro 2 - Requisitos Funcionais</sup>
 

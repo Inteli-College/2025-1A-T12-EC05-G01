@@ -8,7 +8,7 @@ slug: /
 
 &nbsp;&nbsp;&nbsp;&nbsp; A seção de Requisitos Não Funcionais apresenta os aspectos fundamentais que vão além da funcionalidade do sistema. Esses requisitos são essenciais para garantir que o projeto funcione de forma eficiente, segura e intuitiva, atendendo às necessidades de desempenho e de escalabilidade. Além disso, eles abordam a integridade dos dados, a proteção das informações pessoais dos usuários, e a compatibilidade com a infraestrutura tecnológica existente. A implementação adequada desses requisitos contribuirá para uma experiência eficiente, fluída e confiável.
 
-<br>
+
 <div align="center">
 <sup>Quadro 2 - Requisitos Não Funcionais</sup>
 
