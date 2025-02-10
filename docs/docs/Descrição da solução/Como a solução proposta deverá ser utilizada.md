@@ -9,14 +9,16 @@ sidebar_position: 8
 
 &nbsp;&nbsp;&nbsp;&nbsp;Para garantir o pleno funcionamento da solução, será necessário seguir uma série de etapas:
 
-&nbsp;&nbsp;&nbsp;&nbsp;Preparação do ambiente: A instalação dos manipuladores robóticos e sensores deverá ser realizada na área de farmácia do hospital, com integração direta ao sistema de prescrições eletrônicas.
+-**Preparação do ambiente**: A instalação dos manipuladores robóticos e sensores deverá ser realizada na área de farmácia do hospital, com integração direta ao sistema de prescrições eletrônicas próprio do hospital.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Cadastramento e primeiro uso: O sistema deverá ser configurado para reconhecer diferentes protocolos de medicação, com integração de dados das prescrições médicas.
+-**Cadastramento e primeiro uso:** O sistema deverá ser configurado para reconhecer diferentes protocolos de medicação, com integração de dados das prescrições médicas.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Operação: Os manipuladores robóticos realizarão a separação dos medicamentos conforme as prescrições eletrônicas, validando cada item através de sensores antes de incluí-los na "Fita de medicamentos".
+-**Operação**: Os manipuladores robóticos realizarão a separação dos medicamentos conforme as prescrições eletrônicas, validando cada item através de sensores antes de incluí-los na "Fita de medicamentos".
 
-&nbsp;&nbsp;&nbsp;&nbsp;Monitoramento e ajustes: Uma Interface Homem-Máquina (IHM) amigável permitirá o monitoramento em tempo real, ajustes e registro de operações.
+-**Monitoramento e ajustes:** Uma Interface Homem-Máquina (IHM) amigável permitirá o monitoramento em tempo real, ajustes e registro de operações.
 
-&nbsp;&nbsp;&nbsp;&nbsp;Análise de dados: O sistema fornecerá relatórios detalhados sobre o processo, permitindo a análise de eficiência, taxa de erros e rastreamento de medicamentos.
+-**Análise de dados:** O sistema fornecerá relatórios detalhados sobre o processo, permitindo a análise de eficiência, taxa de erros e rastreamento de medicamentos.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Assim, com a implementação da automação, o hospital terá um processo mais rápido, seguro e eficiente. A redução de erros, o controle aprimorado de estoque e a economia de recursos humanos trarão benefícios significativos para a operação da farmácia e para a segurança dos pacientes.
 
 
