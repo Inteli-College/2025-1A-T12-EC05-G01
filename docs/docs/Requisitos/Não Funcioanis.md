@@ -3,7 +3,26 @@ title: Não Funcionais
 sidebar_position: 12
 slug: /
 ---
+# Requisitos
 
-# Introdução
+## Requisitos Não Funcionais
 
+Os requisitos não funcionais asseguram que o sistema de automação funcione de forma eficiente, segura e confiável. Eles abordam aspectos como desempenho, segurança de dados e escalabilidade.
+
+<br>
+<div align="center">
+<sup>Quadro 2 - Requisitos Não Funcionais</sup>
+
+| RNF#  | Descrição                                                                                                 | Aspecto de Qualidade     | Referência ao Negócio                                                                                          | Teste                                                                                                  | Caso de Aceite                                                                                                         | Caso de Recusa                                                                                                       | Prioridade |
+|-----------|-----------------------------------------------------------------------------------------------------------------|------------------------------|------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|----------------|
+| RNF01     | O tempo máximo de resposta do robô Dobot para cada medicamento deve ser de 3 segundos.                         | Eficiência de performance   | Atende à necessidade de um processo rápido e eficiente, garantindo agilidade na separação de medicamentos.         | Testes de desempenho para medir o tempo de resposta em condições normais e de pico.                        | O robô seleciona e valida medicamentos em menos de 3 segundos em 95% das tentativas.                                     | O robô demora mais de 3 segundos em 5% ou mais das tentativas.                                                           | Sim            |
+| RNF02     | O sistema deve garantir a confidencialidade dos dados dos pacientes e medicamentos.                              | Segurança                   | Atende à necessidade de proteger dados sensíveis, conforme a LGPD.                                                  | Testes de autenticação, autorização e simulação de ataques para avaliar a segurança.                       | Dados sensíveis são protegidos, e acessos não autorizados são bloqueados.                                             | Dados são acessíveis por usuários não autorizados ou falhas na identificação de tentativas de invasão.               | Sim            |
+| RNF03     | O sistema deve garantir o armazenamento de dados mesmo em caso de falha de energia ou rede.                      | Confiabilidade               | Garante que nenhuma informação importante será perdida durante interrupções.                                   | Testes de falha de rede/energia, verificando o armazenamento local e posterior sincronização.                   | Dados armazenados localmente são sincronizados corretamente após a restauração da conexão.                             | Perda de dados durante falhas ou problemas na sincronização após o retorno da conexão.                                | Sim            |
+| RNF04     | O sistema deve ser escalável para armazenar dados de até 50.000 medicamentos.                                   | Manutenibilidade             | Permite o crescimento do volume de dados sem comprometer a performance do sistema.                                    | Testes de estresse para verificar a capacidade de armazenamento e acesso a grandes volumes de dados.       | O sistema armazena e acessa dados de 50.000 medicamentos sem perda significativa de desempenho.                           | O sistema apresenta lentidão ou falhas ao acessar dados em grandes volumes.                                              | Não            |
+| RNF05     | A interface do sistema deve ser intuitiva e acessível para os profissionais de saúde.                            | Usabilidade                  | Facilita o uso do sistema por farmacêuticos e técnicos, aumentando a eficiência operacional.                        | Testes de usabilidade com a equipe da farmácia, avaliando a facilidade de uso e compreensão da interface.      | Profissionais conseguem operar o sistema sem necessidade de treinamento extensivo.                                        | Profissionais enfrentam dificuldades significativas para operar o sistema sem suporte constante.                         | Não            |
+
+<sup>Fonte: Material produzido pelo grupo Dose Certa (2025)</sup>
+</div>
+
+Esses requisitos garantem que o sistema não apenas funcione corretamente, mas também que seja seguro, eficiente e fácil de usar. A implementação adequada desses requisitos contribuirá para um sistema confiável e eficaz no ambiente hospitalar.
 
