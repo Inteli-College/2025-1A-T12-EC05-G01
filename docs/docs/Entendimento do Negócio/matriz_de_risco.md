@@ -10,7 +10,7 @@ A matriz de risco é uma ferramenta essencial para a identificação, avaliaçã
 
 A seguinte matriz de risco foi elaborada considerando os riscos e oportunidades do projeto, abrangendo aspectos relacionados ao próprio grupo, ao parceiro, ao hardware e ao software.
 
-![Matriz de risco](<../../static/img/matrizderisco.jpg>)
+![Matriz de risco](../../static/img/matrizderisco.png)
 
 Nela, é possível observar riscos que podem comprometer o desenvolvimento do projeto, mas, ao mesmo tempo, também entende-se que é necessário estar preparado para aproveitar as oportunidades que podem surgir durante a progressão da solução.
 ## 2. Riscos pouco comprometedores
@@ -19,9 +19,9 @@ Nela, é possível observar riscos que podem comprometer o desenvolvimento do pr
 Os riscos abaixo possuem **baixa probabilidade e baixo impacto**, mas ainda exigem medidas preventivas.
 :::
 
-* **Elevado número de faltas**: Como é um comportamento corriqueiro, pode-se considerar que, ao longo do projeto, a ausência de membros do grupo tem uma probabilidade intermediária de ocorrer. Para mitigar isso, diariamente, verificaremos a presença de todos. Caso seja notado a ausência de alguém, haverá uma tentativa de comunicação com essa pessoa. Se o membro do grupo estiver disponível e disposto, ele poderá fazer a tarefa de modo home-office, caso contrário, a atividade será redistribuída entre o restante do grupo. Desse modo, o impacto final desse risco será baixo
-    
-* **Desentendimento entre o grupo**: Ao trabalhar em grupo, durante o desenvolvimento de projetos, é comum haver discordâncias de ideias e insatisfações com outros integrantes da equipe. No entanto, nosso grupo irá aplicar CNV (comuniatravéscação não-violenta) e prática de feedbacks para evitar que ocorram desentendimentos. Pela boa relação entre os membros do grupo, esse risco foi julgado como um com baixa probabilidade de acontecer. Devido às abordagens adotadas para mitigação, o impacto final desse risco é considerado muito baixo.
+* **Falha na leitura dos códigos de barras**: Os insumos podem descer a rampa de modo que os códigos de barras não fiquem voltados para a região que o robô consegue realizar a leitura. Para mitigar, no MVP, será feito testes com os insumos dentro de um material específico, para evitar que ocorram os casos de erros de leitura por parte do robô dobot. Assim, a possibilidade de ocorrer erros de leitura podem acabar sendo baixas, assim como o impacto desse risco.
+
+* **Erros de formatação dos dados importados pela API**: Os dados importados pela API do Hospital das Clínicas da Unicamp podem vir com problemas de formatação. Para contornar problemas advindos disso, quando for disponibilizado para a equipe a API do HC, será feito diversos testes para entender como os dados serão importados. Assim, entendendo isso, os riscos associados a essa questão serão facilmente minimizados e evitados.
   
 
 ## 3. Riscos moderadamente comprometedores
@@ -30,13 +30,13 @@ Os riscos abaixo possuem **baixa probabilidade e baixo impacto**, mas ainda exig
 Os riscos abaixo podem impactar o andamento do projeto, mas podem ser gerenciados com boas práticas.
 :::
 
-* **Feedbacks imprecisos do parceiro**: Durante as entregas de sprints, há a possibilidade do parceiro não ser claro com os pontos de melhoria que ele gostaria de ver no projeto desenvolvido pela equipe e não haver uma troca de informações tão clara entre grupo e parceiro, uma questão agravada pelas validações de sprints iniciais serem online. Isso poderia levar a um desenvolvimento que, com a ausência dos devidos feedbacks, não fosse o que o cliente esperava. No entanto, apesar disso, em validações de entrega, o grupo irá formular perguntas para sanar as principais dúvidas em relação ao andamento do projeto. Além disso, é de conhecimento do grupo que o professor orientador está disposto a encaminhar as dúvidas do grupo para os parceiros sempre que necessário.
+* **Segurança de dados**: Existe o risco de vazamento de informações sensíveis, já que o sistema lida com dados de pacientes e inventário de medicamentos. Para evitar esse problema, serão adotadas medidas como uso de senhas fortes para o banco de dados, controle de acesso restrito a funções essenciais e verificações periódicas de possíveis brechas de segurança. Também é planejado seguir as normas previtas na LGPD.
 
 
-* **Usabilidade da aplicação web**: Durante o desenvolvimento da interface do usuário na aplicação web, o grupo pode acabar desenvolvendo uma interface que seja intuitiva para quem desenvolveu, mas pode acabar possuindo uma usabilidade ruim para o usuário final. Com isso em mente, já no início do desenvolvimento do projeto, foi feita uma pesquisa a respeito das personas que utilizarão nosso sistema. Além disso, o grupo contará com o apoio do professor de UX e orientador ao longo de todo o projeto, inclusive com testes de usabilidade sendo realizados antes da entrega final.
+* **Problemas de usabilidade**: Durante o desenvolvimento da interface do usuário na aplicação web, pode ser desenvolvido uma interface uma usabilidade pouco intuitiva para os farmacêuticos e técnicos que utilizarão o produto final. Com isso em mente, já no início do desenvolvimento do projeto, foi feita uma pesquisa a respeito das personas que utilizarão nosso sistema com o intuito de desenvolver uma solução centrada no usuário. Além disso, para mitigar a possibilidade de riscos associados a usabilidade afetaram o projeto, serão realizados testes de usabilidade antes da entrega final.
 
 
-* **Robô não conseguir coletar bem os insumos**: É possível que o robô apresente certas inconsistências ao tentar coletar insumos de variados formatos. Para evitar que isso possa se tornar um problema real, o grupo fará testes já no início de desenvolvimento do projeto, com o foco em testar diferentes materiais, pesos e dimensões de insumos, simulando o que ele irá coletar dentro de uma farmácia do HC. Caso o robô, de fato, apresente problemas ao agarrar ou com a sucção, a equipe irá conversar com os professores e técnicos de laboratório para encontrar maneiras de minimizar esses efeitos adversos no desenvolvimento do projeto. 
+* **Robô falhar coletar os insumos**: É possível que o robô apresente certas inconsistências ao tentar coletar insumos de variados formatos. Para evitar que isso possa se tornar um problema real, o grupo fará testes já no início de desenvolvimento do projeto, com o foco em testar diferentes materiais, pesos e dimensões de insumos, simulando o que ele irá coletar dentro de uma farmácia do HC. Caso o robô, de fato, apresente problemas ao agarrar ou com a sucção, a equipe irá conversar com os professores e técnicos de laboratório para encontrar maneiras de minimizar esses efeitos adversos no desenvolvimento do projeto. 
 
 
 ## 4. Riscos altamente comprometedores
@@ -45,7 +45,7 @@ Os riscos abaixo podem impactar o andamento do projeto, mas podem ser gerenciado
 Estes riscos podem comprometer o projeto se não forem gerenciados corretamente.
 :::
 
-* **Problemas de comunicação**: Os membros do grupo, ao longo do desenvolvimento do projeto, podem criar um mal hábito de assumir a responsabilidade de tasks e não comunicar para o restante do grupo como está o andamento das tasks, o que pode levar a situações problemáticas. Para evitar que isso aconteça, o grupo está comprometido a fazer dailies completas, com comentários a respeito do que foi feito no dia anterior e o que será feito no dia. Além disso, o Trello será diariamente atualizado com as atividades do dia. Caso ainda assim o problema se persistir, será necessário conversar com o professor orientador para que ele faça uma intervenção no grupo. Sendo assim, é um risco com um impacto muito alto, apesar de não tão provável.
+* **Falha na comunicação entre hardware e software**: Como a solução envolve a integração contínua entre hardware e software, é de fundamental importância a comunicação plena entre o dobot, a aplicação web e os servidores. Nesse contexto, há um risco baixo, mas de muito impacto, de haver falhas na comunicação entre hardware e software. Para mitigar esse risco, o projeto incluirá protocolos de comunicação robustos, com verificação de funcionamanto e maneiras de reconexão automática (quando necessário). Assim, falhas pontuais podem ser rapidamente detectadas e corrigidas.
     
 
 * **Dificuldades de integração com o sistema do HC**: Para que o projeto desenvolvido funcione adequadamente e seja integrado ao Hospital das Clínicas da Unicamp, é essencial que o sistema desenvolvido seja integrado corretamente com o do hospital. No entanto, ao longo do desenvolvimento, há uma possibilidade alta da equipe possuir dificuldades em fazer a integração com as APIs do hospital, uma vez que boa parte dos membros não estarem familiarizados com isso e irá aprender ao longo do projeto. Em adição a essa questão, as APIs disponibilizadas pelo hospital podem fornecer mais informações do que o necessário para o escopo do projeto. Com tudo isso, o grupo pode enfrentar atrasos no cronograma. Portanto, é um risco com um alto impacto e que, para mitigar, a equipe deve aproveitar a abertura que os professores e monitores dão para auxiliar no desenvolvimento do projeto, além de que membros mais experientes devem atuar como mentores para auxiliar na integração, reduzindo a curva de aprendizado dos demais.
@@ -57,9 +57,9 @@ Estes riscos podem comprometer o projeto se não forem gerenciados corretamente.
 Além dos riscos, há oportunidades estratégicas que podem ser exploradas.
 :::
 
-* **Alta produtividade**: Há uma probabilidade muita alta do grupo ser bem produtivo, tendo em vista as novas ferramentas de organização adotadas e pelo nível de comprometimento dos membros da equipe. Aliado a isso, o grupo poderá realizar rapidamente os requisitos do escopo presentes no TAPI e, com isso, irá sobrar tempo aprimorar e refinar a solução desenvolvida para o parceiro, promovendo uma entrega de mais alto nível.
+* **Otimização da separação e montagem**: Com a automação, o tempo gasto e a taxa de erros podem ser significativamente reduzidos, aumentando a segurança e a eficiência no hospital. É planejado monitorar indicadores-chave (taxa de erros, tempo de montagem) para refinar continuamente o processo e comprovar o ganho de produtividade para o hospital.
 
-* **Oportunidade de focar no hardware**: Há uma chance intermediária de que as APIs fornecidas pelo hospital sejam práticas e de fácil implementação. Além disso, a necessidade de criar poucas páginas de interface pode simplificar o desenvolvimento web. Como resultado, o grupo poderá focar em otimizar e potencializar o trabalho do robô dobot, capaz de fazer a separação de medicamentos de modo ainda mais rápido, impactando de modo muito positivo a solução final.
+* **Escalabilidade e manutenibilidade**: A solução pode apresentar muitos dados que suportem a eficiência da solução, motivando a expansão para outras áreas de atuação do hospital. Pensando nessa possível oportunidade, será desenvolvida uma arquitetura modular e com uma documentação explicativa, facilitando tanto o crescimento do sistema quanto sua manutenção futura.
 
 
- Portanto, com a elaboração dessa matriz de risco, **o grupo está preparado para evitar e mitigar possíveis riscos** que podem vir a prejudicar o desenvolvimento da solução. Também, **há planos de ações** para aproveitar da melhor maneira as oportunidades que poderão surgir ao longo do projeto.
+Portanto, com a elaboração dessa matriz de risco, **o grupo está preparado para evitar e mitigar possíveis riscos** que podem vir a prejudicar o desenvolvimento da solução. Também, **há planos de ações** para aproveitar da melhor maneira as oportunidades que poderão surgir ao longo do projeto.
