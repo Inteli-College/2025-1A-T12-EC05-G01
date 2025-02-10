@@ -1,15 +1,15 @@
 ---
 title: Qual será o critério de sucesso e qual medida será utilizada para o avaliar
 sidebar_position: 10
-slug: /
 ---
+
 # Descrição da solução
 
 ## Qual será o critério de sucesso e qual medida será utilizada para o avaliar?
 
 &nbsp;&nbsp;&nbsp;&nbsp;Durante o desenvolvimento do sistema, serão adotados critérios para avaliar sua eficácia, considerando tanto a experiência do usuário quanto aspectos técnicos, como armazenamento de informações e segurança de dados. O Quadro 1 apresenta os critérios de sucesso para os componentes da solução e as métricas para avaliação de sua efetividade.
 
-<br>
+  \\
 <div align="center">
 <sup>Quadro 1 - Critérios de sucesso para os componentes da solução</sup>
 

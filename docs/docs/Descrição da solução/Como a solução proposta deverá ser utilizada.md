@@ -1,8 +1,8 @@
 ---
 title: Como a solução proposta deverá ser utilizada
 sidebar_position: 8
-slug: /
 ---
+
 # Descrição da solução
 
 ## Como a solução proposta deverá ser utilizada?
