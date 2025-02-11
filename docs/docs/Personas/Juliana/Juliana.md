@@ -40,7 +40,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
     title="Persona Juliana Montana" 
     style={{ maxWidth: '80%', height: 'auto' }}
   />
-  <p>Fonte: Elaborado pelos próprios autores</p>
+  <p>Fonte: Elaborado pelo grupo Dose Certa (2025)</p>
 </div>
 
 &emsp;Em seu trabalho, as principais dores que Juliana enfrenta incluem:
@@ -55,7 +55,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Mapa de jornada do usuário
 
-&emsp;O mapa de jornada do usuário da persona Juliana Montana tem como objetivo retratar como ela interagiria com o sistema de automação a ser desenvolvido. Neste mapa, Juliana tem a tarefa de realizar a triagem de uma prescrição médica utilizando o sistema de automação.
+&emsp;O mapa de jornada do usuário da persona Juliana Montana tem como objetivo retratar como ela interage com o sistema de automação a ser desenvolvido. Neste mapa, Juliana tem a tarefa de realizar a triagem de uma prescrição médica utilizando o sistema de automação.
 
 <div style={{ textAlign: 'center' }}>
   <p><strong>Figura 3 - Mapa de Jornada do Usuário da Persona Juliana Montana</strong></p>
@@ -65,14 +65,14 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
     title="Mapa de Jornada do Usuário da Persona Juliana Montana"
     style={{ maxWidth: '80%', height: 'auto' }}
   />
-  <p>Fonte: Elaborado pelos próprios autores</p>
+  <p>Fonte: Elaborado pelo grupo Dose Certa (2025)</p>
 </div> 
 
 &emsp;Neste cenário em específico, Juliana espera poder concluir a tarefa o mais rápido possível, a fim de poder ter mais tempo livre para atividades mais complexas e importantes na farmácia do hospital. Dessa forma, o mapa de jornada é dividido em 4 fases, sendo elas o recebimento da prescrição médica, a análise de tal prescrição, a aprovação ou rejeição da prescrição e, por fim, a supervisão do processo de separação dos medicamentos e montagem da fita.
 
 &emsp;Durante a primeira etapa de sua jornada, Juliana se sente insegura porque não sabe, ainda, ao certo como o sistema funciona e tem medo de erros ocorrerem. Nesta etapa, ela recebe uma notificação no seu computador, avisando que uma nova prescrição foi emitida por um médico e precisa de aprovação. Ela, então, pode clicar na notificação e visualizar a prescrição.
 
-&emsp;Na segunda etapa da jornada, Juliana já se sente um pouco mais confiante, pois percebe que é fácil de realizar o processo de triagem das prescrições. Nessa fase, ela abre a prescrição e verifica todos os medicamentos que foram pedidos, prestando atenção se possui cada medicamento no estoque. Após isso, ela decide se algo na prescrição precisa ser alterado/negado ou se ela pode ser aprovada.
+&emsp;Na segunda etapa da jornada, Juliana já se sente um pouco mais confiante, pois percebe que é fácil realizar o processo de triagem das prescrições. Nessa fase, ela abre a prescrição e verifica todos os medicamentos que foram pedidos, prestando atenção se possui cada medicamento no estoque. Após isso, ela decide se algo na prescrição precisa ser alterado/negado ou se ela pode ser aprovada.
 
 &emsp;Já na terceira etapa da jornada, Juliana se sente muito mais feliz em comparação com o começo do processo, uma vez que entendeu que pode ter total controle sobre as prescrições que entram e saem direto no sistema de automação. Nesta etapa, caso ela tenha aprovado a prescrição, a mesma seguirá para a montagem. Caso ela rejeite a prescrição, ela pode optar por retorná-la ao médico responsável com uma justificativa ou alterá-la e então liberá-la para montagem. 
 
@@ -80,7 +80,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 &emsp;Durante o desenvolvimento do mapa de jornada de usuário, é possível identificar algumas oportunidades, dentre elas, existe a opção de disponibilizar informações sobre medicamentos disponíveis em estoque no momento de triagem, assim Juliana não aprova uma receita que pede medicamentos indisponíveis na farmácia. Para além disso, algumas responsabilidades do time de desenvolvedores devem ser pontuadas, tais como o desenvolvimento de interfaces gráficas visualmente agradáveis e intuitivas, a fim de minimizar erros por usabilidade. Já o "backend" da solução deve ser eficiente e rápido para garantir uma comunicação eficaz e segura entre cliente e servidor. 
 
-&emsp;Dessa forma, fica claro como que um bom mapa de jornada do usuário pode ser um grande auxílio ao se desenvolver uma solução de sistema de automação, uma vez que tal mapa ajuda a identificar pontos em que uma persona poderia ter problemas ao utilizar a solução. Além disso, ao elaborar um mapa de jornada do usuário, o processo de utilização da solução pela persona é esclarecido e decisões acerca de que features são mais importantes de serem adicionadas podem ser tomadas mais facilmente.
-> 
+&emsp;Dessa forma, fica claro como que um bom mapa de jornada do usuário pode ser um grande auxílio ao se desenvolver uma solução de sistema de automação, uma vez que tal mapa ajuda a identificar pontos em que uma persona poderia ter problemas ao utilizar a solução. Além disso, ao elaborar um mapa de jornada do usuário, o processo de utilização da solução pela persona é esclarecido e decisões acerca de quais features são mais importantes de serem adicionadas podem ser tomadas mais facilmente.
+ 
 
 
