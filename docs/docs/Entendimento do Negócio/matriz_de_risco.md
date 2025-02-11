@@ -4,24 +4,34 @@ sidebar_position: 1
 
 # Matriz de risco
 
-A matriz de risco é uma ferramenta essencial para a identificação, avaliação e priorização de potenciais ameaças e oportunidades que possam impactar o sucesso de um projeto. Sua importância reside na capacidade de proporcionar uma visão clara dos fatores que podem interferir no alcance dos objetivos, permitindo a adoção de estratégias eficazes de mitigação ou aproveitamento. 
+&nbsp;&nbsp;&nbsp;&nbsp;A matriz de risco é uma ferramenta essencial para a identificação, avaliação e priorização de potenciais ameaças e oportunidades que possam impactar o sucesso de um projeto. Sua importância reside na capacidade de proporcionar uma visão clara dos fatores que podem interferir no alcance dos objetivos, permitindo a adoção de estratégias eficazes de mitigação ou aproveitamento. 
 
 ## 1. Estrutura da Matriz de Risco
 
-A seguinte matriz de risco foi elaborada considerando os riscos e oportunidades do projeto, abrangendo aspectos relacionados ao próprio grupo, ao parceiro, ao hardware e ao software.
+&nbsp;&nbsp;&nbsp;&nbsp;A seguinte matriz de risco foi elaborada considerando os riscos e oportunidades do projeto, abrangendo aspectos relacionados ao próprio grupo, ao parceiro, ao hardware e ao software.
 
-![Matriz de risco](../../static/img/matrizderisco.png)
+<p align="center"><strong>Figura X - Matriz de risco</strong></p>
+<p align="center">
+    <img
+        src="../../img/matrizderisco.png"
+        alt="Matriz de risco"
+        title="Matriz de risco"
+        style={{ maxWidth: '80%', height: 'auto' }}
+    />
+</p>
+<p align="center">Fonte: Elaborado pelos próprios autores</p>
 
-Nela, é possível observar riscos que podem comprometer o desenvolvimento do projeto, mas, ao mesmo tempo, também entende-se que é necessário estar preparado para aproveitar as oportunidades que podem surgir durante a progressão da solução.
+
+&nbsp;&nbsp;&nbsp;&nbsp;Nela, é possível observar riscos que podem comprometer o desenvolvimento do projeto, mas, ao mesmo tempo, também entende-se que é necessário estar preparado para aproveitar as oportunidades que podem surgir durante a progressão da solução.
 ## 2. Riscos pouco comprometedores
 
 :::tip Estratégia de Mitigação
 Os riscos abaixo possuem **baixa probabilidade e baixo impacto**, mas ainda exigem medidas preventivas.
 :::
 
-* **Falha na leitura dos códigos de barras**: Os insumos podem descer a rampa de modo que os códigos de barras não fiquem voltados para a região que o robô consegue realizar a leitura. Para mitigar, no MVP, será feito testes com os insumos dentro de um material específico, para evitar que ocorram os casos de erros de leitura por parte do robô dobot. Assim, a possibilidade de ocorrer erros de leitura podem acabar sendo baixas, assim como o impacto desse risco.
+* **Falha na leitura dos códigos de barras**: Os insumos podem descer a rampa de modo que os códigos de barras não fiquem voltados para a região que o robô consegue realizar a leitura. Para mitigar, no MVP, serão feito testes com os insumos dentro de um material específico, para evitar que ocorram os casos de erros de leitura por parte do robô dobot. Assim, a possibilidade de ocorrer erros de leitura podem acabar sendo baixas, assim como o impacto desse risco.
 
-* **Erros de formatação dos dados importados pela API**: Os dados importados pela API do Hospital das Clínicas da Unicamp podem vir com problemas de formatação. Para contornar problemas advindos disso, quando for disponibilizado para a equipe a API do HC, será feito diversos testes para entender como os dados serão importados. Assim, entendendo isso, os riscos associados a essa questão serão facilmente minimizados e evitados.
+* **Erros de formatação dos dados importados pela API**: Os dados importados pela API do Hospital das Clínicas da Unicamp podem vir com problemas de formatação. Para contornar problemas advindos disso, quando for disponibilizado para a equipe a API do HC, serão feito diversos testes para entender como os dados serão importados. Assim, entendendo isso, os riscos associados a essa questão serão facilmente minimizados e evitados.
   
 
 ## 3. Riscos moderadamente comprometedores
@@ -30,10 +40,10 @@ Os riscos abaixo possuem **baixa probabilidade e baixo impacto**, mas ainda exig
 Os riscos abaixo podem impactar o andamento do projeto, mas podem ser gerenciados com boas práticas.
 :::
 
-* **Segurança de dados**: Existe o risco de vazamento de informações sensíveis, já que o sistema lida com dados de pacientes e inventário de medicamentos. Para evitar esse problema, serão adotadas medidas como uso de senhas fortes para o banco de dados, controle de acesso restrito a funções essenciais e verificações periódicas de possíveis brechas de segurança. Também é planejado seguir as normas previtas na LGPD.
+* **Segurança de dados**: Existe o risco de vazamento de informações sensíveis, já que o sistema lida com dados de pacientes e inventário de medicamentos. Para evitar esse problema, serão adotadas medidas como uso de senhas fortes para o banco de dados, controle de acesso restrito a funções essenciais e verificações periódicas de possíveis brechas de segurança. Também é planejado seguir as normas previstas na LGPD.
 
 
-* **Problemas de usabilidade**: Durante o desenvolvimento da interface do usuário na aplicação web, pode ser desenvolvido uma interface uma usabilidade pouco intuitiva para os farmacêuticos e técnicos que utilizarão o produto final. Com isso em mente, já no início do desenvolvimento do projeto, foi feita uma pesquisa a respeito das personas que utilizarão nosso sistema com o intuito de desenvolver uma solução centrada no usuário. Além disso, para mitigar a possibilidade de riscos associados a usabilidade afetaram o projeto, serão realizados testes de usabilidade antes da entrega final.
+* **Problemas de usabilidade**: Durante o desenvolvimento da interface do usuário na aplicação web, pode ser desenvolvida uma interface com uma usabilidade pouco intuitiva para os farmacêuticos e técnicos que utilizarão o produto final. Com isso em mente, já no início do desenvolvimento do projeto, foi feita uma pesquisa a respeito das personas que utilizarão nosso sistema com o intuito de desenvolver uma solução centrada no usuário. Além disso, para mitigar a possibilidade de riscos associados à usabilidade afetarem o projeto, serão realizados testes de usabilidade antes da entrega final.
 
 
 * **Robô falhar coletar os insumos**: É possível que o robô apresente certas inconsistências ao tentar coletar insumos de variados formatos. Para evitar que isso possa se tornar um problema real, o grupo fará testes já no início de desenvolvimento do projeto, com o foco em testar diferentes materiais, pesos e dimensões de insumos, simulando o que ele irá coletar dentro de uma farmácia do HC. Caso o robô, de fato, apresente problemas ao agarrar ou com a sucção, a equipe irá conversar com os professores e técnicos de laboratório para encontrar maneiras de minimizar esses efeitos adversos no desenvolvimento do projeto. 
@@ -62,4 +72,4 @@ Além dos riscos, há oportunidades estratégicas que podem ser exploradas.
 * **Escalabilidade e manutenibilidade**: A solução pode apresentar muitos dados que suportem a eficiência da solução, motivando a expansão para outras áreas de atuação do hospital. Pensando nessa possível oportunidade, será desenvolvida uma arquitetura modular e com uma documentação explicativa, facilitando tanto o crescimento do sistema quanto sua manutenção futura.
 
 
-Portanto, com a elaboração dessa matriz de risco, **o grupo está preparado para evitar e mitigar possíveis riscos** que podem vir a prejudicar o desenvolvimento da solução. Também, **há planos de ações** para aproveitar da melhor maneira as oportunidades que poderão surgir ao longo do projeto.
+&nbsp;&nbsp;&nbsp;&nbsp;Portanto, com a elaboração dessa matriz de risco, **o grupo está preparado para evitar e mitigar possíveis riscos** que podem vir a prejudicar o desenvolvimento da solução. Também, **há planos de ações** para aproveitar da melhor maneira as oportunidades que poderão surgir ao longo do projeto.
