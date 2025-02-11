@@ -8,7 +8,7 @@ sidebar_position: 6
 ## Qual é o problema a ser resolvido?
 
 &nbsp;&nbsp;&nbsp;&nbsp;O Hospital de Clínicas da Unicamp, através do seu Núcleo Farmácia, enfrenta desafios no processo de separação e montagem da "Fita de medicamentos" para pacientes internados. Essa fita consiste, no caso do HC, nos medicamentos para as próximas 24 horas do paciente. Ela fica pronta todo dia as 16:00, e os enfermeiros e técnicos de farmácia levam em média 8 horas todos os dias para fazer a montagem delas. 
-
+  
 &nbsp;&nbsp;&nbsp;&nbsp;Este processo, atualmente, demanda um alto tempo operacional e está sujeito a riscos, como erros de separação e duplicidade de medicamentos. Ele é divido em 4 etapas. A primeira é a **conferência** da prescrição médica, atividade realizada por um enfermeiro, que tem as opções de aprovar, negar e pedir alterações na receita, a depender do contexto e medicamentos disponíveis. Após aprovada, a receita é impressa e vai para a etapa de **separação**.
 
 &nbsp;&nbsp;&nbsp;&nbsp;Nessa etapa, os envolvidos são técnicos em farmácia, que devem ir nos bins da farmácia, onde cada remédio é guardado, pegar os respectivos remédios da fita que ele está separando no momento e colocar em uma bandeija. Assim que essa etapa é concluída, eles fazem a **bipagem** dos medicamentos, escaneando o código de barras/QR code de cada um, a depender do medicamento. Por fim, os remédios são selados na fita de medicamentos, etapa chamada de **selagem**.
