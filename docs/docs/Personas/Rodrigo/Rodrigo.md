@@ -67,19 +67,19 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
     <p> Fonte: Elaborado pelos próprios autores</p>
 </div>
 
-**1. Recebimento da prescrição aprovada**
+**1.** Recebimento da prescrição aprovada
 
 &emsp; O processo de Rodrigo começa quando ele recebe a notificação de que uma prescrição foi aprovada pelo farmacêutico e precisa ser separada. Ele acessa o sistema e verifica todos os medicamentos e suas quantidades. Neste momento, ele sente um certo receio quanto à confiabilidade do sistema, questionando se as informações estão corretas e se a automação realmente ajudará a reduzir erros.
 
-**2. Separação automatizada**
+**2.** Separação automatizada
 
 &emsp; Após conferir os detalhes, Rodrigo seleciona a opção para que o robô inicie a separação dos medicamentos. O sistema então executa o processo automaticamente, pegando e depositando os medicamentos no local correto. Durante essa etapa, Rodrigo acompanha atentamente a operação, inicialmente inseguro, mas depois sentindo confiança ao ver que o robô parece funcionar corretamente, sem apresentar falhas aparentes.
 
-**3. Conferência do processo de separação** 
+**3.** Conferência do processo de separação
 
 &emsp; Após a separação ser realizada, Rodrigo verifica se os medicamentos e as quantidades correspondem à prescrição. Ao confirmar que tudo está correto, ele sente satisfação ao perceber que seu trabalho ficou mais ágil e seguro. Essa etapa reforça a confiabilidade do sistema e dá a Rodrigo mais tranquilidade para seguir com as próximas fases.
 
-**4. Selagem e liberação da fita**
+**4.** Selagem e liberação da fita
 
 &emsp;Após conferir os medicamentos, Rodrigo realiza a selagem da fita e a entrega para a equipe de enfermagem, que será responsável pela administração aos pacientes. Ele sente orgulho ao perceber que o novo sistema ajudou a reduzir a chance de erro e facilitou seu trabalho.
 
