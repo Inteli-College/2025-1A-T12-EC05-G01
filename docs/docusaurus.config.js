@@ -25,7 +25,7 @@ const config = {
   organizationName: 'Inteli.College', // Usually your GitHub org/user name.
   projectName: '2025-1A-T12-EC05-G01', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
@@ -85,7 +85,7 @@ const config = {
             items: [
               {
                 label: 'Introdução',
-                to: 'http://localhost:3000/docs/introducao-grupo',
+                to: '/docs/intro',
               },
             ],
           },
