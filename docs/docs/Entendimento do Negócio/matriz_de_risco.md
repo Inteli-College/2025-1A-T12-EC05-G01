@@ -1,5 +1,7 @@
 ---
+title: Matriz de Risco
 sidebar_position: 1
+slug: /matriz-de-risco
 ---
 
 # Matriz de risco

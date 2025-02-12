@@ -1,7 +1,7 @@
 ---
 title: Personas 
 sidebar_position: 11
-slug: /Personas
+slug: /persona-rodrigo
 ---
 
 # Personas e Mapa de Jornada do usuário

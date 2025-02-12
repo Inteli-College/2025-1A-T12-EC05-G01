@@ -1,7 +1,7 @@
 ---
 title: Persona Juliana - Farmacêutica
 sidebar_position: 12
-slug: /Persona/Juliana
+slug: /persona-juliana
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';

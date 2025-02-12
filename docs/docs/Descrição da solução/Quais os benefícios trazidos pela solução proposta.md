@@ -1,6 +1,7 @@
 ---
 title: Quais os benefícios trazidos pela solução proposta
 sidebar_position: 9
+slug: /beneficios-solucao-proposta
 ---
 
 # Descrição da solução

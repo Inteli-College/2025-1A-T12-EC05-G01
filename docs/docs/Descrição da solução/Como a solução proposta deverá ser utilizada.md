@@ -1,6 +1,7 @@
 ---
 title: Como a solução proposta deverá ser utilizada
 sidebar_position: 8
+slug: /utilizacao-solucao-proposta
 ---
 
 # Descrição da solução

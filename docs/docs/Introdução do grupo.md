@@ -4,6 +4,8 @@ sidebar_position: 1
 slug: /
 ---
 
-# Introdução do grupo
+# Dose Certa
+
+## Nome do projeto
 
 

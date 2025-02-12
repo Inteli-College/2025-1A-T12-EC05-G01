@@ -1,6 +1,7 @@
 ---
 title: Qual a solução proposta
 sidebar_position: 7
+slug: /solucao-proposta
 ---
 
 # Descrição da solução
