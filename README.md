@@ -27,6 +27,8 @@
 </div>
 
 ## 👩‍🏫 Professores:
+### Coordenador(a) de curso:
+- <a href="https://www.linkedin.com/in/michele-bazana-de-souza-69b77763/">Michele Bazana de Souza</a>
 ### Orientador(a) 
 - <a href="https://www.linkedin.com/in/murilo-zanini-de-carvalho-0980415b/">Murilo Zanini de Carvalho</a>
 ### Instrutores
