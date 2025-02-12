@@ -1,0 +1,8 @@
+{
+    "label": "Pesquisa Desk",
+    "position": 3,
+    "link": {
+      "type": "generated-index",
+      "description": "Description"
+    }
+  }
