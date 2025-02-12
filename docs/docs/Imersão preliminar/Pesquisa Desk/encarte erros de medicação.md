@@ -14,4 +14,4 @@ slug: /desk1
 &nbsp;&nbsp;&nbsp;&nbsp;Diante do apresentado, conclui-se que “a implantação de sistemas seguros, organizados e eficazes é fundamental para minimizar a ocorrência de erros de medicação nas instituições de saúde.”
 
 ## Referências
-[1] HOSPITALAR, F.; DE MEDICAÇÃO, E. Tânia azevedo anacleTo Mário Borges rosa HesseM Miranda neiva Maria auxiliadora Parreiras MarTins. [s.l: s.n.]. Disponível em: https://www.cff.org.br/sistemas/geral/revista/pdf/124/encarte_farmaciahospitalar.pdf. 
+[1] ANACLETO, Tânia Azevedo et al. FARMACOVIGILÂNCIA HOSPITALAR: Como implantar. Pharmacia Brasileira, n. 124, p. 2-14, jan./fev. 2010. Disponível em: https://www.cff.org.br/sistemas/geral/revista/pdf/124/encarte_farmaciahospitalar.pdf. Acesso em: 12 fev. 2025.
