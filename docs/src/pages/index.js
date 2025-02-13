@@ -14,6 +14,9 @@ export default function Home() {
           </a>
         </p>
         <br />
+        <p align="center">
+          <img src={useBaseUrl('/img/logo-do-grupo.png')} alt="Logo do Grupo" className={styles.logo} />
+        </p>
         <h2 className={styles.projectName}>Nome do Projeto</h2>
         <h3 className={styles.sectionTitle}>👨‍🎓 Integrantes:</h3>
         <div align="center">
