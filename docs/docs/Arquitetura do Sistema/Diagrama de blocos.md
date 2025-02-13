@@ -18,7 +18,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   <p>Fonte: Elaborado pelo grupo Dose Certa (2025)</p>
 </div>
 
-LINK DO DIAGRAMA: https://drive.google.com/file/d/14ac7LdykwFA3hwSt1orK0FP3AWVqZHxL/view?usp=sharing
+Acesse a imagem em maior definição no link a seguir: https://drive.google.com/file/d/14ac7LdykwFA3hwSt1orK0FP3AWVqZHxL/view?usp=sharing
 
 &nbsp;&nbsp;&nbsp;&nbsp;O diagrama de blocos é um modelo padronizado e eficaz para representar a interação entre os componentes do sistema e o fluxo de informações entre eles. Nas palavras de Plíno Castrucci: "A análise de sistemas em engenharia costuma ser feita a partir de sua representação em diagramas de blocos. A representação convencional de um bloco é realizada por meio de um retângulo, com a função de transferência correspondente escrita em seu interior."
 Nesta seção, apresentamos a arquitetura geral do projeto, desde a prescrição inicial do médico até a administração do medicamento ao paciente. 
