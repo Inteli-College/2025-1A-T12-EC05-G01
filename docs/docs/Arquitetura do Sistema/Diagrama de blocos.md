@@ -18,6 +18,8 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   <p>Fonte: Elaborado pelo grupo Dose Certa (2025)</p>
 </div>
 
+LINK DO DIAGRAMA: https://drive.google.com/file/d/14ac7LdykwFA3hwSt1orK0FP3AWVqZHxL/view?usp=sharing
+
 &nbsp;&nbsp;&nbsp;&nbsp;O diagrama de blocos é um modelo padronizado e eficaz para representar a interação entre os componentes do sistema e o fluxo de informações entre eles. Nas palavras de Plíno Castrucci: "A análise de sistemas em engenharia costuma ser feita a partir de sua representação em diagramas de blocos. A representação convencional de um bloco é realizada por meio de um retângulo, com a função de transferência correspondente escrita em seu interior."
 Nesta seção, apresentamos a arquitetura geral do projeto, desde a prescrição inicial do médico até a administração do medicamento ao paciente. 
 
@@ -28,4 +30,7 @@ Nesta seção, apresentamos a arquitetura geral do projeto, desde a prescrição
 &nbsp;&nbsp;&nbsp;&nbsp;Após confirmados os remédios, o Técnico Farmacêutico prepara uma Fita de Administração contendo os medicamentos selecionados. A API então registra essa etapa no Banco de Dados, atualizando o status do pedido. Por fim, os medicamentos são administrados ao Paciente, completando o ciclo do sistema.
 
 &nbsp;&nbsp;&nbsp;&nbsp;A arquitetura é fundamental para estruturar o projeto, proporcionando uma visão clara das interações e fluxos de dados entre os componentes. Definimos essa arquitetura para garantir que cada etapa do processo, desde a prescrição até a administração do medicamento, seja conduzida de maneira eficiente e segura. Além disso, ela serve como base para futuras melhorias, facilitando a integração de novas funcionalidades e a adaptação a requisitos emergentes. Conforme o projeto avançar, mudanças terão que ser feitas na arquitetura para representá-las.
+
+## Bibliografia:
+CASTRUCCI, Plínio de Lauro; BITTAR, Anselmo; SALES, Roberto Moura. Controle automático. 2. ed. Rio de Janeiro: LTC, 2018.
 
