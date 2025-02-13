@@ -10,7 +10,7 @@ export default function Home() {
         <h2 className={styles.title}>Inteli - Instituto de Tecnologia e Liderança</h2>
         <p align="center">
           <a href="https://www.inteli.edu.br/">
-            <img src={useBaseUrl('media/inteli.png')} alt="Inteli - Instituto de Tecnologia e Liderança" className={styles.logo} />
+            <img src={useBaseUrl('/img/inteli.png')} alt="Inteli - Instituto de Tecnologia e Liderança" className={styles.logo} />
           </a>
         </p>
         <br />
@@ -31,7 +31,7 @@ export default function Home() {
                 ].map((member) => (
                   <td align="center" key={member.name} className={styles.member}>
                     <a href={`https://www.linkedin.com/in/${member.linkedin}/`}>
-                      <img style={{ borderRadius: '10%' }} src={useBaseUrl(`./static/img/fotos-grupo/${member.img}`)} width="100px" alt={`Foto de ${member.name}`} />
+                      <img style={{ borderRadius: '10%' }} src={useBaseUrl(`/img/fotos-grupo/${member.img}`)} width="100px" alt={`Foto de ${member.name}`} />
                       <br /><sub><b>{member.name}</b></sub>
                     </a>
                   </td>
