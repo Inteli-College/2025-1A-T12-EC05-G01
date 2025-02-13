@@ -8,7 +8,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Matriz é / não é - faz / não faz
 
-&emsp;A chamada Matriz É - Não É / Faz - Não Faz é uma ferramenta que ajuda a descrever um produto trazendo foco não só para aquilo que o produto faz, mas também deixando bem claro o que o produto não faz [[1]](https://caroli.org/e-nao-e-faz-nao-faz/). Dessa forma, esta é uma ferramenta de extrema utilidade para quando se deseja delimitar expectativas acerca do que será a entrega final de um produto. Assim, a seguinte matriz foi elaborada para o projeto:
+&emsp;A chamada Matriz É - Não É / Faz - Não Faz é uma ferramenta que ajuda a descrever um produto trazendo foco não só para aquilo que o produto faz, mas também deixando bem claro o que o produto não faz [[1]](https://caroli.org/e-nao-e-faz-nao-faz/). Dessa forma, esta é uma ferramenta de extrema utilidade para quando se deseja delimitar expectativas acerca do que será a entrega final de um produto. Assim, a seguinte matriz, visível na figura 1, foi elaborada para o projeto:
 
 ## Matriz é / não é - faz / não faz desenvolvido para o projeto
 
@@ -23,7 +23,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   <p>Fonte: Elaborado pelo grupo Dose Certa (2025)</p>
 </div>
 
-&emsp;A matriz acima descreve os seguintes 4 pontos importantes:
+&emsp;A matriz acima (figura 1) descreve os seguintes 4 pontos importantes:
 * O produto é: Um sistema automatizado de montagem de fitas de medicamento e um sistema autônomo de hardware + plataforma web;
 * O produto não é: Um substituto para farmacêuticos e técnicos e não é 100% infalível, insuscetível a erros;
 * O produto faz: Ele acelera o processo de montagem de fitas, verifica por alergias de pacientes e realiza a bipagem dos medicamentos;
