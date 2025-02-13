@@ -10,8 +10,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Dose Certa',
+  tagline: 'Documentação do projeto Dose Certa',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -22,8 +22,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'Inteli.College', // Usually your GitHub org/user name.
+  projectName: '2025-1A-T12-EC05-G01', // Usually your repo name.
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -43,11 +43,6 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          routeBasePath: '/'
         },
         blog: false,
         theme: {
@@ -63,20 +58,20 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'Dose Certa',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Dose Certa - Logo',
           src: 'img/logo.svg',
         },
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Documentação',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/Inteli-College/2025-1A-T12-EC05-G01',
             label: 'GitHub',
             position: 'right',
           },
@@ -89,39 +84,35 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/Intro',
+                label: 'Introdução',
+                to: '/docs/intro',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'Links externos',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'Inteli',
+                href: 'https://www.inteli.edu.br/',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
+                label: 'HC - Unicamp',
+                href: 'https://hc.unicamp.br/',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Outros',
             items: [ 
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'GitHub Inteli',
+                href: 'https://github.com/Inteli-College',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} - Dose Certa`,
       },
       prism: {
         theme: prismThemes.github,

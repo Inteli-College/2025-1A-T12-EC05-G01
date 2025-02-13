@@ -1,5 +1,7 @@
 ---
+title: Canvas Proposta de Valor
 sidebar_position: 1
+slug: /canvas-proposta-de-valor
 ---
 
 # Canvas da Proposta de Valor
