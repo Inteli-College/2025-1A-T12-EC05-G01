@@ -10,6 +10,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 &emsp;A chamada Matriz É - Não É / Faz - Não Faz é uma ferramenta que ajuda a descrever um produto trazendo foco não só para aquilo que o produto faz, mas também deixando bem claro o que o produto não faz [[1]](https://caroli.org/e-nao-e-faz-nao-faz/). Dessa forma, esta é uma ferramenta de extrema utilidade para quando se deseja delimitar expectativas acerca do que será a entrega final de um produto. Assim, a seguinte matriz foi elaborada para o projeto:
 
+## Matriz é / não é - faz / não faz desenvolvido para o projeto
 
 <div style={{ textAlign: 'center' }}>
   <p><strong>Figura 1 - Matriz É - Não é / Faz - Não faz</strong></p>
