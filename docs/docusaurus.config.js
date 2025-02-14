@@ -15,7 +15,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://inteli-college.github.io/2025-1A-T12-EC05-G01',
+  url: 'https://inteli-college.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/2025-1A-T12-EC05-G01/',
