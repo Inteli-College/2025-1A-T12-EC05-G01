@@ -4,25 +4,23 @@ sidebar_position: 1
 slug: /matriz-de-risco
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Matriz de risco
 
 &nbsp;&nbsp;&nbsp;&nbsp;A matriz de risco é uma ferramenta essencial para a identificação, avaliação e priorização de potenciais ameaças e oportunidades que possam impactar o sucesso de um projeto. Sua importância reside na capacidade de proporcionar uma visão clara dos fatores que podem interferir no alcance dos objetivos, permitindo a adoção de estratégias eficazes de mitigação ou aproveitamento. 
 
 ## 1. Estrutura da Matriz de Risco
 
-&nbsp;&nbsp;&nbsp;&nbsp;A seguinte matriz de risco foi elaborada considerando os riscos e oportunidades do projeto, abrangendo aspectos relacionados ao próprio grupo, ao parceiro, ao hardware e ao software.
+&nbsp;&nbsp;&nbsp;&nbsp;A seguinte matriz de risco foi elaborada considerando os riscos e oportunidades do projeto, abrangendo aspectos relacionados ao próprio grupo, ao parceiro, ao hardware e ao software.       
 
-<p align="center"><strong>Figura X - Matriz de risco</strong></p>
-<p align="center">
-    <img
-        src="../../img/matrizderisco.png"
-        alt="Matriz de risco"
-        title="Matriz de risco"
-        style={{ maxWidth: '80%', height: 'auto' }}
-    />
-</p>
-<p align="center">Fonte: Elaborado pelos próprios autores</p>
+<div align="center">
+<sub>Figura X - Matriz de Risco</sub>
 
+
+![Matriz de Risco](<../../static/img/matrizderisco.png>)
+<sub>Fonte: Elaborado pelo grupo Dose Certa (2025)</sub>
+</div>
 
 &nbsp;&nbsp;&nbsp;&nbsp;Nela, é possível observar riscos que podem comprometer o desenvolvimento do projeto, mas, ao mesmo tempo, também entende-se que é necessário estar preparado para aproveitar as oportunidades que podem surgir durante a progressão da solução.
 ## 2. Riscos pouco comprometedores
