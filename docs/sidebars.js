@@ -55,10 +55,10 @@ const sidebars = {
         'Imersão preliminar/definicao',
         'Imersão preliminar/questionário',
         'Imersão preliminar/tipos de pesquisa',
+        'Imersão preliminar/Pesquisa Desk/pesquisa desk',
         'Imersão preliminar/Pesquisa Desk/encarte erros de medicação',
         'Imersão preliminar/Pesquisa Desk/errosDeDispensaçãoNoAmbitoHospitalar',
         'Imersão preliminar/Pesquisa Desk/estratégiasParaReduzirErros',
-        'Imersão preliminar/Pesquisa Desk/pesquisa desk',
       ],
     },
     {
