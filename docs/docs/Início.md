@@ -17,11 +17,13 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 ## Grupo: Dose Certa
 
 <img 
-    src={useBaseUrl('/img/logo-do-grupo')} 
+    src={useBaseUrl('/img/logo.png')} 
     alt="Logo Dose Certa" 
     title="Logo Dose Certa" 
     style={{ maxWidth: '50%', height: 'auto' }}
 />
+
+## Projeto: Dosaí
 
 ### Integrantes:
 

@@ -1,5 +1,3 @@
-# 2025-1A-T12-EC05-G01
-
 # Inteli - Instituto de Tecnologia e Liderança 
 
 <p align="center">
@@ -8,7 +6,9 @@
 
 <br>
 
-# Nome do Projeto
+# Grupo: Dose Cera
+
+## Projeto: Dosaí
 
 ## 👨‍🎓 Integrantes: 
 

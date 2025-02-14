@@ -15,9 +15,10 @@ export default function Home() {
         </p>
         <br />
         <p align="center">
-          <img src={useBaseUrl('/img/logo-do-grupo.png')} alt="Logo do Grupo" className={styles.logo} />
+          <img src={useBaseUrl('/img/logo.png')} alt="Logo do Grupo" style={{ maxWidth: '20%', height: 'auto' }} className={styles.logo} />
         </p>
-        <h2 className={styles.projectName}>Nome do Projeto</h2>
+        <h2 className={styles.projectName}>Grupo: Dose Certa</h2>
+        <h2 className={styles.projectName}>Projeto: Dosaí</h2>
         <h3 className={styles.sectionTitle}>👨‍🎓 Integrantes:</h3>
         <div align="center">
           <table className={styles.table}>
@@ -71,7 +72,10 @@ export default function Home() {
         
         <h3 className={styles.sectionTitle}>📜 Descrição</h3>
         <p className={styles.description}>Descrição do projeto.</p>
-        <p><a href="">[Link para o vídeo de demonstração do funcionamento do projeto]</a></p>
+        <p><a href="">Link para o vídeo de demonstração do funcionamento do projeto</a></p>
+
+        <h4 className={styles.sectionTitle}>Apresentações</h4>
+        <p><a href="https://www.canva.com/design/DAGe2XsNHqs/S1qAqhXeYQnNW8U2GIjkqg/edit">Sprint 1</a></p>
 
         <h3 className={styles.sectionTitle}>📁 Estrutura de pastas</h3>
         <ul className={styles.list}>
