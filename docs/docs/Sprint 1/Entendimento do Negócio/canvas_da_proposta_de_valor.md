@@ -13,7 +13,7 @@ slug: /canvas-proposta-de-valor
 <div align="center">
 <sub>Figura X - Título</sub>
 
-![Canvas da Proposta de Valor](<../../static/img/canvas-proposta-valor.png>)
+![Canvas da Proposta de Valor](<../../../static/img/canvas-proposta-valor.png>)
 <sup>Fonte: Material produzido pelos autores (2025) com Template de [Strategyzer](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.strategyzer.com%2Flibrary%2Fthe-value-proposition-canvas&psig=AOvVaw1mu8QB2T4G5ERnVzEeuh9Y&ust=1738958698227000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDyvo3sr4sDFQAAAAAdAAAAABAE)</sup>
 </div>
 
