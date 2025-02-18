@@ -18,7 +18,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 <sub>Figura X - Matriz de Risco</sub>
 
 
-![Matriz de Risco](<../../static/img/matrizderisco.png>)
+![Matriz de Risco](<../../../static/img/matrizderisco.png>)
 <sub>Fonte: Elaborado pelo grupo Dose Certa (2025)</sub>
 </div>
 
