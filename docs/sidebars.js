@@ -76,6 +76,13 @@ const sidebars = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'Sprint 2',
+      items: [
+        'Sprint 2/User Stories/user-stories',
+      ],
+    },
   ],
 };
 
