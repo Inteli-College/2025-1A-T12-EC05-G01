@@ -20,10 +20,12 @@ slug: /questionario
 4. Existem atividades que você gostaria de alterar?
 5. Descreva para nós como é o dia a dia no processo de montagem e separação de medicamentos?
 6. O que você diria que é a maior dificuldade da separação de medicamentos no processo atual?
-7. Os erros ocorrem:  
-    - Raramente
-    - De vez em quando
-    - Frequentemente
-8. Qual a porcentagem de erros em montagem de fitas atualmente?
-9. Quais são os tipos mais comuns de erros cometidos?
+7. Considerando os erros na montagem da fita de medicamentos, com qual frequência você diria que eles ocorrem?
+    [] Raramente
+    [] De vez em quando
+    [] Frequentemente
+8. Ainda considerando esses erros, qual porcentagem você diria que eles representam em relação ao total de montagens?
+9. De acordo com a sua percepção, quais você diria que são os erros mais comuns desse processo? 
 10. Quanto tempo você diria que gasta apenas realizando a checagem e correção de fitas incorretas?
+
+> Em função da limitação de entrevistados, os dados **quantitativos** dessa pesquisa virão de dados secundários, principalmente obtidos por meio da pesquisa desk apresentada nessa documentação
