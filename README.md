@@ -6,7 +6,7 @@
 
 <br>
 
-# Grupo: Dose Cera
+# Grupo: Dose Certa
 
 ## Projeto: Dosaí
 
