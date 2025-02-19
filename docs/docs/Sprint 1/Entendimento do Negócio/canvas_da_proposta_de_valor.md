@@ -11,7 +11,7 @@ slug: /canvas-proposta-de-valor
 &nbsp;&nbsp;&nbsp;&nbsp;Ademais, com base nas conclusões obtidas na análise do público-alvo, pode-se propor uma solução em três fases: analgésicos (*Pain Relievers*), criadores de ganho (*Gain Creators*) e produtos e serviços (*Products and Services*). Os analgésicos representam como a solução aliviará as dores do cliente, enquanto os criadores de ganho são aspectos da solução capazes de entregar valor aos clientes e, enfim, em produtos e serviços, listam-se quais são as principais entregas a serem feitas, ou seja, qual a solução proposta de forma concisa. Nesse cenário, foi criada uma ferramenta visual para organização da análise feita, o canvas de proposta de valor. Para o desenvolvimento do projeto, essa ferramenta foi utilizada e está representada na Figura X.
 
 <div align="center">
-<sub>Figura X - Título</sub>
+<sub>Figura 1 - Canvas da Proposta de Valor</sub>
 
 ![Canvas da Proposta de Valor](<../../../static/img/canvas-proposta-valor.png>)
 <sup>Fonte: Material produzido pelos autores (2025) com Template de [Strategyzer](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.strategyzer.com%2Flibrary%2Fthe-value-proposition-canvas&psig=AOvVaw1mu8QB2T4G5ERnVzEeuh9Y&ust=1738958698227000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDyvo3sr4sDFQAAAAAdAAAAABAE)</sup>

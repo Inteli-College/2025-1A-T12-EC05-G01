@@ -81,6 +81,7 @@ const sidebars = {
       label: 'Sprint 2',
       items: [
         'Sprint 2/User Stories/user-stories',
+        'Sprint 2/User Flow/user-flow',
       ],
     },
   ],
