@@ -41,7 +41,7 @@ slug: /user-flow
 <sup>Fonte: Material produzido pelos autores (2025)</sup>
 </div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;A tela de checagem de estoque permite a verificação das quantidades de medicamentos disponíveis dentro da farmácia, correspondendo a [US08](../User%20Stories/user-stories.md)
+&nbsp;&nbsp;&nbsp;&nbsp;A tela de checagem de estoque permite a verificação das quantidades de medicamentos disponíveis dentro da farmácia, correspondendo a [US08](../User%20Stories/user-stories.md). Já a tela de prescrições é destinada à triagem das prescrições recebidas, ela representará, em nosso sistema a tela existente no sistema do hospital; assim, quando o sistema for ser de fato utilizado, ela será substituida pela tela existente, garantindo a integração com o sitema do HC, conforme a [US02](../User%20Stories/user-stories.md). As outras duas telas existentes e a conexão com o hardware podem ser vistos na Figura 5.
 
 <!-- <div align="center">
 <sub>Figura 5 - </sub>
@@ -50,7 +50,7 @@ slug: /user-flow
 <sup>Fonte: Material produzido pelos autores (2025)</sup>
 </div> -->
 
-&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;A tela de Montagens Realizadas permite o controle da montagem de todas as fitas que já foram triadas, com comando para iniciar e pausar o processo e com a informação se a montagem já foi concluída ou não; dessa forma, a [US05](../User%20Stories/user-stories.md) é atendida. Caso haja algum erro no processo de montagem, um alerta será mostrado nessa tela, correspondendo à [US06](../User%20Stories/user-stories.md). A tela para verificação dos medicamentos mostra a lista de medicamentos presentes nas fitas já separadas, as quais precisam ser seladas manualmente pelos técnicos farmacêuticos. 
 
 &nbsp;&nbsp;&nbsp;&nbsp;Logo, realizar o mapeamento do fluxo do usuário permite a visualização dos passos necessários para que o usuário realize as tarefas do sistema, além de permitir a verificação de possíveis problemas.
 
