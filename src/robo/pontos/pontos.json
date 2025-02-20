@@ -36,7 +36,7 @@
           "y": -178.862,
           "z": 29.7396,
           "r": -35.4041,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "off"
         },
         {
@@ -45,7 +45,7 @@
           "y": -178.4476,
           "z": 10.8886,
           "r": -35.4086,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -54,7 +54,7 @@
           "y": -176.6154,
           "z": 148.5751,
           "r": -35.3951,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -72,7 +72,7 @@
           "y": -300.8484,
           "z": -8.107,
           "r": -104.5166,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -81,7 +81,7 @@
           "y": -309.8394,
           "z": -20.1414,
           "r": -104.5241,
-          "movimento": "movj",
+          "movimento": "movl",  
           "suctionCup": "off"
         },
         {
@@ -92,15 +92,6 @@
           "r": -107.3996,
           "movimento": "movj",
           "suctionCup": "off"
-        },
-        {
-          "ponto": 11,
-          "x": 251.6091,
-          "y": -82.2933,
-          "z": 149.6059,
-          "r": -18.1113,
-          "movimento": "movj",
-          "suctionCup": "on"
         }
       ]
     },
@@ -122,7 +113,7 @@
           "y": -105.5703,
           "z": 16.5641,
           "r": -22.4538,
-          "movimento": "movj",
+          "movimento": "movj",  
           "suctionCup": "on"
         },
         {
@@ -131,7 +122,7 @@
           "y": -99.2805,
           "z": 156.4643,
           "r": -21.7177,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -149,7 +140,7 @@
           "y": -310.6665,
           "z": 144.9234,
           "r": -87.9641,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -158,7 +149,7 @@
           "y": -311.9232,
           "z": -22.601,
           "r": -87.2366,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "off"
         },
         {
@@ -167,16 +158,7 @@
           "y": -290.9894,
           "z": 146.983,
           "r": -87.9866,
-          "movimento": "movj",
-          "suctionCup": "off"
-        },
-        {
-          "ponto": 8,
-          "x": 268.0746,
-          "y": -13.9278,
-          "z": 152.1224,
-          "r": -2.9741,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "off"
         }
       ]
@@ -190,7 +172,7 @@
           "y": -20.0812,
           "z": 40.9749,
           "r": -4.4216,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "off"
         },
         {
@@ -199,7 +181,7 @@
           "y": -23.1925,
           "z": 12.8745,
           "r": -5.1079,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "on"
         },
         {
@@ -208,7 +190,7 @@
           "y": -13.5275,
           "z": 164.405,
           "r": -2.9816,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "on"
         },
         {
@@ -226,7 +208,7 @@
           "y": -240.6529,
           "z": -17.4499,
           "r": -87.9956,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -235,7 +217,7 @@
           "y": -243.1698,
           "z": -23.55,
           "r": -87.9956,
-          "movimento": "movj",
+          "movimento": "movl",  
           "suctionCup": "off"
         },
         {
@@ -244,25 +226,7 @@
           "y": -216.7499,
           "z": 164.9276,
           "r": -84.3931,
-          "movimento": "movj",
-          "suctionCup": "off"
-        },
-        {
-          "ponto": 8,
-          "x": 10.158,
-          "y": -233.6275,
-          "z": 143.7785,
-          "r": -87.5104,
-          "movimento": "movj",
-          "suctionCup": "off"
-        },
-        {
-          "ponto": 9,
-          "x": 234.7654,
-          "y": 56.5232,
-          "z": 166.6105,
-          "r": 13.5371,
-          "movimento": "movj",
+          "movimento": "movl",  
           "suctionCup": "off"
         }
       ]
@@ -285,7 +249,7 @@
           "y": 53.5751,
           "z": 32.1461,
           "r": 12.0934,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "on"
         },
         {
@@ -294,7 +258,7 @@
           "y": 54.6534,
           "z": 17.9402,
           "r": 12.0896,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -303,7 +267,7 @@
           "y": 54.4008,
           "z": 161.8275,
           "r": 12.0934,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "on"
         },
         {
@@ -330,7 +294,7 @@
           "y": -302.8281,
           "z": -18.8311,
           "r": -74.3201,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "off"
         },
         {
@@ -339,16 +303,7 @@
           "y": -292.4512,
           "z": 151.5487,
           "r": -72.1392,
-          "movimento": "movj",
-          "suctionCup": "off"
-        },
-        {
-          "ponto": 9,
-          "x": 206.4712,
-          "y": 99.7138,
-          "z": 166.2159,
-          "r": 25.7779,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "off"
         }
       ]
@@ -380,7 +335,7 @@
           "y": 134.1454,
           "z": 32.5067,
           "r": 27.9521,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "on"
         },
         {
@@ -389,7 +344,7 @@
           "y": 137.3185,
           "z": 18.495,
           "r": 27.9334,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -398,7 +353,7 @@
           "y": 134.0139,
           "z": 154.8172,
           "r": 26.5121,
-          "movimento": "movj",
+          "movimento": "movl",  
           "suctionCup": "on"
         },
         {
@@ -416,7 +371,7 @@
           "y": -237.7929,
           "z": -15.0836,
           "r": -69.2854,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "on"
         },
         {
@@ -425,7 +380,7 @@
           "y": -244.1924,
           "z": -20.0378,
           "r": -69.9979,
-          "movimento": "movj",
+          "movimento": "movl",
           "suctionCup": "off"
         },
         {
@@ -434,16 +389,7 @@
           "y": -249.6411,
           "z": 156.1709,
           "r": -67.0706,
-          "movimento": "movj",
-          "suctionCup": "off"
-        },
-        {
-          "ponto": 10,
-          "x": 242.3302,
-          "y": -3.1897,
-          "z": 147.2797,
-          "r": -0.7541,
-          "movimento": "movj",
+          "movimento": "movl", 
           "suctionCup": "off"
         }
       ]

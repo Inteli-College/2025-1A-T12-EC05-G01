@@ -19,6 +19,20 @@ class Dobot(pydobot.Dobot):
     def set_speed(self, speed, acceleration):
         super().speed(speed, acceleration)
 
+    def clear_all_alarms(self):
+        msg = pydobot.message.Message()
+        msg.id = pydobot.enums.CommunicationProtocolIDs.CommunicationProtocolIDs.CLEAR_ALL_ALARMS_STATE
+        msg.ctrl = pydobot.enums.ControlValues.ControlValues.ONE
+        return super()._send_command(msg)
+
+    def get_alarm_state(self):
+        msg = pydobot.message.Message()
+        msg.id = pydobot.enums.CommunicationProtocolIDs.CommunicationProtocolIDs.GET_ALARMS_STATE
+        msg.ctrl = pydobot.enums.ControlValues.ControlValues.ONE
+        return super()._send_command(msg)
+
+
+
 
 if __name__ == "__main__":
     robo = Dobot(port="COM6", verbose=False)

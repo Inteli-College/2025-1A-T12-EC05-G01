@@ -28,8 +28,10 @@ def executar_rotina_medicamento(robo, medicamento):
     with yaspin(text=f"Executando rotina para Medicamento {medicamento['medicamento']}...", color="green") as spinner:
         try:
             # Configurar velocidade padrão
-            robo.set_speed(100, 100)
+            robo.set_speed(200, 200)
+            robo.home()
             
+
             for i, ponto in enumerate(medicamento['pontos'], 1):
                 # Converter coordenadas para float
                 x = float(ponto['x'])
@@ -58,6 +60,8 @@ def executar_rotina_medicamento(robo, medicamento):
         except Exception as e:
             spinner.fail(f"❌ Falha na execução: {str(e)}")
 
+        robo.home()
+
 def controle_manual(robo, delta=20, interval=0.005):
     """Controle manual com movimentos do tipo MOVJ"""
     print("Modo de controle manual ativado (MOVJ). Use as teclas:")
@@ -70,7 +74,7 @@ def controle_manual(robo, delta=20, interval=0.005):
             break
 
         if keyboard.is_pressed('h'):
-            robo.go_home();
+            robo.home();
         
 
         x, y, z, r, *_ = robo.pose()
@@ -123,6 +127,10 @@ def main():
         except Exception as e:
             spinner.fail(f"❌ Falha na conexão: {str(e)}")
             return
+    
+    robo.home()
+    print(robo.get_alarm_state())
+    robo.clear_all_alarms()
 
     while True:
         acao = inquirer.prompt([
@@ -160,7 +168,7 @@ def main():
 
         elif acao == 'home':
             with yaspin(text="Retornando à posição home...", color="green") as spinner:
-                robo.go_home()
+                robo.home()
                 spinner.ok("✔ Home alcançado!")
 
         elif acao == 'sair':
