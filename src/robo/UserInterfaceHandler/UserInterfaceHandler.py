@@ -3,6 +3,11 @@ import inquirer
 from yaspin import yaspin
 
 class UserInterfaceHandler:
+    """
+    Essa clase abstrai alguns dos métodos da biblioteca inquirer 
+    e yaspin, trazendo facilidade para implementar a seleção de portas 
+    e também o display de spinners e erros.
+    """
     @staticmethod
     def select_port(ports: List[str]) -> str:
         """Exibe interface de seleção de portas"""

@@ -1,6 +1,14 @@
 import pydobot
 
 class Dobot(pydobot.Dobot):
+    """
+    Classe que extende a classe inerente à biblioteca pydobot
+    A biblioteca pydobot deixa de implementar algumas funções importantes
+    que podem ser encontradas aqui. Um exemplo é a função home(), que manda 
+    o robô para a home.
+    Outras funções que podem ser implementadas podem ser encontradas nos
+    enums da biblioteca e nos CommunicationProtocolIDs. 
+    """
     def __init__(self, port=None, verbose=False):
         super().__init__(port=port, verbose=verbose)
 

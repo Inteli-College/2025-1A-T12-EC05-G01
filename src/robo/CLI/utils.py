@@ -4,7 +4,11 @@ import inquirer
 from CLI.help_cli import exibir_help
 
 def executar_rotina_medicamento(robo, medicamento):
-    """Executa a rotina completa para um medicamento selecionado"""
+    """Executa a rotina completa para um medicamento selecionado, 
+       iterando por cada ponto do medicamento passado e levando o robô
+       para tal ponto. Também realiza verificação se o movimento é 
+       linear ou por junta, e se o suctionCup está ativo ou não.
+       Manda o robô para home antes e depois de pegar o medicamento."""
     with yaspin(text=f"Executando rotina para Medicamento {medicamento['medicamento']}...", color="green") as spinner:
         try:
             # Configurar velocidade padrão
@@ -57,7 +61,11 @@ def controle_manual(robo, delta=20):
 
         x, y, z, r, *_ = robo.pose()
         dx = dy = dz = dr = 0
-
+        
+        # A fim de melhorar um pouco a fluidez, o que é feito
+        # é basicamente aumentar a variação de movimento
+        # a cada momento em que a tecla está pressionada.
+        # No final, passamos a posição atualizada ao robô
         if keyboard.is_pressed('left'): dx = -delta
         if keyboard.is_pressed('right'): dx = delta
         if keyboard.is_pressed('up'): dy = delta
@@ -77,6 +85,11 @@ def controle_manual(robo, delta=20):
             )
 
 def handle_acao(robo, medicamentos):
+    """
+    Recebe uma instância do robô e a lista de medicamentos.
+    Oferece uma lista de ações para o usuário e aguarda a escolha.
+    Após escolha, faz o handle de direcionar qual função deve ser chamada.
+    """
     while True:
         acao = inquirer.prompt([
             inquirer.List(
