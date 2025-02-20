@@ -2,6 +2,7 @@ from yaspin import yaspin
 import keyboard 
 import time
 import inquirer 
+from CLI.help_cli import exibir_help
 
 def executar_rotina_medicamento(robo, medicamento):
     """Executa a rotina completa para um medicamento selecionado"""
@@ -87,7 +88,8 @@ def handle_acao(robo, medicamentos):
                     ('Controle manual', 'manual'),
                     ('Posição atual', 'posicao'),
                     ('Ir para home', 'home'),
-                    ('Sair', 'sair')
+                    ('Sair', 'sair'),
+                    ('Ajuda', 'ajuda'),
                 ],
                 carousel=True
             )
@@ -123,11 +125,28 @@ def handle_acao(robo, medicamentos):
             robo.clear_all_alarms()
             robo.close()
             break
-         
-        robo.home()
-        # print(robo.get_alarm_state())
-        robo.clear_all_alarms()
 
+        elif acao == 'ajuda':
+            resposta = inquirer.prompt([
+                inquirer.List(
+                    'help',
+                    message="Selecione uma opção de ajuda",
+                    choices=[
+                        ('Ajuda geral', 'geral'),
+                        ('Executar rotina de medicamento', 'rotina'),
+                        ('Controle manual', 'manual'),
+                        ('Exibir posição atual', 'posicao'),
+                        ('Ir para home', 'home'),
+                        ('Encerrar conexão', 'sair')
+                    ],
+                    carousel=True
+                )
+            ])['help']
+        
+            if resposta == 'geral':
+                exibir_help()
+            else:
+                exibir_help(resposta)
 
 
 
