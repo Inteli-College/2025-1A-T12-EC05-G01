@@ -1,4 +1,4 @@
-from Dobot import Dobot
+from Dobot.Dobot import Dobot
 
 import json
 from serial.tools import list_ports
@@ -7,7 +7,7 @@ from yaspin import yaspin
 import time
 import keyboard
 
-def carregar_medicamentos(arquivo='pontos.json'):
+def carregar_medicamentos(arquivo='pontos/pontos.json'): ## Caminho relativo à pasta robo
     """Carrega os medicamentos e seus pontos do arquivo JSON"""
     try:
         with open(arquivo, 'r') as f:

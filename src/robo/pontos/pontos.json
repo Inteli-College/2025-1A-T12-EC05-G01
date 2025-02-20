@@ -1,0 +1,452 @@
+{
+  "medicamentos": [
+    {
+      "medicamento": 1,
+      "pontos": [
+        {
+          "ponto": 1,
+          "x": 242.2294,
+          "y": 0.0,
+          "z": 151.3549,
+          "r": 0.0,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 2,
+          "x": 210.4828,
+          "y": -134.0619,
+          "z": 151.063,
+          "r": -32.4941,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 3,
+          "x": 259.3422,
+          "y": -179.3704,
+          "z": 139.5613,
+          "r": -34.6691,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 4,
+          "x": 251.6451,
+          "y": -178.862,
+          "z": 29.7396,
+          "r": -35.4041,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 5,
+          "x": 251.0203,
+          "y": -178.4476,
+          "z": 10.8886,
+          "r": -35.4086,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 6,
+          "x": 248.5668,
+          "y": -176.6154,
+          "z": 148.5751,
+          "r": -35.3951,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 7,
+          "x": -61.4342,
+          "y": -298.7121,
+          "z": 149.0144,
+          "r": -101.6216,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 8,
+          "x": -77.8979,
+          "y": -300.8484,
+          "z": -8.107,
+          "r": -104.5166,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 9,
+          "x": -80.269,
+          "y": -309.8394,
+          "z": -20.1414,
+          "r": -104.5241,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 10,
+          "x": -97.1691,
+          "y": -310.0745,
+          "z": 130.8323,
+          "r": -107.3996,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 11,
+          "x": 251.6091,
+          "y": -82.2933,
+          "z": 149.6059,
+          "r": -18.1113,
+          "movimento": "movj",
+          "suctionCup": "on"
+        }
+      ]
+    },
+    {
+      "medicamento": 2,
+      "pontos": [
+        {
+          "ponto": 1,
+          "x": 258.3503,
+          "y": -102.9024,
+          "z": 65.2056,
+          "r": -21.7177,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 2,
+          "x": 255.452,
+          "y": -105.5703,
+          "z": 16.5641,
+          "r": -22.4538,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 3,
+          "x": 249.2568,
+          "y": -99.2805,
+          "z": 156.4643,
+          "r": -21.7177,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 4,
+          "x": 18.4174,
+          "y": -304.799,
+          "z": 156.4643,
+          "r": -86.5421,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 5,
+          "x": 11.0435,
+          "y": -310.6665,
+          "z": 144.9234,
+          "r": -87.9641,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 6,
+          "x": 15.0558,
+          "y": -311.9232,
+          "z": -22.601,
+          "r": -87.2366,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 7,
+          "x": 10.2297,
+          "y": -290.9894,
+          "z": 146.983,
+          "r": -87.9866,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 8,
+          "x": 268.0746,
+          "y": -13.9278,
+          "z": 152.1224,
+          "r": -2.9741,
+          "movimento": "movj",
+          "suctionCup": "off"
+        }
+      ]
+    },
+    {
+      "medicamento": 3,
+      "pontos": [
+        {
+          "ponto": 1,
+          "x": 259.6989,
+          "y": -20.0812,
+          "z": 40.9749,
+          "r": -4.4216,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 2,
+          "x": 259.4634,
+          "y": -23.1925,
+          "z": 12.8745,
+          "r": -5.1079,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 3,
+          "x": 259.7154,
+          "y": -13.5275,
+          "z": 164.405,
+          "r": -2.9816,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 4,
+          "x": 48.0483,
+          "y": -255.1908,
+          "z": 161.7645,
+          "r": -79.337,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 5,
+          "x": 8.4223,
+          "y": -240.6529,
+          "z": -17.4499,
+          "r": -87.9956,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 6,
+          "x": 8.5103,
+          "y": -243.1698,
+          "z": -23.55,
+          "r": -87.9956,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 7,
+          "x": 21.2791,
+          "y": -216.7499,
+          "z": 164.9276,
+          "r": -84.3931,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 8,
+          "x": 10.158,
+          "y": -233.6275,
+          "z": 143.7785,
+          "r": -87.5104,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 9,
+          "x": 234.7654,
+          "y": 56.5232,
+          "z": 166.6105,
+          "r": 13.5371,
+          "movimento": "movj",
+          "suctionCup": "off"
+        }
+      ]
+    },
+    {
+      "medicamento": 4,
+      "pontos": [
+        {
+          "ponto": 1,
+          "x": 261.5348,
+          "y": 56.0903,
+          "z": 141.978,
+          "r": 12.1046,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 2,
+          "x": 250.0463,
+          "y": 53.5751,
+          "z": 32.1461,
+          "r": 12.0934,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 3,
+          "x": 255.1604,
+          "y": 54.6534,
+          "z": 17.9402,
+          "r": 12.0896,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 4,
+          "x": 253.8999,
+          "y": 54.4008,
+          "z": 161.8275,
+          "r": 12.0934,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 5,
+          "x": 99.7645,
+          "y": -235.9931,
+          "z": 158.4139,
+          "r": -67.0841,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 6,
+          "x": 115.8626,
+          "y": -294.8374,
+          "z": 150.1282,
+          "r": -68.5466,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 7,
+          "x": 85.0065,
+          "y": -302.8281,
+          "z": -18.8311,
+          "r": -74.3201,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 8,
+          "x": 94.2387,
+          "y": -292.4512,
+          "z": 151.5487,
+          "r": -72.1392,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 9,
+          "x": 206.4712,
+          "y": 99.7138,
+          "z": 166.2159,
+          "r": 25.7779,
+          "movimento": "movj",
+          "suctionCup": "off"
+        }
+      ]
+    },
+    {
+      "medicamento": 5,
+      "pontos": [
+        {
+          "ponto": 1,
+          "x": 206.4712,
+          "y": 99.7138,
+          "z": 166.2159,
+          "r": 25.7779,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 2,
+          "x": 267.1618,
+          "y": 137.4478,
+          "z": 151.0885,
+          "r": 27.2246,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 3,
+          "x": 252.8001,
+          "y": 134.1454,
+          "z": 32.5067,
+          "r": 27.9521,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 4,
+          "x": 258.9846,
+          "y": 137.3185,
+          "z": 18.495,
+          "r": 27.9334,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 5,
+          "x": 268.6479,
+          "y": 134.0139,
+          "z": 154.8172,
+          "r": 26.5121,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 6,
+          "x": 126.503,
+          "y": -231.5094,
+          "z": 153.6672,
+          "r": -61.3466,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 7,
+          "x": 89.9239,
+          "y": -237.7929,
+          "z": -15.0836,
+          "r": -69.2854,
+          "movimento": "movj",
+          "suctionCup": "on"
+        },
+        {
+          "ponto": 8,
+          "x": 88.8891,
+          "y": -244.1924,
+          "z": -20.0378,
+          "r": -69.9979,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 9,
+          "x": 105.6034,
+          "y": -249.6411,
+          "z": 156.1709,
+          "r": -67.0706,
+          "movimento": "movj",
+          "suctionCup": "off"
+        },
+        {
+          "ponto": 10,
+          "x": 242.3302,
+          "y": -3.1897,
+          "z": 147.2797,
+          "r": -0.7541,
+          "movimento": "movj",
+          "suctionCup": "off"
+        }
+      ]
+    }
+  ]
+}
