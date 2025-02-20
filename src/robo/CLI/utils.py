@@ -1,6 +1,7 @@
 from yaspin import yaspin 
 import keyboard 
 import time
+import inquirer 
 
 def executar_rotina_medicamento(robo, medicamento):
     """Executa a rotina completa para um medicamento selecionado"""
@@ -30,8 +31,6 @@ def executar_rotina_medicamento(robo, medicamento):
                 else:
                     robo.suck(False)
                 
-                # Pequena pausa para estabilização
-                time.sleep(0.3)
                 
                 spinner.text = f"Medicamento {medicamento['medicamento']} - Ponto {i}/{len(medicamento['pontos'])} concluído"
             
@@ -77,4 +76,60 @@ def controle_manual(robo, delta=20, interval=0.005):
                 wait=False
             )
 
+def handle_acao(robo, medicamentos):
+    while True:
+        acao = inquirer.prompt([
+            inquirer.List(
+                'acao',
+                message="Controle do Dobot",
+                choices=[
+                    ('Executar rotina de medicamento', 'rotina'),
+                    ('Controle manual', 'manual'),
+                    ('Posição atual', 'posicao'),
+                    ('Ir para home', 'home'),
+                    ('Sair', 'sair')
+                ],
+                carousel=True
+            )
+        ])['acao']
+
+        if acao == 'rotina':
+            med = inquirer.prompt([
+                inquirer.List(
+                    'medicamento',
+                    message="Selecione o medicamento",
+                    choices=[(f"Medicamento {m['medicamento']}", m) for m in medicamentos],
+                    carousel=True
+                )
+            ])['medicamento']
+            executar_rotina_medicamento(robo, med)
+
+        elif acao == 'manual':
+            controle_manual(robo)
+
+        elif acao == 'posicao':
+            x, y, z, r, *_ = robo.pose()
+            print(f"\nPosição atual:\nX: {x:.1f} mm\nY: {y:.1f} mm\nZ: {z:.1f} mm\nR: {r:.1f}°\n")
+
+        elif acao == 'home':
+            with yaspin(text="Retornando à posição home...", color="green") as spinner:
+                robo.home()
+                spinner.ok("✔ Home alcançado!")
+
+        elif acao == 'sair':
+            print("Conexão encerrada.")
+            # print(robo.get_alarm_state())
+            robo.home()
+            robo.clear_all_alarms()
+            robo.close()
+            break
+         
+        robo.home()
+        # print(robo.get_alarm_state())
+        robo.clear_all_alarms()
+
+
+
+
+   
 
