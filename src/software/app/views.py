@@ -37,3 +37,7 @@ def montagens():
 @app.route('/verificacao')
 def verificacao():
     return render_template('verificacao.html')
+
+@app.route('/logout')
+def logout():
+    return render_template('login.html')
