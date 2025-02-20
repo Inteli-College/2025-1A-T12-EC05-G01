@@ -1,6 +1,5 @@
 from yaspin import yaspin 
 import keyboard 
-import time
 import inquirer 
 from CLI.help_cli import exibir_help
 
@@ -41,7 +40,7 @@ def executar_rotina_medicamento(robo, medicamento):
 
         robo.home()
 
-def controle_manual(robo, delta=20, interval=0.005):
+def controle_manual(robo, delta=20):
     """Controle manual com movimentos do tipo MOVJ"""
     print("Modo de controle manual ativado (MOVJ). Use as teclas:")
     print("  ←/→: mover em X | ↑/↓: mover em Y | W/S: mover em Z")

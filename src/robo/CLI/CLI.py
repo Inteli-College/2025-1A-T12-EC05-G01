@@ -1,11 +1,10 @@
 from pontos.carregar_medicamentos import carregar_medicamentos
 from CLI.utils import handle_acao
-from typing import List, Optional
-
 from SerialPortFinder.SerialPortFinder import SerialPortFinder 
 from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
-from PortTester.PortTester import PortTester
 from UserInterfaceHandler.UserInterfaceHandler import UserInterfaceHandler
+from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
+
 def main():
     # Carregar medicamentos
     medicamentos = carregar_medicamentos()
