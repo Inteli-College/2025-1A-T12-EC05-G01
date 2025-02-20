@@ -1,83 +1,11 @@
-from Dobot.Dobot import Dobot
 from pontos.carregar_medicamentos import carregar_medicamentos
 from CLI.utils import handle_acao
-import inquirer
-from yaspin import yaspin
-from multiprocessing import Process, Queue
 from typing import List, Optional
 
 from SerialPortFinder.SerialPortFinder import SerialPortFinder 
 from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
-
-class PortTester:
-    TIMEOUT = 5
-
-    @staticmethod
-    def test_port(port: str) -> Optional[str]:
-        """Testa uma porta serial com timeout"""
-        queue = Queue()
-        process = Process(target=PortTester._test_connection, args=(port, queue))
-        
-        try:
-            process.start()
-            process.join(PortTester.TIMEOUT)
-            
-            if process.is_alive():
-                process.terminate()
-                process.join()
-                return None
-                
-            result = queue.get_nowait()
-            return result if isinstance(result, str) else None
-            
-        except Exception:
-            return None
-
-    @staticmethod
-    def _test_connection(port: str, queue: Queue) -> None:
-        """Método interno para teste de conexão"""
-        try:
-            robot = Dobot(port=port, verbose=False)
-            robot.pose()
-            robot.close()
-            queue.put(port)
-        except Exception as e:
-            queue.put(e)
-
-class UserInterfaceHandler:
-    @staticmethod
-    def select_port(ports: List[str]) -> str:
-        """Exibe interface de seleção de portas"""
-        options = ports + ["Não sei a porta do Dobot"]
-        return inquirer.prompt([
-            inquirer.List(
-                'porta',
-                message="Selecione a porta do Dobot",
-                choices=options,
-                carousel=True
-            )
-        ])['porta']
-
-    @staticmethod
-    def show_spinner(text: str, color: str = "green") -> yaspin:
-        return yaspin(text=text, color=color)
-
-    @staticmethod
-    def show_error(message: str) -> None:
-        print(f"\n❌ {message}")
-
-class DobotAutoDetector:
-    @staticmethod
-    def detect(ports: List[str]) -> Optional[str]:
-        """Executa detecção automática de portas"""
-        for port in ports:
-            with UserInterfaceHandler.show_spinner(f"Testando porta {port}...") as spinner:
-                if PortTester.test_port(port):
-                    spinner.ok(f"✔ Dobot encontrado na porta {port}!")
-                    return port
-                spinner.fail(f"❌ Porta {port} inválida")
-        return None
-
+from PortTester.PortTester import PortTester
+from UserInterfaceHandler.UserInterfaceHandler import UserInterfaceHandler
 def main():
     # Carregar medicamentos
     medicamentos = carregar_medicamentos()
