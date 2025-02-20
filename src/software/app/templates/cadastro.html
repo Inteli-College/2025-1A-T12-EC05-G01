@@ -1,26 +1,38 @@
+<!-- cadastro.hmtl -->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
 </head>
+
 <body>
     <section class="card-formulario">
-        <img src="../static/images/logo.png" alt="" width="10%"/>
+
+        <img src="../static/images/logo.png" alt="" width="10%" />
+
         <span> Insira suas informações abaixo para se cadastrar no sistema</span>
-        <div class="formulario">
-            <div class="Email">
+
+        <form action="/cadastro" method="POST">
+
+            <div class="email">
                 <label>Email</label>
-                <input placeholder="joao.silva@unicamp.com" />
+                <input name="email" type="email" placeholder="joao.silva@unicamp.br" required />
             </div>
 
-            <div class="Password">
+            <div class="password">
                 <label>Senha</label>
-                <input placeholder="*****" />
+                <input name="password" type="password" required placeholder="******" required />
             </div>
 
-        <button class="botao-formularios">cadastrar</button>
+            <button type="submit" class="botao-formularios">Cadastrar</button>
+
+        </form>
+
     </section>
 </body>
+
 </html>

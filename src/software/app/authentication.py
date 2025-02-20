@@ -19,35 +19,5 @@ auth = firebase.auth()
 
 app.secret_key = 'secret'
 
-@app.route('/login', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        try:
-            user = auth.sign_in_with_email_and_password(email, password)
-            session['user'] = email
-        except:
-            return 'Falha no login'
-        return render_template('index.html')
-    if request.method == 'GET':
-        return render_template('login.html')
-    
-@app.route('/cadastro', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        try:
-            user = auth.create_user_with_email_and_password(email, password)
-            session['user'] = email
-        except:
-            return 'Falha no cadastro'
-        return render_template('index.html')
-    if request.method == 'GET':
-        return render_template('cadastro.html')
-    
-@app.route('/logout')
-def logout():
-    session.pop('user')
-    return redirect('/login')
+def get_auth():
+    return auth
