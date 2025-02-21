@@ -44,6 +44,75 @@ def executar_rotina_medicamento(robo, medicamento):
 
         robo.home()
 
+def montar_fita(robo, medicamentos):
+    """
+    Permite ao usuário montar a fita de medicamentos escolhendo os tipos e as quantidades desejadas.
+    Para cada item selecionado, a função executa a rotina do medicamento a quantidade de vezes especificada.
+    """
+    # Lista para armazenar os medicamentos e suas quantidades
+    fita = []
+    
+    while True:
+        opcao = inquirer.prompt([
+            inquirer.List(
+                'opcao',
+                message="Montar fita: Selecione a ação",
+                choices=[
+                    ("Adicionar medicamento", "adicionar"),
+                    ("Realizar montagem da fita", "finalizar"),
+                    ("Cancelar montagem da fita", "cancelar")
+                ],
+                carousel=True
+            )
+        ])['opcao']
+
+        if opcao == "finalizar":
+            break
+        elif opcao == "cancelar":
+            break
+
+        # Seleciona o medicamento (utilizando os medicamentos carregados previamente)
+        med = inquirer.prompt([
+            inquirer.List(
+                'medicamento',
+                message="Selecione o medicamento",
+                choices=[(f"Medicamento {m['medicamento']}", m) for m in medicamentos],
+                carousel=True
+            )
+        ])['medicamento']
+
+        # Permite que o usuário informe a quantidade desejada
+        qtd_str = inquirer.prompt([
+            inquirer.Text(
+                'qtd',
+                message="Digite a quantidade de medicamentos"
+            )
+        ])['qtd']
+
+        try:
+            qtd = int(qtd_str)
+        except ValueError:
+            print("Quantidade inválida. Tente novamente.")
+            continue
+
+        fita.append({
+            "medicamento": med,
+            "quantidade": qtd
+        })
+
+    # Se houver itens na fita, inicia o processo de montagem
+    if fita and opcao != "cancelar":
+        print("Montagem da fita iniciada...")
+        for item in fita:
+            med = item["medicamento"]
+            quantidade = item["quantidade"]
+            for i in range(quantidade):
+                print(f"Iniciando rotina para Medicamento {med['medicamento']} - Unidade {i+1} de {quantidade}")
+                executar_rotina_medicamento(robo, med)
+        print("Montagem da fita concluída!")
+    else:
+        print("Nenhum medicamento selecionado para montagem da fita.")
+
 def controle_manual(robo, delta=20):
     """Controle manual com movimentos do tipo MOVJ"""
     print("Modo de controle manual ativado (MOVJ). Use as teclas:")
@@ -97,6 +166,7 @@ def handle_acao(robo, medicamentos):
                 message="Controle do Dobot",
                 choices=[
                     ('Executar rotina de medicamento', 'rotina'),
+                    ('Montar fita de medicamentos', 'fita'),
                     ('Controle manual', 'manual'),
                     ('Posição atual', 'posicao'),
                     ('Ir para home', 'home'),
@@ -117,6 +187,9 @@ def handle_acao(robo, medicamentos):
                 )
             ])['medicamento']
             executar_rotina_medicamento(robo, med)
+
+        elif acao == 'fita':
+            montar_fita(robo, medicamentos)
 
         elif acao == 'manual':
             controle_manual(robo)
