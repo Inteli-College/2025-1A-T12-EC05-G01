@@ -82,6 +82,7 @@ const sidebars = {
       items: [
         'Sprint 2/User Stories/user-stories',
         'Sprint 2/User Flow/user-flow',
+        'Sprint 2/Resultados Ux research/resultados'
       ],
     },
   ],
