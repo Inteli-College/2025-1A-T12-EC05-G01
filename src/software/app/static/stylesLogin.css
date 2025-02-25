@@ -72,15 +72,20 @@ body {
   color: #ffffff;
 }
 
-.form-section a {
+.form-section {
   font-weight: bold;
   color: #2ECC71;
   transition: color .3s ease;
 }
 
-.form-section a:hover {
-  color: #26dd72;
+.form-section a {
+  color: #34495E;
   text-decoration: underline;
+}
+
+.form-section a:hover {
+  color: #232a32;
+  text-decoration: underline; /
 }
 
 /*Button*/
