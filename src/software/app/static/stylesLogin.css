@@ -99,3 +99,21 @@ body {
 .form button:hover {
   background-color: #26dd72;
 }
+
+/* Footer */
+.footer {
+  background-color: #323848;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.footer-image {
+  max-width: 50px;
+  height: auto;
+}
+
+.footer-image.center {
+  margin: 0 auto;
+}

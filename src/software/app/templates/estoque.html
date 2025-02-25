@@ -1,17 +1,18 @@
 <!-- estoque.hmtl -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
 </head>
 <body>
     <nav>Navbar a ser implementada posteriormente</nav>
     <div class="topo-estoque">
-        <h2>Gerencimento de estoque</h2>
-        <button> Adicoinar medicamento <span>+</span></button>
+        <h2>Gerenciamento de estoque</h2>
+        <button>Adicionar medicamento <span>+</span></button>
     </div>
 
     <section class="medicamentos-estoque">
@@ -43,6 +44,10 @@
         </div>
     </section>
 
-    <footer>Footer a ser implementado posteriormente</footer>
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
 </body>
 </html>
