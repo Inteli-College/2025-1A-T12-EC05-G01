@@ -14,7 +14,7 @@ const Login = () => {
           <button type="submit">Entrar</button>
         </form>
         <div className="form-section">
-          <p><a href="/recuperar-senha" className="link">Esqueceu sua senha?</a></p>
+          <p><a href="/recuperar_senha" className="link">Esqueceu sua senha?</a></p>
           <p>Não tem uma conta? <a href="/cadastro" className="link">Cadastre-se</a></p>
         </div>
       </div>
@@ -77,6 +77,10 @@ const StyledWrapper = styled.div`
     font-size: .85rem;
     background-color: #8098b0;
     box-shadow: rgb(0 0 0 / 8%) 0 -1px;
+  }
+
+  .form-section p {
+    color:rgb(244, 243, 243);
   }
 
   .form-section a {
