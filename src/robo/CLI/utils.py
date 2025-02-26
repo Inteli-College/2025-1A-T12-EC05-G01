@@ -12,11 +12,6 @@ def executar_rotina_medicamento(robo, medicamento,  medicamentos, delta_z = 0):
        linear ou por junta, e se o suctionCup está ativo ou não.
        Manda o robô para home antes e depois de pegar o medicamento."""
        
-    ##print(medicamentos[0]['medicamento']) ## medicamento 1
-    ##print(medicamentos[0]['pontos']) ## pontos do medicamento 1
-    ##print("-----------------------")   
-    
-    ## print(pontos_medicamentos)
     with yaspin(text=f"Executando rotina para Medicamento {medicamento}...", color="green") as spinner:
         try:
             # Configurar velocidade padrão
