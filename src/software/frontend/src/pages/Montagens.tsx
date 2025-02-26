@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
+import Navbar from '../components/sidebar/Navbar'
 
 const Montagens = () => {
   return (
     <StyledWrapper>
-      <nav>Navbar a ser implementada posteriormente</nav>
+      <nav><Navbar /></nav>
 
       <div className="topo-montagens">
         <h1>Acompanhamento de montagens</h1>

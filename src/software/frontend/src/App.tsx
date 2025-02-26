@@ -7,9 +7,11 @@ import Verificacao from './pages/Verificacao';
 import Prescricoes from './pages/Prescricoes';
 import Estoque from './pages/Estoque';
 import Montagens from './pages/Montagens';
+import './App.css'
 
 function App() {
   return (
+    <div className='body'>
     <Router>
       <Routes>
         <Route path="/cadastro" element={<Cadastro />} />
@@ -23,6 +25,7 @@ function App() {
         <Route path="/" element={<Login />} /> {/* Default route */}
       </Routes>
     </Router>
+    </div>
   );
 }
 

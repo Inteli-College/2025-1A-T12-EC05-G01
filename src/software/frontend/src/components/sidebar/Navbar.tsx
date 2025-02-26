@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import sanduiche from '../../assets/sanduiche.svg';
 import profilePic from '../../assets/profilePic.svg';
-import Sidebar from './Sidebar'; // Certifique-se de que o componente Sidebar está importado corretamente.
+import Sidebar from './Sidebar'; 
 
 const Navbar = () => {
     const [sidebar, setSidebar] = useState(false);
