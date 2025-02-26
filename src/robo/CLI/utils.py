@@ -3,54 +3,68 @@ import keyboard
 import inquirer 
 from CLI.help_cli import exibir_help
 
-def executar_rotina_medicamento(robo, medicamento):
+constante_z = 12.0
+
+def executar_rotina_medicamento(robo, medicamento,  medicamentos, delta_z = 0):
     """Executa a rotina completa para um medicamento selecionado, 
        iterando por cada ponto do medicamento passado e levando o robô
        para tal ponto. Também realiza verificação se o movimento é 
        linear ou por junta, e se o suctionCup está ativo ou não.
        Manda o robô para home antes e depois de pegar o medicamento."""
-    with yaspin(text=f"Executando rotina para Medicamento {medicamento['medicamento']}...", color="green") as spinner:
+       
+    ##print(medicamentos[0]['medicamento']) ## medicamento 1
+    ##print(medicamentos[0]['pontos']) ## pontos do medicamento 1
+    ##print("-----------------------")   
+    
+    ## print(pontos_medicamentos)
+    with yaspin(text=f"Executando rotina para Medicamento {medicamento}...", color="green") as spinner:
         try:
             # Configurar velocidade padrão
             robo.set_speed(200, 200)
             robo.home()
             
+            for i in range(len(medicamentos[medicamento - 1]['pontos'])):
+                pontos_medicamento = medicamentos[medicamento - 1]['pontos'][i] 
+                ##print(pontos_medicamento)   
+                x = float(pontos_medicamento['x'])
+                y = float(pontos_medicamento['y'])
+                
+                if (i == len(medicamentos[medicamento - 1]['pontos']) - 2) or (i == len(medicamentos[medicamento - 1]['pontos']) - 1):
+                    z = float(pontos_medicamento['z']) + delta_z
+                else:
+                    z = float(pontos_medicamento['z'])
 
-            for i, ponto in enumerate(medicamento['pontos'], 1):
-                # Converter coordenadas para float
-                x = float(ponto['x'])
-                y = float(ponto['y'])
-                z = float(ponto['z'])
-                r = float(ponto['r'])
+                r = float(pontos_medicamento['r'])
                 
-                # Selecionar tipo de movimento
-                if ponto['movimento'] == 'movj':
+                print(pontos_medicamento['movimento'])
+                
+                if pontos_medicamento['movimento'] == 'movj':
                     robo.movej_to(x, y, z, r, wait=True)
-                elif ponto['movimento'] == 'movl':
+                elif pontos_medicamento['movimento'] == 'movl':
                     robo.movel_to(x, y, z, r, wait=True)
-                
-                # Controlar ventosa
-                if ponto['suctionCup'].lower() == 'on':
+                    
+                if pontos_medicamento['suctionCup'].lower() == 'on':
                     robo.suck(True)
                 else:
                     robo.suck(False)
-                
-                
-                spinner.text = f"Medicamento {medicamento['medicamento']} - Ponto {i}/{len(medicamento['pontos'])} concluído"
+           
+                spinner.text = f"Medicamento {medicamento} - Ponto {i}/{len(medicamentos[medicamento - 1]['pontos'])} concluído"
             
             spinner.ok("✔ Rotina completa executada com sucesso!")
+            clear_states(robo)
         except Exception as e:
             spinner.fail(f"❌ Falha na execução: {str(e)}")
-
-        robo.home()
-
+            clear_states(robo)
+            
+        clear_states(robo)
+            
 def montar_fita(robo, medicamentos):
     """
     Permite ao usuário montar a fita de medicamentos escolhendo os tipos e as quantidades desejadas.
     Para cada item selecionado, a função executa a rotina do medicamento a quantidade de vezes especificada.
     """
     # Lista para armazenar os medicamentos e suas quantidades
-    fita = []
+    fita = {}
     
     while True:
         opcao = inquirer.prompt([
@@ -95,20 +109,38 @@ def montar_fita(robo, medicamentos):
             print("Quantidade inválida. Tente novamente.")
             continue
 
-        fita.append({
-            "medicamento": med,
-            "quantidade": qtd
-        })
+        if med['medicamento'] not in fita:
+            fita[med['medicamento']] = qtd
+        else:
+            fita[med['medicamento']] += qtd
+        
+        ##fita.append({
+        ##    "medicamento": med['medicamento'],
+        ##    "quantidade": qtd
+        ##})
+        
+        print(f"FITA: {fita}")
+        ##for item in fita:
+        ##    print(item['medicamento']['medicamento'])
+        ##print(qtd)
+        ##print(f"MED: {med}")
+        
+        ## [{med1: qtd}, {med: qtd}, {med1: qtd}, {med: qtd}]
+        ## constante 
+        ## constante . indice = acresc no z 
+
+        for key, value in fita.items():
+            print(f"Medicamento: {key}, quantidade: {value}")
+
 
     # Se houver itens na fita, inicia o processo de montagem
     if fita and opcao != "cancelar":
         print("Montagem da fita iniciada...")
-        for item in fita:
-            med = item["medicamento"]
-            quantidade = item["quantidade"]
+        for medicamento, quantidade in fita.items():
             for i in range(quantidade):
-                print(f"Iniciando rotina para Medicamento {med['medicamento']} - Unidade {i+1} de {quantidade}")
-                executar_rotina_medicamento(robo, med)
+                delta_z = i *  constante_z
+                print(f"Iniciando rotina para Medicamento {medicamento} - Unidade {i+1} de {quantidade}")
+                executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z)
         print("Montagem da fita concluída!")
     else:
         print("Nenhum medicamento selecionado para montagem da fita.")
@@ -170,6 +202,7 @@ def handle_acao(robo, medicamentos):
                     ('Controle manual', 'manual'),
                     ('Posição atual', 'posicao'),
                     ('Ir para home', 'home'),
+                    ('Limpar alarmes', 'alarme'),
                     ('Sair', 'sair'),
                     ('Ajuda', 'ajuda'),
                 ],
@@ -232,8 +265,13 @@ def handle_acao(robo, medicamentos):
                 exibir_help()
             else:
                 exibir_help(resposta)
+        
+        elif acao == 'alarme':
+            clear_states(robo)
 
 
 
-   
-
+def clear_states(robo):
+    robo.get_alarm_state()
+    robo.clear_all_alarms()
+    robo.home()
