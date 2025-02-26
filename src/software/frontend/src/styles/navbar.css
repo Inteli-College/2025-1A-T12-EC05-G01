@@ -1,0 +1,63 @@
+.navbar {
+    background-color: #323848;
+    width: 100vw;
+    height: 6vh;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.sanduiche {
+    margin: 0;
+    padding: .7rem 1rem;
+}
+
+.profile-pic {
+    margin: 0;
+    padding: .5rem 1rem;
+}
+
+.navbar img:hover {
+    cursor: pointer;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: static;
+
+    background-color: #323848;
+    height: 94vh;
+    width: 15vw;
+    overflow: hidden;
+}
+
+.sidebar-buttons {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 80%;
+}
+
+.sidebar-buttons a {
+    text-decoration: none;
+    color: aliceblue;
+    width: 100%;
+}
+
+.sidebar-buttons button {
+    width: 100%;
+    background-color: #323848;
+    transition: 0.3s;
+    text-align: left;
+}
+
+.sidebar-buttons button:hover {
+    background-color: #2ECC71;
+    border: none;
+} 

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
+import Navbar from '../components/sidebar/Navbar'
 
 const Verificacao = () => {
   return (
     <StyledWrapper>
-      <nav>Navbar a ser implementada posteriormente</nav>
+      <nav><Navbar /></nav>
       <h1>Verificação de medicamentos</h1>
 
       <section className="prescricoes">

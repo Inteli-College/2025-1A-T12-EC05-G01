@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
+import Navbar from '../components/sidebar/Navbar';
 
 const Dashboard = () => {
   return (
     <StyledWrapper>
-      <nav>Navbar a ser implementada posteriormente</nav>
+      <nav><Navbar /></nav>
       <div className="topo-dash">
         <h2>Métricas de acompanhamento</h2>
         <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius.</p>

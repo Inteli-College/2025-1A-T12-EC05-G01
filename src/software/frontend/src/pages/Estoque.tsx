@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
+import Navbar from '../components/sidebar/Navbar'
 
 const Estoque = () => {
   return (
     <StyledWrapper>
-      <nav>Navbar a ser implementada posteriormente</nav>
+      <nav><Navbar /></nav>
       <div className="topo-estoque">
         <h2>Gerenciamento de estoque</h2>
         <button>Adicionar medicamento <span>+</span></button>
