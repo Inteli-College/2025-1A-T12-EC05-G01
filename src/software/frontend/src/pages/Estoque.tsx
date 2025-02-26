@@ -1,4 +1,7 @@
 import './estoque.css'
+import alertaImg from '../assets/alerta.png';
+import maisImg from '../assets/mais.png';
+import menosImg from '../assets/menos.png';
 
 export default function Estoque() {
     return (
@@ -14,7 +17,7 @@ export default function Estoque() {
                 </h2>
 
                 <div class="alertas">
-                    <AlertaMedicamento medicamento={"Paracetamol 750mg"} bin={4} unidades={12}/>
+                    <AlertaMedicamento imagem={alertaImg} medicamento={"Paracetamol 750mg"} bin={4} unidades={12}/>
                 </div>
             </div>
 
@@ -24,26 +27,7 @@ export default function Estoque() {
                 </h2>
 
                 <div class="alertas">
-                    <div class="alerta-medicamento">
-                        <img src="mais.png" alt="Alerta" width="60" />
-                        <div class="textos-alertas">
-                            <div class="linha">
-                                <p class="nome-remedio">Miosan 10mg</p>
-                                <p class="bin">Bin 2</p>
-                            </div>
-                            <p class="quantidade-remedio-add">+ 60 unidades</p>
-                        </div>
-                    </div>
-                    <div class="alerta-medicamento">
-                        <img src="mais.png" alt="Alerta" width="60" />
-                        <div class="textos-alertas">
-                            <div class="linha">
-                                <p class="nome-remedio">Sertralina 50mg</p>
-                                <p class="bin">Bin 5</p>
-                            </div>
-                            <p class="quantidade-remedio-add">+ 75 unidades</p>
-                        </div>
-                    </div>
+                    <AlertaMedicamento imagem={maisImg} medicamento={"Miosan 10mg"} bin={2} unidades={"+ 60"} />
                 </div>
             </div>
 
@@ -53,26 +37,7 @@ export default function Estoque() {
                 </h2>
 
                 <div class="alertas">
-                    <div class="alerta-medicamento">
-                        <img src="menos.png" alt="Alerta" width="60" />
-                        <div class="textos-alertas">
-                            <div class="linha">
-                                <p class="nome-remedio">Paracetamol 750mg</p>
-                                <p class="bin">Bin 4</p>
-                            </div>
-                            <p class="quantidade-remedio">- 3 unidades</p>
-                        </div>
-                    </div>
-                    <div class="alerta-medicamento">
-                        <img src="menos.png" alt="Alerta" width="60" />
-                        <div class="textos-alertas">
-                            <div class="linha">
-                                <p class="nome-remedio">Dipirona 1g</p>
-                                <p class="bin">Bin 3</p>
-                            </div>
-                            <p class="quantidade-remedio">- 4 unidades</p>
-                        </div>
-                    </div>
+                    <AlertaMedicamento imagem={menosImg} medicamento={"Paracetamol 750mg"} bin={4} unidades={"- 3"}/>
                 </div>
             </div>
 
@@ -82,36 +47,10 @@ export default function Estoque() {
                 </h2>
 
                 <div class="quadro">
-                    <div class="titulos-quadro">
-                        <p class="titulos-quadro">Bin</p>
-                        <p class="titulos-quadro">Medicamento</p>
-                        <p class="titulos-quadro">Quantidade</p>
-                    </div>
-                    <div class="medicamento-quadro">
-                        <p class="bin">1</p>
-                        <p class="nome-remedio">Loratadina 10mg</p>
-                        <p class="quantidade-remedio">13 unidades</p>
-                    </div>
-                    <div class="medicamento-quadro">
-                        <p class="bin">2</p>
-                        <p class="nome-remedio">Loratadina 10mg</p>
-                        <p class="quantidade-remedio">13 unidades</p>
-                    </div>
-                    <div class="medicamento-quadro">
-                        <p class="bin">3</p>
-                        <p class="nome-remedio">Loratadina 10mg</p>
-                        <p class="quantidade-remedio">13 unidades</p>
-                    </div>
-                    <div class="medicamento-quadro">
-                        <p class="bin">4</p>
-                        <p class="nome-remedio">Loratadina 10mg</p>
-                        <p class="quantidade-remedio">13 unidades</p>
-                    </div>
-                    <div class="medicamento-quadro">
-                        <p class="bin">5</p>
-                        <p class="nome-remedio">Loratadina 10mg</p>
-                        <p class="quantidade-remedio">13 unidades</p>
-                    </div>
+                    <TituloQuadro />
+                    {medicamentosEstoque.map((medicamento) => (
+                        <MedicamentoQuadro bin={medicamento.bin} nome={medicamento.nome} unidades={medicamento.unidades} />
+                    ))}
                 </div>
             </div>
         </div>
@@ -127,15 +66,48 @@ function AdicionarRemedio() {
     );
   }
 
-function AlertaMedicamento ({medicamento, bin, unidades}){
-    <div class="alerta-medicamento">
-        <img src="/alerta.png" alt="Alerta" width="60" />
-        <div class="textos-alertas">
-            <div class="linha">
-                <p class="nome-remedio">{medicamento}</p>
-                <p class="bin">Bin {bin}</p>
+function AlertaMedicamento ({imagem, medicamento, bin, unidades}){
+    return (
+        <div class="alerta-medicamento">
+            <img src={imagem} alt="Alerta" width="60" />
+            <div class="textos-alertas">
+                <div class="linha">
+                    <p class="nome-remedio">{medicamento}</p>
+                    <p class="bin">Bin {bin}</p>
+                </div>
+                <p class="quantidade-remedio-critico">{unidades} unidades</p>
             </div>
-            <p class="quantidade-remedio-critico">{unidades} unidades</p>
         </div>
-    </div>
+    );
 }
+
+function TituloQuadro (){
+    return(
+        <div class="titulos-quadro">
+            <p class="titulos-quadro">Bin</p>
+            <p class="titulos-quadro">Medicamento</p>
+            <p class="titulos-quadro">Quantidade</p>
+        </div>
+    );
+}
+
+function MedicamentoQuadro ({bin, nome, unidades}){
+    return (
+        <div class="medicamento-quadro">
+            <p class="bin">{bin}</p>
+            <p class="nome-remedio">{nome}</p>
+            <p class="quantidade-remedio">{unidades} unidades</p>
+        </div>
+    );
+}
+
+var medicamentosEstoque = [{
+    bin: 1,
+    nome: "Loratadina 10mg",
+    unidades: 12
+},
+{
+    bin: 2,
+    nome: "Loratadina 10mg",
+    unidades: 12
+}]
