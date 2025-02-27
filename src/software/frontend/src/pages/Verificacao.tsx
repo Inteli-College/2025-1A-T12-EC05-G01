@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
-import Navbar from '../components/sidebar/Navbar'
-import '../styles/veirficacao.css'
+import Navbar from '../components/sidebar/Navbar';
 
 const Verificacao = () => {
   const quantidade = 1
