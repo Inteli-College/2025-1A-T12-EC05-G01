@@ -1,5 +1,6 @@
 body {
     background-color: #ECF0F1;
+    justify-content: center;
 }
 
 .conteudo {
@@ -12,6 +13,7 @@ body {
 .topo-estoque {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 30px;
     width: 800px;
 }
@@ -63,6 +65,7 @@ body {
 .titulo-secao {
     font-family: "Montserrat";
     margin: 30px;
+    color: #2C3E50;
 }
 
 .alerta-medicamento {
