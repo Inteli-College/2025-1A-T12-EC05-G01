@@ -82,6 +82,17 @@ const sidebars = {
       items: [
         'Sprint 2/User Stories/user-stories',
         'Sprint 2/User Flow/user-flow',
+        {
+          type: 'category',
+          label: 'Sistema de automação',
+          items: [
+            'Sprint 2/Sistema de automacao/funcionamento-sistema',
+            'Sprint 2/Sistema de automacao/carregamento-pontos',
+            'Sprint 2/Sistema de automacao/navegacao-robo',
+            'Sprint 2/Sistema de automacao/interface-cli',
+            'Sprint 2/Sistema de automacao/explicacao-funcoes',
+          ],
+        },
       ],
     },
   ],
