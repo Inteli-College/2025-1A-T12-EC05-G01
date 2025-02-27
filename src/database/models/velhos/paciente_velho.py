@@ -1,3 +1,4 @@
+# classe de paciente velha pra exemplo
 from database.db_conexao import get_db_connection
 
 class Paciente:
