@@ -252,9 +252,11 @@ def handle_acao(robo, medicamentos):
                     choices=[
                         ('Ajuda geral', 'geral'),
                         ('Executar rotina de medicamento', 'rotina'),
+                        ('Montar fita de medicamentos', 'fita'),
                         ('Controle manual', 'manual'),
                         ('Exibir posição atual', 'posicao'),
                         ('Ir para home', 'home'),
+                        ('Limpar alarmes', 'alarmes'),
                         ('Encerrar conexão', 'sair')
                     ],
                     carousel=True
