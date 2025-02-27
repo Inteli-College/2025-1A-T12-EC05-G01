@@ -5,6 +5,11 @@ from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from UserInterfaceHandler.UserInterfaceHandler import UserInterfaceHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 
+from rich import print
+from rich.console import Console
+from rich.panel import Panel
+from pyfiglet import Figlet
+
 def main():
     # Carrega os medicamentos
     medicamentos = carregar_medicamentos()
@@ -15,6 +20,13 @@ def main():
     ports = SerialPortFinder.find_available_ports()
     if not ports:
         return
+
+    console = Console()
+    console.print(Panel("Bem-vindo(a) à [bold cyan]CLI do Dosaí![/bold cyan]!"))
+    
+    f = Figlet(font='slant')
+    ascii_art = f.renderText('Dose Certa')
+    print(f"[bold green]{ascii_art}[/bold green]")
 
     # UserInterfaceHandler é responsável por lidar com as opções da CLI, 
     # basicamente encapsulando a biblioteca inquirer.
@@ -51,6 +63,8 @@ def main():
 
     # Inicialização do robô (leva para a home, limpa alarmes)
     connection_handler.initialize_robot()
+    
+    
     
     # Roda em loop, pedindo um prompt ou ação do usuário
     # Quando o usuário seleciona uma ação, também é responsável por

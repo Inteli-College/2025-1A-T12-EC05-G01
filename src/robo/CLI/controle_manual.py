@@ -1,10 +1,15 @@
 import keyboard
+from rich import print
+from rich.console import Console
+from rich.panel import Panel
 
 def controle_manual(robo, delta=20):
     """Controle manual com movimentos do tipo MOVJ"""
-    print("Modo de controle manual ativado (MOVJ). Use as teclas:")
-    print("  ←/→: mover em X | ↑/↓: mover em Y | W/S: mover em Z")
-    print("  A/D: ajustar rotação | Q: sair")
+    
+    console = Console()
+    console.print(Panel("Modo de [bold cyan]controle manual[/bold cyan] ativado (MOVJ). Use as teclas:"))
+    
+    console.print(Panel("""  ←/→: mover em X | ↑/↓: mover em Y | W/S: mover em Z | A/D: ajustar rotação | Q: sair"""))
     
     while True:
         if keyboard.is_pressed('q'):
