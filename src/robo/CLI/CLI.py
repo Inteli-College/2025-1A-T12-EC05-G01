@@ -55,7 +55,8 @@ def main():
     # Roda em loop, pedindo um prompt ou ação do usuário
     # Quando o usuário seleciona uma ação, também é responsável por
     # chamar o método/service adequado para realizar tal ação
-    handle_acao(connection_handler.robot, medicamentos)
+    while True:
+        handle_acao(connection_handler.robot, medicamentos)
 
 if __name__ == "__main__":
     main()

@@ -12,6 +12,7 @@ def executar_rotina_medicamento(robo, medicamento,  medicamentos, delta_z = 0):
        linear ou por junta, e se o suctionCup está ativo ou não.
        Manda o robô para home antes e depois de pegar o medicamento."""
        
+    medicamento = int(medicamento[-1])
     with yaspin(text=f"Executando rotina para Medicamento {medicamento}...", color="green") as spinner:
         try:
             # Configurar velocidade padrão
@@ -205,16 +206,21 @@ def handle_acao(robo, medicamentos):
             )
         ])['acao']
 
+        escolhas = [(f"Medicamento {m}") for m in range(1, 6)]
+        escolhas.append('Cancelar rotina')
+
         if acao == 'rotina':
             med = inquirer.prompt([
                 inquirer.List(
                     'medicamento',
                     message="Selecione o medicamento",
-                    choices=[(f"Medicamento {m['medicamento']}", m) for m in medicamentos],
+                    choices=escolhas,
                     carousel=True
                 )
             ])['medicamento']
-            executar_rotina_medicamento(robo, med)
+            if med == 'Cancelar rotina':
+                return
+            executar_rotina_medicamento(robo, med, medicamentos)
 
         elif acao == 'fita':
             montar_fita(robo, medicamentos)
@@ -233,11 +239,10 @@ def handle_acao(robo, medicamentos):
 
         elif acao == 'sair':
             print("Conexão encerrada.")
-            # print(robo.get_alarm_state())
             robo.home()
             robo.clear_all_alarms()
             robo.close()
-            break
+            quit() ## sai do programa
 
         elif acao == 'ajuda':
             resposta = inquirer.prompt([
