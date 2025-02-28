@@ -93,6 +93,7 @@ const sidebars = {
             'Sprint 2/Sistema de automacao/explicacao-funcoes',
           ],
         },
+        'Sprint 2/Resultados Ux research/resultados',
       ],
     },
   ],

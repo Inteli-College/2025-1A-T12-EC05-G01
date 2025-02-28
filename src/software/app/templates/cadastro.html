@@ -1,42 +1,32 @@
+<!-- cadastro.hmtl -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesLogin.css') }}">
 </head>
+
 <body>
-    <section class="card-formulario">
-        <img src="../static/images/logo.png" alt="" width="10%"/>
-        <span> Insira suas informações abaixo para cadastrar-se no sistema</span>
-        <div class="formulario">
-            <div class="campo-formulario">
-                <label>campo 1</label>
-                <input placeholder="Digite aqui o valor do campo 1" />
+    <div class="form-box">
+        <form class="form" action="/cadastro" method="POST">
+            <span class="title">Cadastre-se</span>
+            <span class="subtitle">Crie uma conta com seu email.</span>
+            <div class="form-container">
+                <input type="text" class="input" name="full_name" placeholder="Nome Completo" required>
+                <input type="email" class="input" name="email" placeholder="Email" required>
+                <input type="password" class="input" name="password" placeholder="Senha" required>
+                <input type="password" class="input" name="confirm_password" placeholder="Confirmar Senha" required>
             </div>
-
-            <div class="campo-formulario">
-                <label>campo 2</label>
-                <input placeholder="Digite aqui o valor do campo 2" />
-            </div>
-
-            <div class="campo-formulario">
-                <label>campo 3</label>
-                <input placeholder="Digite aqui o valor do campo 3" />
-            </div>
-
-            <div class="campo-formulario">
-                <label>campo 4</label>
-                <input placeholder="Digite aqui o valor do campo 4" />
-            </div>
-
-            <div class="campo-formulario">
-                <label>campo 5</label>
-                <input placeholder="Digite aqui o valor do campo 5" />
-            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div class="form-section">
+            <p>Já tem uma conta? <a href="/login" class="link">Faça login</a></p>
         </div>
-
-        <button class="botao-formularios">cadastrar</button>
-    </section>
+    </div>
 </body>
+
 </html>

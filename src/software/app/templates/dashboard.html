@@ -1,15 +1,18 @@
+<!-- dashboard.hmtl -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
 </head>
 <body>
     <nav>Navbar a ser implementada posteriormente</nav>
     <div class="topo-dash">
         <h2>Métricas de acompanhamento</h2>
-    <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius. </p>
+        <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius.</p>
     </div>
 
     <section class="cards-fitas">
@@ -88,14 +91,14 @@
     </section>
 
     <section class="montagens">
-        <h3>Ultimas monstagens</h3>
+        <h3>Últimas montagens</h3>
         <div class="infos-lista-montagem">
             <p>id da montagem</p>
-                <p>Status</p>
-                <p>horário de finalização da montagem</p>
+            <p>Status</p>
+            <p>horário de finalização da montagem</p>
         </div>
 
-        <ul class="lista-monstagens">
+        <ul class="lista-montagens">
             <li>
                 <p>id da montagem</p>
                 <select>
@@ -153,6 +156,10 @@
         </ul>
     </section>
 
-    <footer>Footer a ser implementado posteriormente</footer>
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
 </body>
 </html>
