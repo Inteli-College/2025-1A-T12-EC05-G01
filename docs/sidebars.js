@@ -94,6 +94,7 @@ const sidebars = {
           ],
         },
         'Sprint 2/Resultados Ux research/resultados',
+        'Sprint 2/Logs de atividades/Logs'
       ],
     },
   ],
