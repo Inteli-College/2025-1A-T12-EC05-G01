@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dose certa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
 </head>
 <body>
     <h1>Dose certa</h1>
@@ -22,5 +23,11 @@
         <button onclick="window.location.href='/montagens'">Montagens</button>
         <button onclick="window.location.href='/verificacao'">Verificação</button>
     </div>
+
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
 </body>
 </html>
