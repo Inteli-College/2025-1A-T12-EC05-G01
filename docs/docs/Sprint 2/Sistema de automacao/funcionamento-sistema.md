@@ -22,8 +22,7 @@ O software, implementado em Python, possibilita:
 A seguir é possível conferir o vídeo demonstrativo do funcionamento do sistema, que evidencia como os comandos enviados pela CLI resultam nos movimentos esperados pelo robô:
 
 [VIDEO DO ROBO/CLI](https://youtu.be/WzDmWVUwjK0) 
-</br>
-
+<br />
 
 Dessa forma, através do vídeo acima é possível entender, de modo geral, as principais funcionalidades do sofware integrado com o robô, como navegar pela CLI, a maneira como as instruções são passada para o robô e como ele executa as tarefas de modo preciso. Além disso, foi claro ver a presença de elementos para facilitar a navegação e visualização, como o uso de cores e elementos de carregamento, inseridos por meio do uso da biblioteca `yaspin`. 
 
