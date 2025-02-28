@@ -1,3 +1,5 @@
+import Popup from 'reactjs-popup';
+import { useState } from "react";
 import './estoque.css'
 import alertaImg from '../assets/alerta.png';
 import maisImg from '../assets/mais.png';
@@ -5,54 +7,54 @@ import menosImg from '../assets/menos.png';
 
 export default function Estoque() {
     return (
-        <div class="conteudo">
-            <div class="topo-estoque">
-                <h1 class="titulo-pagina">Controle de Estoque</h1>
-                <AdicionarRemedio />
+        <div className="conteudo">
+            <div className="topo-estoque">
+                <h1 className="titulo-pagina">Controle de Estoque</h1>
+                <PopupAdicionarMedicamentos />
             </div>
 
-            <div class="secoes">
-                <h2 class="titulo-secao">
+            <div className="secoes">
+                <h2 className="titulo-secao">
                     Reabastecimentos Necessários
                 </h2>
 
-                <div class="alertas">
+                <div className="alertas">
                 {medicamentosReabastecer.map(medicamento => 
                     <AlertaMedicamento imagem={alertaImg} medicamento={medicamento.medicamento} bin={medicamento.bin} classe={ClasseUnidades(medicamento.unidades)} unidades={medicamento.unidades} />
                 )}
                 </div>
             </div>
 
-            <div class="secoes">
-                <h2 class="titulo-secao">
+            <div className="secoes">
+                <h2 className="titulo-secao">
                     Últimas Adições
                 </h2>
 
-                <div class="alertas">
+                <div className="alertas">
                     {medicamentosAdicionados.map(medicamento =>
                         <AlertaMedicamento imagem={maisImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio-add"} unidades={medicamento.unidades} />
                     )}
                 </div>
             </div>
 
-            <div class="secoes">
-                <h2 class="titulo-secao">
+            <div className="secoes">
+                <h2 className="titulo-secao">
                     Últimas Retiradas
                 </h2>
 
-                <div class="alertas">
+                <div className="alertas">
                     {medicamentosRetirados.map(medicamento => 
                         <AlertaMedicamento imagem={menosImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio"} unidades={medicamento.unidades} />
                     )}
                 </div>
             </div>
 
-            <div class="secoes">
-                <h2 class="titulo-secao">
+            <div className="secoes">
+                <h2 className="titulo-secao">
                     Visão Geral
                 </h2>
 
-                <div class="quadro">
+                <div className="quadro">
                     <TituloQuadro />
                     {medicamentosEstoque.map((medicamento) => (
                         <MedicamentoQuadro bin={medicamento.bin} nome={medicamento.nome} unidades={medicamento.unidades} />
@@ -63,25 +65,96 @@ export default function Estoque() {
     );
   }
 
-function AdicionarRemedio() {
+function PopupAdicionarMedicamentos() {
     return (
-        <button class="add-medicamento">
-            Adicionar<br />Medicamentos
-            <span class="mais">+</span>
-        </button>
+            <Popup trigger=
+                {<button className="add-medicamento">
+                    Adicionar<br />Medicamentos
+                    <span className="mais">+</span>
+                </button>} 
+                modal nested>
+                {
+                    close => (
+                        <div className='popup'>
+                            <h2>Adicionar Medicamentos</h2>
+                            <div>
+                                <DadosMedicamentos />
+                                <BotaoAddMais />
+                            </div>
+                            <div className="botoes-popup">
+                                <button className="botao-cancelar" onClick=
+                                    {() => close()}>Cancelar
+                                </button>
+                                <button className="botao-salvar">Salvar</button>
+                            </div>
+                        </div>
+                    )
+                }
+            </Popup>
+    )
+};
+
+function DadosMedicamentos(){
+    return(
+        <div className="dados-medicamento">
+            <SelectMedicamento />
+            <InputUnidades />
+        </div>
     );
-  }
+}
+
+function SelectMedicamento(){
+    return (
+        <div className="dados-select-medicamento">
+            <label for="select-dados-medicamento" className="texto-dados-medicamento">Medicamento:</label>
+            <select className="select-dados-medicamento">
+                <option value="" selected disabled hidden>Selecione</option>
+                {medicamentosEstoque.map(x => <option value="teste">{x.nome}</option>)}
+            </select>
+        </div>
+    );
+}
+
+function InputUnidades(){
+    return(
+        <div className="dados-unidades">
+            <label for="input-unidades" className="texto-dados-medicamento">Quantidade:</label>
+            <input className="input-unidades" type="number" placeholder={0} ></input>
+        </div>
+    );
+}
+
+function BotaoAddMais() {
+  const [items, setItems] = useState([]);
+
+  const addItem = () => {
+    setItems([...items, { id: items.length}]);
+  };
+
+  return (
+    <div>
+      <div className="mt-4 space-y-2">
+        {items.map((item) => (
+          <DadosMedicamentos />
+        ))}
+      </div>
+      <button onClick={addItem} className="btn-add-mais">
+        Adicionar Mais
+      </button>
+    </div>
+  );
+}
 
 function AlertaMedicamento ({imagem, medicamento, bin, classe, unidades}){
     return (
-        <div class="alerta-medicamento">
+        <div className="alerta-medicamento">
             <img src={imagem} alt="Alerta" width="60" />
-            <div class="textos-alertas">
-                <div class="linha">
-                    <p class="nome-remedio">{medicamento}</p>
-                    <p class="bin">Bin {bin}</p>
+            <div className="textos-alertas">
+                <div className="linha">
+                    <p className="nome-remedio">{medicamento}</p>
+                    <p className="bin">Bin {bin}</p>
                 </div>
-                <p class={classe}>{unidades} unidades</p>
+                <p className={classe}>{unidades} unidades</p>
             </div>
         </div>
     );
@@ -89,20 +162,20 @@ function AlertaMedicamento ({imagem, medicamento, bin, classe, unidades}){
 
 function TituloQuadro (){
     return(
-        <div class="titulos-quadro">
-            <p class="titulos-quadro">Bin</p>
-            <p class="titulos-quadro">Medicamento</p>
-            <p class="titulos-quadro">Quantidade</p>
+        <div className="titulos-quadro">
+            <p className="titulos-quadro">Bin</p>
+            <p className="titulos-quadro">Medicamento</p>
+            <p className="titulos-quadro">Quantidade</p>
         </div>
     );
 }
 
 function MedicamentoQuadro ({bin, nome, unidades}){
     return (
-        <div class="medicamento-quadro">
-            <p class="bin">{bin}</p>
-            <p class="nome-remedio">{nome}</p>
-            <p class={ClasseUnidades(unidades)}>{unidades} unidades</p>
+        <div className="medicamento-quadro">
+            <p className="bin">{bin}</p>
+            <p className="nome-remedio">{nome}</p>
+            <p className={ClasseUnidades(unidades)}>{unidades} unidades</p>
         </div>
     );
 }
