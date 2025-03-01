@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const RecuperarSenha = () => {
@@ -22,6 +21,12 @@ const RecuperarSenha = () => {
 }
 
 const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #e8e8e5;
+
   .form-box {
     max-width: 300px;
     background: #34495E;
