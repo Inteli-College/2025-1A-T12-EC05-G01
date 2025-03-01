@@ -1,0 +1,33 @@
+<!-- index.hmtl -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dose certa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
+</head>
+<body>
+    <h1>Dose certa</h1>
+    <p>Olá, seja bem-vindo ao sistema de gerenciamento de fitas médicas do Grupo Dose Certa!</p>
+
+    <h3>Para testar as rotas do sistema, utilize os botões abaixo:</h3>
+    <div style="display: flex; flex-direction: column;width:50vw;gap: 10px">
+        <button onclick="window.location.href='/cadastro'">Cadastro</button>
+        <button onclick="window.location.href='/login'">Login</button>
+        <button onclick="window.location.href='/recuperar-senha'">Recuperação de senha</button>
+        <button onclick="window.location.href='/dashboard'">Dashboard</button>
+        <button onclick="window.location.href='/estoque'">Estoque</button>
+        <button onclick="window.location.href='/prescricoes'">Prescrições</button>
+        <button onclick="window.location.href='/montagens'">Montagens</button>
+        <button onclick="window.location.href='/verificacao'">Verificação</button>
+    </div>
+
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
+</body>
+</html>

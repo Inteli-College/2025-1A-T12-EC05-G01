@@ -1,0 +1,165 @@
+<!-- dashboard.hmtl -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
+</head>
+<body>
+    <nav>Navbar a ser implementada posteriormente</nav>
+    <div class="topo-dash">
+        <h2>Métricas de acompanhamento</h2>
+        <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius.</p>
+    </div>
+
+    <section class="cards-fitas">
+        <h3>Fitas montadas</h3>
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cards-fitas">
+        <h3>Fitas em montagem</h3>
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+
+        <div class="card-fita">
+            <img src="" alt="imagem do remédio" />
+            <div class="infos-card-fita">
+                <span>Nome do paciente</span>
+                <p>informações da fita</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="grafico">
+        <h3>Taxa de sucesso</h3>
+        <img src="" alt="" />
+    </section>
+
+    <section class="montagens">
+        <h3>Últimas montagens</h3>
+        <div class="infos-lista-montagem">
+            <p>id da montagem</p>
+            <p>Status</p>
+            <p>horário de finalização da montagem</p>
+        </div>
+
+        <ul class="lista-montagens">
+            <li>
+                <p>id da montagem</p>
+                <select>
+                    <option>Status</option>
+                    <option>Concluída</option>
+                    <option>Aguardando aprovação</option>
+                    <option>Montagem com erro</option>
+                </select>
+                <p>horário de finalização da montagem</p>
+            </li>
+
+            <li>
+                <p>id da montagem</p>
+                <select>
+                    <option>Status</option>
+                    <option>Concluída</option>
+                    <option>Aguardando aprovação</option>
+                    <option>Montagem com erro</option>
+                </select>
+                <p>horário de finalização da montagem</p>
+            </li>
+
+            <li>
+                <p>id da montagem</p>
+                <select>
+                    <option>Status</option>
+                    <option>Concluída</option>
+                    <option>Aguardando aprovação</option>
+                    <option>Montagem com erro</option>
+                </select>
+                <p>horário de finalização da montagem</p>
+            </li>
+
+            <li>
+                <p>id da montagem</p>
+                <select>
+                    <option>Status</option>
+                    <option>Concluída</option>
+                    <option>Aguardando aprovação</option>
+                    <option>Montagem com erro</option>
+                </select>
+                <p>horário de finalização da montagem</p>
+            </li>
+
+            <li>
+                <p>id da montagem</p>
+                <select>
+                    <option>Status</option>
+                    <option>Concluída</option>
+                    <option>Aguardando aprovação</option>
+                    <option>Montagem com erro</option>
+                </select>
+                <p>horário de finalização da montagem</p>
+            </li>
+        </ul>
+    </section>
+
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
+</body>
+</html>

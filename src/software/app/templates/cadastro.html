@@ -1,0 +1,32 @@
+<!-- cadastro.hmtl -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesLogin.css') }}">
+</head>
+
+<body>
+    <div class="form-box">
+        <form class="form" action="/cadastro" method="POST">
+            <span class="title">Cadastre-se</span>
+            <span class="subtitle">Crie uma conta com seu email.</span>
+            <div class="form-container">
+                <input type="text" class="input" name="full_name" placeholder="Nome Completo" required>
+                <input type="email" class="input" name="email" placeholder="Email" required>
+                <input type="password" class="input" name="password" placeholder="Senha" required>
+                <input type="password" class="input" name="confirm_password" placeholder="Confirmar Senha" required>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div class="form-section">
+            <p>Já tem uma conta? <a href="/login" class="link">Faça login</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
