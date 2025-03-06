@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import axios from 'axios';
+//import axios from 'axios';
 
 const Cadastro = () => {
   return (
