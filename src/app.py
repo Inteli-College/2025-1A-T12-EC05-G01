@@ -4,7 +4,7 @@ import os
 # Garante que o Python reconheça os módulos corretamente
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'database')))
 
-from models.paciente import Paciente
+from database.models.paciente import Paciente
 
 # Teste de adição de paciente (não adicionar hc duplicado)
 Paciente.adicionar_paciente("brunao", "B1111", "HC001")

@@ -1,18 +1,70 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const Cadastro = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem');
+      return;
+    }
+    try {
+      await axios.post(`${API_BASE_URL}/cadastro`, { email, password, confirm_password: confirmPassword });
+      navigate('/login');
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.error);
+      } else {
+        setError('Ocorreu um erro inesperado');
+      }
+    }
+  };
+
   return (
     <StyledWrapper>
       <div className="form-box">
-        <form className="form" action="/cadastro" method="POST">
+        <form className="form" onSubmit={handleSubmit}>
           <span className="title">Cadastre-se</span>
           <span className="subtitle">Crie uma conta com seu email.</span>
           <div className="form-container">
-            <input type="text" className="input" name="full_name" placeholder="Nome Completo" required />
-            <input type="email" className="input" name="email" placeholder="Email" required />
-            <input type="password" className="input" name="password" placeholder="Senha" required />
-            <input type="password" className="input" name="confirm_password" placeholder="Confirmar Senha" required />
+            <input
+              type="email"
+              className="input"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="input"
+              name="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="input"
+              name="confirm_password"
+              placeholder="Confirmar Senha"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
           </div>
+          {error && <p className="error">{error}</p>}
           <button type="submit">Cadastrar</button>
         </form>
         <div className="form-section">
@@ -21,9 +73,15 @@ const Cadastro = () => {
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:rgb(255, 255, 255);
+
   .form-box {
     max-width: 300px;
     background: #34495E;
@@ -41,7 +99,6 @@ const StyledWrapper = styled.div`
     text-align: center;
   }
 
-  /*Form text*/
   .title {
     font-weight: bold;
     font-size: 1.6rem;
@@ -53,7 +110,6 @@ const StyledWrapper = styled.div`
     color: #dddbdb;
   }
 
-  /*Inputs box*/
   .form-container {
     overflow: hidden;
     border-radius: 8px;
@@ -92,7 +148,6 @@ const StyledWrapper = styled.div`
     text-decoration: underline;
   }
 
-  /*Button*/
   .form button {
     background-color: #2ECC71;
     color: #fff;
@@ -107,6 +162,11 @@ const StyledWrapper = styled.div`
 
   .form button:hover {
     background-color: #26dd72;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.9rem;
   }
 `;
 

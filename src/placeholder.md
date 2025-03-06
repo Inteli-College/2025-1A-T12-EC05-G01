@@ -1,1 +1,0 @@
-# Esta pasta deve conter o código fonte do projeto, desde o código para controle do robô até a interface web e até mesmo código para controle de um possível microcontrolador, etc. É necessário manter o código modularizado e separado em pastas e arquivos distintos.

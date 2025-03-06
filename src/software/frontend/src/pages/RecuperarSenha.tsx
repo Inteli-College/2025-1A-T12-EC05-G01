@@ -1,15 +1,51 @@
 import styled from 'styled-components';
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const RecuperarSenha = () => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_BASE_URL}/recuperar-senha`, { email });
+      setMessage(response.data.message);
+      setError('');
+      navigate('/login');
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.error);
+      } else {
+        setError('An unexpected error occurred');
+      }
+      setMessage('');
+    }
+  };
+
   return (
     <StyledWrapper>
       <div className="form-box">
-        <form className="form" action="/recuperar_senha" method="POST">
+        <form className="form" onSubmit={handleSubmit}>
           <span className="title">Recuperar Senha</span>
           <span className="subtitle">Digite seu email abaixo para recuperar a sua senha.</span>
           <div className="form-container">
-            <input type="email" className="input" name="email" placeholder="Digite seu email" required />
+            <input
+              type="email"
+              className="input"
+              name="email"
+              placeholder="Digite seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
+          {error && <p className="error">{error}</p>}
+          {message && <p className="message">{message}</p>}
           <button type="submit">Recuperar Senha</button>
         </form>
         <div className="form-section">
@@ -18,14 +54,14 @@ const RecuperarSenha = () => {
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #e8e8e5;
+  background-color:rgb(255, 255, 255);
 
   .form-box {
     max-width: 300px;
@@ -44,7 +80,6 @@ const StyledWrapper = styled.div`
     text-align: center;
   }
 
-  /*Form text*/
   .title {
     font-weight: bold;
     font-size: 1.6rem;
@@ -56,7 +91,6 @@ const StyledWrapper = styled.div`
     color: #dddbdb;
   }
 
-  /*Inputs box*/
   .form-container {
     overflow: hidden;
     border-radius: 8px;
@@ -95,7 +129,6 @@ const StyledWrapper = styled.div`
     text-decoration: underline;
   }
 
-  /*Button*/
   .form button {
     background-color: #2ECC71;
     color: #fff;
@@ -110,6 +143,16 @@ const StyledWrapper = styled.div`
 
   .form button:hover {
     background-color: #26dd72;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.9rem;
+  }
+
+  .message {
+    color: green;
+    font-size: 0.9rem;
   }
 `;
 

@@ -7,7 +7,6 @@ import Verificacao from './pages/Verificacao';
 import Prescricoes from './pages/Prescricoes';
 import Estoque from './pages/Estoque';
 import Montagens from './pages/Montagens';
-import './App.css'
 
 function App() {
   return (
@@ -16,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/recuperar_senha" element={<RecuperarSenha />} />
+        <Route path="/recuperar-senha" element={<RecuperarSenha />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verificacao" element={<Verificacao />} />
         <Route path="/prescricoes" element={<Prescricoes />} />
