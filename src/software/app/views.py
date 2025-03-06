@@ -1,87 +1,98 @@
-from flask import render_template, request, redirect, session, url_for, Flask, flash
+from flask import request, session, jsonify
 from app import app
 import os
 from authentication import get_auth, login_required
 from functools import wraps
+from flask_cors import CORS
 
-# definição das rotas do projeto
+# Enable CORS
+CORS(app)
+
+# API route definitions
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return jsonify({"message": "API is running"})
 
 auth = get_auth()
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        try:
-            user = auth.sign_in_with_email_and_password(email, password)
-            session['user'] = email
-            return redirect(url_for('dashboard'))
-        except Exception as e:
-            error_message = str(e) 
-            return render_template('login.html', error=error_message)
-    return render_template('login.html')
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    
+    try:
+        user = auth.sign_in_with_email_and_password(email, password)
+        session['user'] = email
+        return jsonify({"success": True, "message": "Login successful"})
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"success": False, "error": error_message}), 401
 
-@app.route('/cadastro', methods=['GET', 'POST'])
+@app.route('/cadastro', methods=['POST'])
 def cadastro():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
-        if password != confirm_password:
-            flash('As senhas não coincidem. Tente novamente.')
-            return render_template('cadastro.html')
-        try:
-            user = auth.create_user_with_email_and_password(email, password)
-            session['user'] = email
-        except:
-            return 'Falha no cadastro'
-        return redirect(url_for('dashboard'))
-    if request.method == 'GET':
-        return render_template('cadastro.html')
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirm_password')
+    
+    if password != confirm_password:
+        return jsonify({"success": False, "error": "As senhas não coincidem"}), 400
+    
+    try:
+        user = auth.create_user_with_email_and_password(email, password)
+        session['user'] = email
+        return jsonify({"success": True, "message": "Cadastro realizado com sucesso"})
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"success": False, "error": error_message}), 400
 
 @app.route('/logout')
 def logout():
     if 'user' in session:
         session.pop('user')
-    return redirect(url_for('login'))
+    return jsonify({"success": True, "message": "Logout successful"})
 
-@app.route('/recuperar-senha', methods=['GET', 'POST'])
+@app.route('/recuperar-senha', methods=['POST'])
 def recuperar_senha():
-    if request.method == 'POST':
-        email = request.form['email']
-        try:
-            auth.send_password_reset_email(email)
-            return 'Email de recuperação enviado'
-        except:
-            return 'Falha no envio do email de recuperação'
-    if request.method == 'GET':
-        return render_template('recuperarSenha.html')
+    data = request.get_json()
+    email = data.get('email')
+    
+    try:
+        auth.send_password_reset_email(email)
+        return jsonify({"success": True, "message": "Email de recuperação enviado"})
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"success": False, "error": error_message}), 400
 
+@app.route('/check-auth')
+def check_auth():
+    if 'user' in session:
+        return jsonify({"authenticated": True, "email": session['user']})
+    return jsonify({"authenticated": False})
+
+# These routes now just return JSON data instead of rendering templates
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', user=session['user'])
+    return jsonify({"user": session['user']})
 
 @app.route('/estoque')
 @login_required
 def estoque():
-    return render_template('estoque.html')
+    return jsonify({"page": "estoque"})
 
 @app.route('/prescricoes')
 @login_required
 def prescricoes():
-    return render_template('prescricoes.html')
+    return jsonify({"page": "prescricoes"})
 
 @app.route('/montagens')
 @login_required
 def montagens():
-    return render_template('montagens.html')
+    return jsonify({"page": "montagens"})
 
 @app.route('/verificacao')
 @login_required
 def verificacao():
-    return render_template('verificacao.html')
+    return jsonify({"page": "verificacao"})
