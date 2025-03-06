@@ -61,7 +61,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #e8e8e5;
+  background-color:rgb(255, 255, 255);
 
   .form-box {
     max-width: 300px;

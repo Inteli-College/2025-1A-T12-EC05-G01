@@ -1,89 +1,119 @@
 import Popup from 'reactjs-popup';
 import { useState } from "react";
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import alertaImg from '../assets/alerta.png';
 import maisImg from '../assets/mais.png';
 import menosImg from '../assets/menos.png';
 
+// Add a GlobalStyle component for body styling
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #ECF0F1;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+`;
+
 export default function Estoque() {
     return (
-        <EstoqueContainer>
-            <TopoEstoque>
-                <TituloPagina>Controle de Estoque</TituloPagina>
-                <PopupAdicionarMedicamentos />
-            </TopoEstoque>
+        <>
+            <GlobalStyle />
+            <EstoqueContainer>
+                <TopoEstoque>
+                    <TituloPagina>Controle de Estoque</TituloPagina>
+                    <PopupAdicionarMedicamentos />
+                </TopoEstoque>
 
-            <SecaoContainer>
-                <TituloSecao>
-                    Reabastecimentos Necessários
-                </TituloSecao>
+                <SecaoContainer>
+                    <TituloSecao>
+                        Reabastecimentos Necessários
+                    </TituloSecao>
 
-                <AlertasContainer>
-                {medicamentosReabastecer.map(medicamento => 
-                    <AlertaMedicamento imagem={alertaImg} medicamento={medicamento.medicamento} bin={medicamento.bin} classe={ClasseUnidades({ unidades: medicamento.unidades })} unidades={medicamento.unidades} />
-                )}
-                </AlertasContainer>
-            </SecaoContainer>
-
-            <SecaoContainer>
-                <TituloSecao>
-                    Últimas Adições
-                </TituloSecao>
-
-                <AlertasContainer>
-                    {medicamentosAdicionados.map(medicamento =>
-                        <AlertaMedicamento imagem={maisImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio-add"} unidades={medicamento.unidades} />
+                    <AlertasContainer>
+                    {medicamentosReabastecer.map(medicamento => 
+                        <AlertaMedicamento imagem={alertaImg} medicamento={medicamento.medicamento} bin={medicamento.bin} classe={ClasseUnidades({ unidades: medicamento.unidades })} unidades={medicamento.unidades} />
                     )}
-                </AlertasContainer>
-            </SecaoContainer>
+                    </AlertasContainer>
+                </SecaoContainer>
 
-            <SecaoContainer>
-                <TituloSecao>
-                    Últimas Retiradas
-                </TituloSecao>
+                <SecaoContainer>
+                    <TituloSecao>
+                        Últimas Adições
+                    </TituloSecao>
 
-                <AlertasContainer>
-                    {medicamentosRetirados.map(medicamento => 
-                        <AlertaMedicamento imagem={menosImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio"} unidades={medicamento.unidades} />
-                    )}
-                </AlertasContainer>
-            </SecaoContainer>
+                    <AlertasContainer>
+                        {medicamentosAdicionados.map(medicamento =>
+                            <AlertaMedicamento imagem={maisImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio-add"} unidades={medicamento.unidades} />
+                        )}
+                    </AlertasContainer>
+                </SecaoContainer>
 
-            <SecaoContainer>
-                <TituloSecao>
-                    Visão Geral
-                </TituloSecao>
+                <SecaoContainer>
+                    <TituloSecao>
+                        Últimas Retiradas
+                    </TituloSecao>
 
-                <QuadroContainer>
-                    <TituloQuadro />
-                    {medicamentosEstoque.map((medicamento) => (
-                        <MedicamentoQuadro bin={medicamento.bin} nome={medicamento.nome} unidades={medicamento.unidades} />
-                    ))}
-                </QuadroContainer>
-            </SecaoContainer>
-        </EstoqueContainer>
+                    <AlertasContainer>
+                        {medicamentosRetirados.map(medicamento => 
+                            <AlertaMedicamento imagem={menosImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio"} unidades={medicamento.unidades} />
+                        )}
+                    </AlertasContainer>
+                </SecaoContainer>
+
+                <SecaoContainer>
+                    <TituloSecao>
+                        Visão Geral
+                    </TituloSecao>
+
+                    <QuadroContainer>
+                        <TituloQuadro />
+                        {medicamentosEstoque.map((medicamento) => (
+                            <MedicamentoQuadro bin={medicamento.bin} nome={medicamento.nome} unidades={medicamento.unidades} />
+                        ))}
+                    </QuadroContainer>
+                </SecaoContainer>
+            </EstoqueContainer>
+        </>
     );
 }
 
 function PopupAdicionarMedicamentos() {
     return (
-            <Popup trigger=
-                {<AddMedicamentoButton>
-                    Adicionar<br />Medicamentos
-                    <MaisSpan>+</MaisSpan>
-                </AddMedicamentoButton>} 
-                modal nested>
+            <Popup 
+                trigger={
+                    <AddMedicamentoButton>
+                        Adicionar<br />Medicamentos
+                        <MaisSpan>+</MaisSpan>
+                    </AddMedicamentoButton>
+                } 
+                modal 
+                nested
+                contentStyle={{ 
+                    width: '100%',
+                    maxWidth: '700px',
+                    padding: 0,
+                    border: 'none',
+                    background: 'transparent' 
+                }}
+                overlayStyle={{
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
                 {
                     (close: () => void) => (
                         <PopupContainer>
-                            <h2>Adicionar Medicamentos</h2>
-                            <div>
+                            <PopupHeader>Adicionar Medicamentos</PopupHeader>
+                            <PopupContent>
                                 <DadosMedicamentos />
                                 <BotaoAddMais />
-                            </div>
+                            </PopupContent>
                             <BotoesPopupContainer>
-                                <BotaoCancelar onClick=
-                                    {() => close()}>Cancelar
+                                <BotaoCancelar onClick={() => close()}>
+                                    Cancelar
                                 </BotaoCancelar>
                                 <BotaoSalvar>Salvar</BotaoSalvar>
                             </BotoesPopupContainer>
@@ -276,6 +306,8 @@ const EstoqueContainer = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: #ECF0F1;
+  width: 100%;
+  min-height: 100vh;
 `;
 
 const TopoEstoque = styled.div`
@@ -300,7 +332,7 @@ const AddMedicamentoButton = styled.button`
   padding: 10px 20px 10px 10px;
   color: #FFFFFF;
   font-family: 'Montserrat';
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
   border-color: #2ECC71;
   cursor: pointer;
@@ -317,16 +349,24 @@ const MaisSpan = styled.span`
 const PopupContainer = styled.div`
   background-color: #2C3E50;
   font-family: 'Montserrat';
-  position: absolute;
-  padding: 20px;
   border-radius: 20px;
-  width: 700px;
-  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  overflow: hidden;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.2);
+`;
+
+const PopupHeader = styled.h2`
   color: white;
-  
-  h2 {
-    color: white;
-  }
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const PopupContent = styled.div`
+  padding: 20px;
 `;
 
 const TextoDadosMedicamento = styled.label`
@@ -379,48 +419,64 @@ const SelectDadosMedicamento = styled.select`
 
 const BtnAddMais = styled.button`
   font-family: 'Montserrat';
-  font-size: 19px;
+  font-size: 16px;
+  font-weight: 500;
   border: none;
-  width: 200px;
-  height: auto;
-  transition: background-color .3s;
+  width: 125px;
+  padding: 8px 0;
+  margin-top: 10px;
+  border-radius: 10px;
   background-color: #D9D9D9;
   color: #2C3E50;
-  margin: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #bfbfbf;
+  }
 `;
 
 const BotoesPopupContainer = styled.div`
   display: flex;
-  justify-content: right;
+  justify-content: flex-end;
   align-items: center;
-  font-family: 'Montserrat';
-  font-size: 19px;
-  border: none;
-  height: auto;
-  transition: background-color .3s;
+  padding: 15px 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+  gap: 12px;
 `;
 
 const BotaoCancelar = styled.button`
   background-color: #D9D9D9;
   color: #2C3E50;
-  margin: 5px;
-  width: 150px;
   font-family: 'Montserrat';
-  font-size: 19px;
+  font-size: 16px;
+  font-weight: 600;
   border: none;
-  padding: 8px;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #bfbfbf;
+  }
 `;
 
 const BotaoSalvar = styled.button`
   background-color: #2ECC71;
-  color: #D9D9D9;
-  margin: 5px;
+  color: white;
   font-family: 'Montserrat';
-  font-size: 19px;
+  font-size: 16px;
+  font-weight: 600;
   border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #27ae60;
+  }
 `;
 
 const SecaoContainer = styled.div`
@@ -537,4 +593,5 @@ const QuadroContainer = styled.div`
 const QuadroText = styled.p`
   color: #FFFFFF;
   font-family: 'Montserrat';
+  font-size: 24px;
 `;

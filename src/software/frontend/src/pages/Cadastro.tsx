@@ -76,6 +76,12 @@ const Cadastro = () => {
 };
 
 const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:rgb(255, 255, 255);
+
   .form-box {
     max-width: 300px;
     background: #34495E;
