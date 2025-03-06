@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
-import Navbar from '../components/sidebar/Navbar'
+import Navbar from '../components/sidebar/Navbar';
+import axios from 'axios';
 
 const Prescricoes = () => {
   return (
