@@ -1,27 +1,66 @@
 import styled from 'styled-components';
-//import axios from 'axios';
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_BASE_URL}/login`, { email, password });
+      navigate('/dashboard');
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.error);
+      } else {
+        setError('An unexpected error occurred');
+      }
+    }
+  };
+
   return (
     <StyledWrapper>
       <div className="form-box">
-        <form className="form" action="/login" method="POST">
+        <form className="form" onSubmit={handleSubmit}>
           <span className="title">Login</span>
           <span className="subtitle">Insira suas credenciais para acessar sua conta.</span>
           <div className="form-container">
-            <input className="input" name="email" placeholder="Email" type="email" required />
-            <input className="input" name="password" placeholder="Senha" type="password" required />
+            <input
+              className="input"
+              name="email"
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              className="input"
+              name="password"
+              placeholder="Senha"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
+          {error && <p className="error">{error}</p>}
           <button type="submit">Entrar</button>
         </form>
         <div className="form-section">
-          <p><a href="/recuperar_senha" className="link">Esqueceu sua senha?</a></p>
+          <p><a href="/recuperar-senha" className="link">Esqueceu sua senha?</a></p>
           <p>Não tem uma conta? <a href="/cadastro" className="link">Cadastre-se</a></p>
         </div>
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   .form-box {
@@ -41,7 +80,6 @@ const StyledWrapper = styled.div`
     text-align: center;
   }
 
-  /*Form text*/
   .title {
     font-weight: bold;
     font-size: 1.6rem;
@@ -53,7 +91,6 @@ const StyledWrapper = styled.div`
     color: #dddbdb;
   }
 
-  /*Inputs box*/
   .form-container {
     overflow: hidden;
     border-radius: 8px;
@@ -81,7 +118,7 @@ const StyledWrapper = styled.div`
   }
 
   .form-section p {
-    color:rgb(244, 243, 243);
+    color: rgb(244, 243, 243);
   }
 
   .form-section a {
@@ -96,7 +133,6 @@ const StyledWrapper = styled.div`
     text-decoration: underline;
   }
 
-  /*Button*/
   .form button {
     background-color: #2ECC71;
     color: #fff;
@@ -111,6 +147,11 @@ const StyledWrapper = styled.div`
 
   .form button:hover {
     background-color: #26dd72;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.9rem;
   }
 `;
 
