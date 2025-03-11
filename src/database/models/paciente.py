@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from db_conexao import Base
+from db_conexao import Base, engine
 
 # Definição do modelo Paciente
 class Paciente(Base):
@@ -12,3 +12,6 @@ class Paciente(Base):
 
     def __repr__(self):
         return f"<Paciente(nome={self.nome}, leito={self.leito}, hc={self.hc})>"
+if __name__ == "__main__":
+    Paciente.__table__.create(bind=engine, checkfirst=True)
+    print("Tabela 'paciente' verificada/criada com sucesso!")

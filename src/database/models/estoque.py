@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from db_conexao import Base
+from db_conexao import Base, engine
 
 class Estoque(Base):
     __tablename__ = "estoque"
@@ -17,3 +17,7 @@ class Estoque(Base):
 
     def __repr__(self):
         return f"<Estoque(id_medicamento={self.id_medicamento}, lote={self.lote}, quantidade={self.quantidade})>"
+
+if __name__ == "__main__":
+    Estoque.__table__.create(bind=engine, checkfirst=True)
+    print("Tabela 'estoque' verificada/criada com sucesso!")

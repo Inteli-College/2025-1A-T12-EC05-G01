@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from db_conexao import Base
-
+from db_conexao import Base, engine
 class Medicamento(Base):
     __tablename__ = "medicamento"
 
@@ -11,3 +10,7 @@ class Medicamento(Base):
 
     def __repr__(self):
         return f"<Medicamento(nome={self.nome}, dosagem={self.dosagem}, peso={self.peso})>"
+
+if __name__ == "__main__":
+    Medicamento.__table__.create(bind=engine, checkfirst=True)
+    print("Tabela 'medicamento' verificada/criada com sucesso!")
