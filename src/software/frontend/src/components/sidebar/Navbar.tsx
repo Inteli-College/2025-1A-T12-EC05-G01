@@ -29,7 +29,7 @@ const Navbar = () => {
 const StyledWrapper = styled.div`
 .navbar {
     background-color: #323848;
-    width: 100vw;
+    width: 100%;
     height: 6vh;
     
     display: flex;

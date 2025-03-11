@@ -47,14 +47,18 @@ const StyledWrapper = styled.div`
     width: 100%;
 }
 
-.sidebar-buttons button {
+button {
     width: 100%;
     background-color: #323848;
     transition: 0.3s;
     text-align: left;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: .8rem
 }
 
-.sidebar-buttons button:hover {
+button:hover {
     background-color: #2ECC71;
     border: none;
 } 
