@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, DateTime, func
-from db_conexao import Base, engine
+from database.db_conexao import Base, engine
 
 class PrescricaoAceita(Base):
     __tablename__ = 'prescricao_aceita'
