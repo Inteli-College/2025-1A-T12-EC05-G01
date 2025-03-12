@@ -1,6 +1,6 @@
 from typing import Optional
 from multiprocessing import Process, Queue
-from Dobot.Dobot import Dobot
+from dobot.Dobot.Dobot import Dobot
 
 class PortTester:
     """
