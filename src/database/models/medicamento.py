@@ -1,6 +1,6 @@
-from enum import unique
 from sqlalchemy import Column, Integer, String, Float
-from db_conexao import Base, engine
+from database.db_conexao import Base, engine
+
 class Medicamento(Base):
     __tablename__ = "medicamento"
 

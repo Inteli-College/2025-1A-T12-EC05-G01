@@ -1,25 +1,14 @@
 import pytest
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker
 from database.models.estoque import Estoque
+from database.models.medicamento import Medicamento
 from database.db_conexao import Base
 import logging
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Mock do Medicamento
-class Medicamento(Base):
-    __tablename__ = "medicamento"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    nome = Column(String(50), nullable=False)
-    dosagem = Column(String(20), nullable=False)
-    peso = Column(Float, nullable=False)
-    qr_code = Column(String(50), unique=False)
-
-    def __repr__(self):
-        return f"<Medicamento(nome={self.nome}, dosagem={self.dosagem})>"
 
 @pytest.fixture(scope="module")
 def test_engine():
