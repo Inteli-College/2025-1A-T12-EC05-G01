@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from db_conexao import Base, engine
+from src.database.db_conexao import Base, engine
 
 class Farmaceutico(Base):
     __tablename__ = 'farmaceutico'

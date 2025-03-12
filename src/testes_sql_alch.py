@@ -1,19 +1,16 @@
-import pytest
+from sqlalchemy.exc import IntegrityError
+from src.database.db_conexao import SessionLocal, engine, Base 
 
-from sqlalchemy.exc import IntegrityError, OperationalError
-from db_conexao import SessionLocal, engine  # Adicione engine aqui
-
-from models.saida import Saidas
-from models.prescricao_medicamento import PrescricaoMedicamento
-from models.prescricao_aceita import PrescricaoAceita
-from models.prescricao_on_hold import PrescricaoOnHold
-from models.paciente import Paciente
-from models.medico import Medico
-from models.medicamento import Medicamento
-from models.farmaceuticos import Farmaceutico
-from models.estoque import Estoque
-from models.perdas import Perdas
-from db_conexao import Base
+from src.database.models.saida import Saidas
+from src.database.models.prescricao_medicamento import PrescricaoMedicamento
+from src.database.models.prescricao_aceita import PrescricaoAceita
+from src.database.models.prescricao_on_hold import PrescricaoOnHold
+from src.database.models.paciente import Paciente
+from src.database.models.medico import Medico
+from src.database.models.medicamento import Medicamento
+from src.database.models.farmaceuticos import Farmaceutico
+from src.database.models.estoque import Estoque
+from src.database.models.perdas import Perdas
 
 def clear_database():
     """Remove e recria toda a estrutura do banco de dados"""

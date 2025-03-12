@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, func
-from db_conexao import Base, engine
+from src.database.db_conexao import Base, engine
 
 class Perdas(Base):
     __tablename__ = 'perdas'
