@@ -1,11 +1,12 @@
 <!-- verificacao.hmtl -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificação</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesPages.css') }}">
 </head>
 <body>
     <nav>Navbar a ser implementada posteriormente</nav>
@@ -14,73 +15,66 @@
     <section class="prescricoes">
         <div class="card-prescricao">
             <div class="infos-card-prescricao">
-                <div class="infos-card-prescricao">
-                    <span>Nome do paciente</span>
-                    <button>Finalizar</button>
-
-                </div>
-
-                <div class="interacao-card-prescricao">
-                    <ul>
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <p>Aprovar medicamento</p>
-                        </li>
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <input type="checkbox" />
-                        </li>
-
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <input type="checkbox" />
-                        </li>
-                    </ul>
-                </div>
+                <span>Nome do paciente</span>
+                <button>Finalizar</button>
+            </div>
+            <div class="interacao-card-prescricao">
+                <ul>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <p>Aprovar medicamento</p>
+                    </li>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <input type="checkbox" />
+                    </li>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <input type="checkbox" />
+                    </li>
+                </ul>
             </div>
         </div>
 
         <div class="card-prescricao">
             <div class="infos-card-prescricao">
-                <div class="infos-card-prescricao">
-                    <span>Nome do paciente</span>
-                    <button>Finalizar</button>
-
-                </div>
-
-                <div class="interacao-card-prescricao">
-                    <ul>
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <p>Aprovar medicamento</p>
-                        </li>
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <input type="checkbox" />
-                        </li>
-
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <input type="checkbox" />
-                        </li>
-
-                        <li>
-                            <p>nome do princípio ativo</p>
-                            <p>dosagem do medicamento</p>
-                            <input type="checkbox" />
-                        </li>
-                    </ul>
-                </div>
+                <span>Nome do paciente</span>
+                <button>Finalizar</button>
+            </div>
+            <div class="interacao-card-prescricao">
+                <ul>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <p>Aprovar medicamento</p>
+                    </li>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <input type="checkbox" />
+                    </li>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <input type="checkbox" />
+                    </li>
+                    <li>
+                        <p>nome do princípio ativo</p>
+                        <p>dosagem do medicamento</p>
+                        <input type="checkbox" />
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <footer>Footer a ser implementado posteriormente</footer>
+    <footer class="footer">
+        <img src="{{ url_for('static', filename='images/logo_inteli.svg') }}" alt="Inteli Logo" class="footer-image left">
+        <img src="{{ url_for('static', filename='images/logo_dose_certa.svg') }}" alt="Dose Certa Logo" class="footer-image center">
+        <img src="{{ url_for('static', filename='images/logo_hc.svg') }}" alt="HC Logo" class="footer-image right">
+    </footer>
 </body>
 </html>

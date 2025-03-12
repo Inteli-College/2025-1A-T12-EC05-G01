@@ -1,38 +1,32 @@
 <!-- cadastro.hmtl -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesLogin.css') }}">
 </head>
 
 <body>
-    <section class="card-formulario">
-
-        <img src="../static/images/logo.png" alt="" width="10%" />
-
-        <span> Insira suas informações abaixo para se cadastrar no sistema</span>
-
-        <form action="/cadastro" method="POST">
-
-            <div class="email">
-                <label>Email</label>
-                <input name="email" type="email" placeholder="joao.silva@unicamp.br" required />
+    <div class="form-box">
+        <form class="form" action="/cadastro" method="POST">
+            <span class="title">Cadastre-se</span>
+            <span class="subtitle">Crie uma conta com seu email.</span>
+            <div class="form-container">
+                <input type="text" class="input" name="full_name" placeholder="Nome Completo" required>
+                <input type="email" class="input" name="email" placeholder="Email" required>
+                <input type="password" class="input" name="password" placeholder="Senha" required>
+                <input type="password" class="input" name="confirm_password" placeholder="Confirmar Senha" required>
             </div>
-
-            <div class="password">
-                <label>Senha</label>
-                <input name="password" type="password" required placeholder="******" required />
-            </div>
-
-            <button type="submit" class="botao-formularios">Cadastrar</button>
-
+            <button type="submit">Cadastrar</button>
         </form>
-
-    </section>
+        <div class="form-section">
+            <p>Já tem uma conta? <a href="/login" class="link">Faça login</a></p>
+        </div>
+    </div>
 </body>
 
 </html>

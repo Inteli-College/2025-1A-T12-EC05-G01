@@ -1,41 +1,31 @@
 <!-- login.hmtl -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesLogin.css') }}">
 </head>
 
 <body>
-    <section class="card-formulario">
-        <img src="../static/images/logo.png" alt="" width="10%" />
-        <span> Insira suas informações abaixo para fazer login no sistema</span>
-
-        <form action="/login" method="POST">
-
-            <div class="formulario">
-
-                <label>Email</label>
-                <input name="email" type="email" placeholder="E-mail" required />
-
-                <label>Senha</label>
-                <input name="password" type="password" placeholder="Senha" required />
-
-                <div class="extras-login">
-                    <input type="checkbox" name="remember"> Mantenha-me conectado
-                    <a href="/recuperar-senha">Esqueceu sua senha?</a>
-                </div>
-
+    <div class="form-box">
+        <form class="form" action="/login" method="POST">
+            <span class="title">Login</span>
+            <span class="subtitle">Insira suas credenciais para acessar sua conta.</span>
+            <div class="form-container">
+                <input class="input" name="email" placeholder="Email" type="email" required />
+                <input class="input" name="password" placeholder="Senha" type="password" required />
             </div>
-
-            <button type="submit" class="botao-formularios">Entrar</button>
-
+            <button type="submit">Entrar</button>
         </form>
-
-    </section>
+        <div class="form-section">
+            <p><a href="/recuperar-senha" class="link">Esqueceu sua senha?</a></p>
+            <p>Não tem uma conta? <a href="/cadastro" class="link">Cadastre-se</a></p>
+        </div>
+    </div>
 </body>
 
 </html>

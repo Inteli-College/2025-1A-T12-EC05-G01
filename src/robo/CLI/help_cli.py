@@ -45,6 +45,26 @@ help_comandos = {
         "detalhes": """Ao executar este comando:
             - O robô retorna à posição home antes de desligar.
             - Todos os alarmes são limpos para garantir uma inicialização correta na próxima execução."""
+    },
+    "fita":
+    {
+      
+      "titulo": "Montar fita com medicamentos",
+      "descricao": "Permite selecionar vários medicamentos em quantidades variadas para se montar uma fita de medicamentos",
+      "detalhes": """Ao executar este comando:
+        - Você poderá escolher um medicamento e a quantidade para tal medicamento.
+        - Medicamentos podem ser adicionados sem ordem específica.
+        - Ao finalizar a escolha de medicamentos e quantidades, aperte para finalizar montagem e o robô começará a separação.
+        - Caso queira cancelar, apenas selecione 'Cancelar montagem da fita'."""
+    },
+    "alarmes":
+    {
+        "titulo": "Limpar os estados de alarme do robô",
+        "descricao": "Permite resetar/limpar os estados de alarme do robô",
+        "detalhes": """ O Dobot (robô) possui um sistema de alarme para alertar ao usuário que chegou em uma posição limite.
+        Entretanto, muitas vezes ele entende que está no seu limite quando na verdade não está. Esse alarme
+        pode ser visualizado através do led na sua base, que, quando em alarme, fica vermelho. Este comando
+        apenas limpa este alarme, avisando ao robô que ele não está em posição limite e volta o led para verde."""
     }
 }
 
