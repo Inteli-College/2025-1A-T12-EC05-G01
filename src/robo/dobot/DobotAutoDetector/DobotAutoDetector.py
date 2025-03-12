@@ -1,6 +1,6 @@
 from typing import Optional, List
-from UserInterfaceHandler.UserInterfaceHandler import UserInterfaceHandler
-from PortTester.PortTester import PortTester
+from portas.UserInterfaceHandler.UserInterfaceHandler import UserInterfaceHandler
+from portas.PortTester.PortTester import PortTester
 
 class DobotAutoDetector:
     """
