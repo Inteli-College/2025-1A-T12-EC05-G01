@@ -1,9 +1,9 @@
-import Navbar from '../components/sidebar/Navbar'
+import Header from '../components/sidebar/Navbar'
 
 function Teste() {
   return (
     <div>
-      <Navbar />
+      <Header />
     </div>
   )
 }

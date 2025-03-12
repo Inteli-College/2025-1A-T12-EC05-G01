@@ -1,51 +1,59 @@
 import styled from 'styled-components';
+import SidebarItem from './SidebarItem';
+import { FaBars } from 'react-icons/fa'
 
-const Sidebar = () => {
+const Sidebar = ({ active }) => {
+
+  const closeSidebar = () => {
+    active(false)
+  }
 
   return (
     <div>
-      <StyledWrapper>
-        <div className='sidebar'>
-          <div className='sidebar-buttons'>
-            <a href='/dashboard'><button>Dashboard</button></a>
-            <a href='/estoque'><button>Checagem de estoque</button></a>
-            <a href='/prescricoes'><button>Prescrições</button></a>
-            <a href='/montagens'><button>Montagens realizadas</button></a>
-            <a href='/verificacao'><button>Verificação dos medicamentos</button></a>
-          </div>
-        </div>
-      </StyledWrapper>
+      <Container sidebar={active}>
+        <FaBars onClick={closeSidebar} />
+        <Content>
+          <SidebarItem Text='Checagem de estoque' Path='/estoque' />
+          <SidebarItem Text='Prescrições' Path='/prescricoes' />
+          <SidebarItem Text='Montagens realizadas' Path='/montagens' />
+          <SidebarItem Text='Montagens realizadas' Path='/montagens' />
+          <SidebarItem Text='Verificação dos medicamentos' Path='/verificacao' />
+        </Content>
+      </Container>
     </div>
   )
 }
 
-const StyledWrapper = styled.div`
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: static;
+const Container = styled.div`
+  background-color:#323848;
+  position: fixed;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  width: 300px;
+  left: ${props => props.sidebar ? '0' : '-100%'};
+  animation: showSidebar .4s;
 
-    background-color: #323848;
-    height: 94vh;
-    width: 15vw;
-    overflow: hidden;
-}
+  > svg {
+        position: fixed;
+        color: #2ECC71;
+        width: 30px;
+        height: 40px;
+        margin-top: 13px;
+        margin-left: 22px;
+        cursor: pointer;
+    }
 
-.sidebar-buttons {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 80%;
-}
-
-.sidebar-buttons a {
-    text-decoration: none;
-    color: aliceblue;
-    width: 100%;
-}
+  @keyframes showSidebar {
+    from {
+      opacity: 0;
+      width: 0;
+    }
+    to {
+      opacity: 1;
+      width: 300px;
+    }
+  }
 
 button {
     width: 100%;
@@ -62,6 +70,10 @@ button:hover {
     background-color: #2ECC71;
     border: none;
 } 
+`;
+
+const Content = styled.div`
+  margin-top: 100px;
 `;
 
 export default Sidebar
