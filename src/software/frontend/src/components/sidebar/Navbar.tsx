@@ -20,7 +20,6 @@ const Container = styled.div`
     height: 70px;
     display: flex;
     background-color: #323848;
-    box-shadow: 0 0 20px 3px;
     z-index: 1;
 
     > svg {

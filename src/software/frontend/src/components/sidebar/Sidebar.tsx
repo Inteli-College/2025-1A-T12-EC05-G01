@@ -13,9 +13,9 @@ const Sidebar = ({ active }) => {
       <Container sidebar={active}>
         <FaBars onClick={closeSidebar} />
         <Content>
-          <SidebarItem Text='Checagem de estoque' Path='/estoque' />
+          <SidebarItem Text='Dashboard' Path='/dashboard' />
+          <SidebarItem Text='Checagem de estoque' Path='/estoque'/>
           <SidebarItem Text='Prescrições' Path='/prescricoes' />
-          <SidebarItem Text='Montagens realizadas' Path='/montagens' />
           <SidebarItem Text='Montagens realizadas' Path='/montagens' />
           <SidebarItem Text='Verificação dos medicamentos' Path='/verificacao' />
         </Content>
