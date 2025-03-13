@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from sqlalchemy.orm import Session
 from .db_conexao import engine, Base, get_db, SessionLocal
 from .models.logs import Logs
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -22,6 +23,7 @@ def create_logs():
             action=request.json.get("action"),
             description=request.json.get("description"),
             status=request.json.get("status"),
+            log_data=datetime.now()
         )
         db.add(log)
         db.commit()
