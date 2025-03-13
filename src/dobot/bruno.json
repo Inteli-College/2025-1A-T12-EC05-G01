@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "dobot",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
