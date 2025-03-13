@@ -55,8 +55,12 @@ def move():
 
 @app_dobot.route("/dobot/medicamento/<medicamento>")
 def rotina_medicamento(medicamento):
-    executar_rotina_medicamento(dobot, medicamento, medicamentos)
-    return {"message": "Rotina executada"}, 200
+    if executar_rotina_medicamento(dobot, medicamento, medicamentos) == False:
+       return {"message": "Falha ao executar a rotina"}, 422
+       ## O código 422 (Unprocessable Entity) indica que a requisição foi válida,
+       ## mas não pôde ser processada corretamente pelo sistema.
+    dobot.home()
+    return {"message": "Rotina executada com sucesso"}, 200
 
 @app_dobot.route("/dobot/limpar-todos-alarmes")
 def limpar_alarmes():
