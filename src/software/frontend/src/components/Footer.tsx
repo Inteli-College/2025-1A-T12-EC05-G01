@@ -19,10 +19,10 @@ const StyledFooter = styled.footer`
   justify-content: space-around;
   align-items: center;
   padding: 10px 20px;
+  height: 10vh;
 
   .footer-image {
-    max-width: 50px;
-    height: auto;
+    height: 90%;
   }
 `;
 
