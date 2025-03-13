@@ -1,18 +1,20 @@
 from flask import Flask, request, jsonify
 from .config import Config
-from flask_mqtt import Mqtt
+# from flask_mqtt import Mqtt
 from pontos.carregar_medicamentos import carregar_medicamentos
 from SerialPortFinder.SerialPortFinder import SerialPortFinder
 from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
-
+from .functions.montar_fita import montar_fita
 app_dobot = Flask(__name__)
 
 # app_dobot.config.from_object(Config)
 # mqtt = Mqtt(app_dobot)
 
 medicamentos = carregar_medicamentos()
+
+fita = {}
 
 dobot = None
 
@@ -65,6 +67,38 @@ def limpar_alarmes():
 def posicao_atual():
     x, y, z, r, *_ = dobot.pose()
     return jsonify({"message": f"Posição atual: ({x}, {y}, {z}, {r})"}), 200    
+
+@app_dobot.route("/dobot/fita/adicionar", methods=["POST"])
+def adicionar_medicamento():
+    data = request.json
+    medicamento = data.get("medicamento")
+    quantidade = data.get("quantidade")
+
+    if not medicamento or not quantidade:
+        return jsonify({"status": "erro", "mensagem": "Parâmetros 'medicamento' e 'quantidade' são obrigatórios"}), 400
+    
+    try:
+        quantidade = int(quantidade)
+    except ValueError:
+        return jsonify({"status": "erro", "mensagem": "A quantidade deve ser um número inteiro"}), 400
+    
+    if medicamento not in fita:
+        fita[medicamento] = quantidade 
+    else:
+        fita[medicamento] += quantidade 
+
+    return jsonify({"status": "sucesso", "mensagem": f"Medicamento{medicamento} adicionado à fita", "fita": fita}), 200
+
+@app_dobot.route("/dobot/fita/montar", methods=["POST"])
+def realizar_montagem():
+    resultado = montar_fita(dobot, medicamentos, fita)
+    return jsonify(resultado), 200
+
+@app_dobot.route("/dobot/fita/cancelar", methods=["POST"])
+def cancelar_montagem():
+    global fita
+    fita = {}  # Limpa a fita
+    return jsonify({"status": "sucesso", "mensagem": "Montagem da fita cancelada."}), 200
 
 
 if __name__ == "__main__":
