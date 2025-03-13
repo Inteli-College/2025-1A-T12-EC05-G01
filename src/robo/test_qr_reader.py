@@ -2,8 +2,8 @@ import time
 import logging
 import sys
 import serial.tools.list_ports
-from src.robo.sensores.qr_sensor.reader import SerialDevice
-from src.robo.scanner_config.settings import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
+from robo.sensores.sensor_qr.leitor import SerialDevice
+from robo.base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 
 logging.basicConfig(
     level=logging.INFO,

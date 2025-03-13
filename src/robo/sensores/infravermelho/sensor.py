@@ -1,7 +1,7 @@
 import serial
 import logging
 import time
-from src.robo.scanner_config.settings import IR_SERIAL_PORT, IR_SERIAL_BAUDRATE, IR_THRESHOLD
+from robo.base_scanner.configuracoes import IR_SERIAL_PORT, IR_SERIAL_BAUDRATE, IR_THRESHOLD
 
 logger = logging.getLogger(__name__)
 
