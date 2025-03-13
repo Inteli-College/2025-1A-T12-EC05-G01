@@ -53,13 +53,14 @@ def move():
 
     return jsonify({"message": f"Moved to ({x}, {y}, {z})"}), 200
 
-@app_dobot.route("/dobot/<medicamento>")
+@app_dobot.route("/dobot/medicamento/<medicamento>")
 def rotina_medicamento(medicamento):
     executar_rotina_medicamento(dobot, medicamento, medicamentos)
     return {"message": "Rotina executada"}, 200
 
 @app_dobot.route("/dobot/limpar-todos-alarmes")
 def limpar_alarmes():
+    dobot.get_alarm_state()
     dobot.clear_all_alarms()
     return {"message": "Alarmes removidos"}, 200
 
