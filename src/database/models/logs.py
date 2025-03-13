@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, func, CheckConstraint
 from datetime import datetime
-from src.database.db_conexao import Base, engine
+from database.db_conexao import Base, engine
 
 class Logs(Base):
     __tablename__ = "logs"
