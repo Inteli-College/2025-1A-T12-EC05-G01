@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
 import { HiCheckCircle, HiOutlineClock } from "react-icons/hi2";
+import Chart from '../components/Chart';
 //import axios from 'axios';
 
 const BodyDashboard = styled.div`
@@ -39,6 +40,32 @@ const BodyDashboard = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  .secao-atividades {
+    width: 80%;
+    
+  }
+
+  .secao-atividades h3 {
+    margin: 3rem 0 0 0;
+    color: #34495E;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  .atividades {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+  }
+
+  .chart {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
   }
 `;
 
@@ -125,7 +152,19 @@ const Dashboard = () => {
         </div>
       </div>
 
-      
+      <section className="secao-atividades">
+        <h3>Acompanhamento de atividades</h3>
+        <div className="atividades">
+          <div className="chart">
+            <Chart />
+          </div>
+
+          <div className="tabela">
+            AQUI VAI A TABELA DE ÚLTIMAS MONTAGENS
+          </div>
+        </div>
+      </section>
+
       <footer><Footer /></footer>
     </BodyDashboard>
   );
