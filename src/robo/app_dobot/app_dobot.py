@@ -7,23 +7,51 @@ from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
 from .functions.montar_fita import montar_fita
+from .functions.conectar_qr_code import conectar_qr_code
+import os
+import time
+import time
+import logging
+import sys
+import serial.tools.list_ports
+from sensores.sensor_qr.leitor import SerialDevice
+from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
+
 app_dobot = Flask(__name__)
 
-# app_dobot.config.from_object(Config)
-# mqtt = Mqtt(app_dobot)
-
+# Configurações iniciais
 medicamentos = carregar_medicamentos()
-
 fita = {}
-
 dobot = None
 
-ports = SerialPortFinder.find_available_ports()
-port = DobotAutoDetector.detect(ports)
-connection_handler = DobotConnectionHandler()
-connection_handler.connect(port)
-connection_handler.initialize_robot()
-dobot = connection_handler.robot
+def inicializar_dispositivos():
+    global dobot, qr_reader
+    
+    # Verifica se já foi inicializado
+    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true' and app_dobot.debug:
+        return
+
+    print("\n=== INICIALIZAÇÃO DE DISPOSITIVOS ===")
+    
+    # Conectar QR Code
+    ##print("\n[CONEXÃO QR CODE]")
+    ##qr_reader = conectar_qr_code()
+    ##time.sleep(2)
+    
+    # Conectar Dobot
+    print("\n[CONEXÃO DOBOT]")
+    ports = SerialPortFinder.find_available_ports()
+    port = DobotAutoDetector.detect(ports)
+    connection_handler = DobotConnectionHandler()
+    connection_handler.connect(port)
+    connection_handler.initialize_robot()
+    dobot = connection_handler.robot
+    print("=== DISPOSITIVOS INICIALIZADOS ===\n")
+
+# Executa a inicialização apenas uma vez
+if not app_dobot.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+    inicializar_dispositivos()
+    
 
 @app_dobot.route("/dobot")
 def initiate_dobot():
@@ -57,8 +85,6 @@ def move():
 def rotina_medicamento(medicamento):
     if executar_rotina_medicamento(dobot, medicamento, medicamentos) == False:
        return {"message": "Falha ao executar a rotina"}, 422
-       ## O código 422 (Unprocessable Entity) indica que a requisição foi válida,
-       ## mas não pôde ser processada corretamente pelo sistema.
     dobot.home()
     return {"message": "Rotina executada com sucesso"}, 200
 
@@ -92,7 +118,7 @@ def adicionar_medicamento():
     else:
         fita[medicamento] += quantidade 
 
-    return jsonify({"status": "sucesso", "mensagem": f"Medicamento{medicamento} adicionado à fita", "fita": fita}), 200
+    return jsonify({"status": "sucesso", "mensagem": f"Medicamento {medicamento} adicionado à fita", "fita": fita}), 200
 
 @app_dobot.route("/dobot/fita/montar", methods=["POST"])
 def realizar_montagem():
@@ -105,6 +131,5 @@ def cancelar_montagem():
     fita = {}  # Limpa a fita
     return jsonify({"status": "sucesso", "mensagem": "Montagem da fita cancelada."}), 200
 
-
 if __name__ == "__main__":
-    app_dobot.run(host="0.0.0.0", port=5000, debug=True)
+    app_dobot.run(host="0.0.0.0", port=5000, debug=False)
