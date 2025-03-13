@@ -1,180 +1,135 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
-import Navbar from '../components/sidebar/Navbar';
+import Header from '../components/sidebar/Navbar';
+import { HiCheckCircle, HiOutlineClock } from "react-icons/hi2";
 //import axios from 'axios';
+
+const BodyDashboard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .topo-dash {
+    display: flex;
+    align-itens: flex-start;
+    width: 80%;
+
+    color: #34495E;
+    font-size: 28px;
+    font-weight: 900;
+  }
+
+  > nav {width: 100%;}
+  
+  > footer {width: 100%;}
+
+  .fitas-section {
+    width: 80%;
+  }
+  
+  .fitas-section h3 {
+    margin: 0;
+    color: #34495E;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  .fitas {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+`;
+
+const CardBox = styled.div`
+  background-color: #34495E;
+  width: 20%;
+  border-radius: 15px;
+  padding: 1rem;
+  gap: 2.5rem;
+  color: white;
+  margin: 1rem;
+
+  display: flex;
+  flex-direction: row;
+
+  > svg {
+    width: 20%;
+    height: 20%; 
+    color: #4D925B;
+    margin-left: 1rem;
+  }
+  
+  .infos span {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  .infos p {
+    font-size: 16px;
+    font-weight: 400;
+    margin: .2rem;
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const CardComponent = ({ paciente, id, data, horario }) => {
+  return (
+    <CardBox>
+      <HiCheckCircle />
+      <section className="infos">
+        <span>{paciente}</span>
+        <p>ID: {id}</p>
+        <p><HiOutlineClock /> {data}, {horario} </p>
+      </section>
+    </CardBox>
+  )
+};
+
 
 const Dashboard = () => {
   return (
-    <StyledWrapper>
-      <nav><Navbar /></nav>
+    <BodyDashboard>
+      <nav><Header /></nav>
       <div className="topo-dash">
-        <h2>Métricas de acompanhamento</h2>
-        <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius.</p>
+        <h1>Dashboard</h1>
+      </div>
+      <div className="fitas-section">
+        <h3>Fitas Montadas</h3>
+        <div className="fitas">
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+        </div>
       </div>
 
-      <section className="cards-fitas">
-        <h3>Fitas montadas</h3>
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
+      <div className="fitas-section">
+        <h3>Fitas Montadas</h3>
+        <div className="fitas">
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
         </div>
+      </div>
 
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="cards-fitas">
-        <h3>Fitas em montagem</h3>
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="grafico">
-        <h3>Taxa de sucesso</h3>
-        <img src="" alt="" />
-      </section>
-
-      <section className="montagens">
-        <h3>Últimas montagens</h3>
-        <div className="infos-lista-montagem">
-          <p>id da montagem</p>
-          <p>Status</p>
-          <p>horário de finalização da montagem</p>
-        </div>
-
-        <ul className="lista-montagens">
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-        </ul>
-      </section>
-
-      <Footer />
-    </StyledWrapper>
+      
+      <footer><Footer /></footer>
+    </BodyDashboard>
   );
-}
+};
 
-const StyledWrapper = styled.div`
-  .topo-dash {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  .cards-fitas, .grafico, .montagens {
-    margin: 20px;
-  }
-
-  .card-fita, .infos-lista-montagem, .lista-montagens {
-    margin-bottom: 20px;
-  }
-
-  .infos-card-fita {
-    margin-top: 10px;
-  }
-`;
 
 export default Dashboard;
