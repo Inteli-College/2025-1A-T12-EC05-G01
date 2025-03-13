@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import requests, http
 from .config import Config
 # from flask_mqtt import Mqtt
 from pontos.carregar_medicamentos import carregar_medicamentos
@@ -7,10 +8,13 @@ from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
 from .functions.montar_fita import montar_fita
+
 app_dobot = Flask(__name__)
 
 # app_dobot.config.from_object(Config)
 # mqtt = Mqtt(app_dobot)
+
+DATABASE_URL = "http://127.0.0.1:3000"
 
 medicamentos = carregar_medicamentos()
 
@@ -25,19 +29,29 @@ connection_handler.connect(port)
 connection_handler.initialize_robot()
 dobot = connection_handler.robot
 
-@app_dobot.route("/dobot")
-def initiate_dobot():
-    ports = SerialPortFinder.find_available_ports()
-    port = DobotAutoDetector.detect(ports)
-    connection_handler = DobotConnectionHandler()
-    connection_handler.connect(port)
-    connection_handler.initialize_robot()
-    dobot = connection_handler.robot
-    return jsonify({"message": "Robo conectado"}), 200
+# @app_dobot.route("/dobot")
+# def initiate_dobot():
+#     ports = SerialPortFinder.find_available_ports()
+#     port = DobotAutoDetector.detect(ports)
+#     connection_handler = DobotConnectionHandler()
+#     connection_handler.connect(port)
+#     connection_handler.initialize_robot()
+#     dobot = connection_handler.robot
+#     return jsonify({"message": "Robo conectado"}), 200
 
 @app_dobot.route("/dobot/home", methods=["GET"])
 def move_home():
     dobot.home()
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description":"Moved to home position",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return jsonify({"message": "Moved to home position"}), 200
 
 @app_dobot.route("/dobot/move", methods=["POST"])
@@ -50,23 +64,63 @@ def move():
 
     if None in (x, y, z, r):
         return jsonify({"error": "Missing parameters"}), 400
+    
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description":f"Moved to ({x}, {y}, {z})",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
     return jsonify({"message": f"Moved to ({x}, {y}, {z})"}), 200
 
 @app_dobot.route("/dobot/medicamento/<medicamento>")
 def rotina_medicamento(medicamento):
     executar_rotina_medicamento(dobot, medicamento, medicamentos)
+    dobot.home()
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": f"Rotina executada para o medicamento {medicamento}",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return {"message": "Rotina executada"}, 200
 
 @app_dobot.route("/dobot/limpar-todos-alarmes")
 def limpar_alarmes():
     dobot.get_alarm_state()
     dobot.clear_all_alarms()
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": "Alarmes removidos.",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return {"message": "Alarmes removidos"}, 200
 
 @app_dobot.route("/dobot/posicao", methods=["GET"])
 def posicao_atual():
     x, y, z, r, *_ = dobot.pose()
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": f"Posição verificada: ({x}, {y}, {z}, {r})",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return jsonify({"message": f"Posição atual: ({x}, {y}, {z}, {r})"}), 200    
 
 @app_dobot.route("/dobot/fita/adicionar", methods=["POST"])
@@ -88,17 +142,46 @@ def adicionar_medicamento():
     else:
         fita[medicamento] += quantidade 
 
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": f"Medicamento{medicamento} adicionado à fita",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return jsonify({"status": "sucesso", "mensagem": f"Medicamento{medicamento} adicionado à fita", "fita": fita}), 200
 
 @app_dobot.route("/dobot/fita/montar", methods=["POST"])
 def realizar_montagem():
     resultado = montar_fita(dobot, medicamentos, fita)
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": "Montagem da fita concluída",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return jsonify(resultado), 200
 
 @app_dobot.route("/dobot/fita/cancelar", methods=["POST"])
 def cancelar_montagem():
     global fita
     fita = {}  # Limpa a fita
+
+    data = {
+        "level":"INFO",
+        "origin":"sistema",
+        "action":"STARTUP",
+        "description": "Montagem da fita cancelada",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
     return jsonify({"status": "sucesso", "mensagem": "Montagem da fita cancelada."}), 200
 
 
