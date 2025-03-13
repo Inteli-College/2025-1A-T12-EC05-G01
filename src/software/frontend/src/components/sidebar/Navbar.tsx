@@ -10,8 +10,10 @@ const Header = () => {
 
     return (
         <Container className="container">
-            <FaBars onClick={showSidebar} />
+            <FaBars onClick={showSidebar} className='fabars'/>
+            <FaUserAlt className='fauseralt' onClick={() => {window.location.href='/login'}}/>
             {sidebar && <Sidebar active={setSidebar} />}
+            
         </Container>
     );
 };
@@ -21,14 +23,26 @@ const Container = styled.div`
     display: flex;
     background-color: #323848;
     z-index: 1;
+    
 
-    > svg {
+    .fabars {
         position: fixed;
         color: #2ECC71;
         width: 30px;
         height: 40px;
         margin-top: 13px;
         margin-left: 22px;
+        cursor: pointer;
+    }
+
+    .fauseralt {
+        position: fixed;
+        right: 0%;
+        color: #2ECC71;
+        width: 30px;
+        height: 40px;
+        margin-top: 13px;
+        margin-right: 22px;
         cursor: pointer;
     }
 `
