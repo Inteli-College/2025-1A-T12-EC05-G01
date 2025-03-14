@@ -4,7 +4,7 @@ import serial.tools.list_ports
 from yaspin import yaspin, Spinner
 from sensores.sensor_qr.leitor import SerialDevice
 from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
-from .qr_code_list_ports import list_available_ports, select_port
+from .qr_code_ports import list_available_ports, select_port
 
 def conectar_qr_code():
     # Configuração do spinner

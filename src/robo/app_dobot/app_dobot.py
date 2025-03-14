@@ -7,15 +7,10 @@ from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
 from .functions.montar_fita import montar_fita
-from .functions.conectar_qr_code import conectar_qr_code
 import os
-import time
 import time
 import logging
 import sys
-import serial.tools.list_ports
-from sensores.sensor_qr.leitor import SerialDevice
-from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 
 app_dobot = Flask(__name__)
 
@@ -27,7 +22,7 @@ fita = {}
 dobot = None
 
 def inicializar_dispositivos():
-    global dobot, qr_reader
+    global dobot
     
     # Verifica se já foi inicializado
     if os.environ.get('WERKZEUG_RUN_MAIN') != 'true' and app_dobot.debug:
