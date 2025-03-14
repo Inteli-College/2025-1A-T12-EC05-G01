@@ -4,6 +4,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import alertaImg from '../assets/alerta.png';
 import maisImg from '../assets/mais.png';
 import menosImg from '../assets/menos.png';
+import Header from '../components/sidebar/Navbar';
+import Footer from '../components/Footer';
 
 // Add a GlobalStyle component for body styling
 const GlobalStyle = createGlobalStyle`
@@ -13,6 +15,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
   }
+
 `;
 
 export default function Estoque() {
@@ -20,6 +23,7 @@ export default function Estoque() {
         <>
             <GlobalStyle />
             <EstoqueContainer>
+              <nav><Header /> </nav>
                 <TopoEstoque>
                     <TituloPagina>Controle de Estoque</TituloPagina>
                     <PopupAdicionarMedicamentos />
@@ -73,6 +77,7 @@ export default function Estoque() {
                         ))}
                     </QuadroContainer>
                 </SecaoContainer>
+                <footer><Footer /> </footer>
             </EstoqueContainer>
         </>
     );
@@ -308,6 +313,14 @@ const EstoqueContainer = styled.div`
   background-color: #ECF0F1;
   width: 100%;
   min-height: 100vh;
+  
+  > nav {
+    width: 100%; 
+  }
+
+  > footer {
+    width: 100%; 
+  }
 `;
 
 const TopoEstoque = styled.div`

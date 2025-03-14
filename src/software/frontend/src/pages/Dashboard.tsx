@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
-import { HiCheckCircle, HiOutlineClock } from "react-icons/hi2";
+import { HiCheckCircle, HiOutlineClock, HiClock } from "react-icons/hi2";
+import Chart from '../components/Chart';
 //import axios from 'axios';
 
 const BodyDashboard = styled.div`
@@ -40,6 +41,55 @@ const BodyDashboard = styled.div`
     align-items: center;
     flex-wrap: wrap;
   }
+
+  .secao-atividades {
+    width: 80%;
+    
+  }
+
+  .secao-atividades h3 {
+    margin: 3rem 0 0 0;
+    color: #34495E;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  .atividades {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .chart {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
+  }
+
+  .tabela {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
+    overflow: auto;
+    max-height: 420px;
+  }
+
+  .labels {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .labels span {
+    color: #FFF;
+    font-size: 24px;
+    font-weight: 900;
+  }
 `;
 
 const CardBox = styled.div`
@@ -76,10 +126,10 @@ const CardBox = styled.div`
   }
 `;
 
-const CardComponent = ({ paciente, id, data, horario }) => {
+const CardComponent = ({ paciente, id, data, horario, icon }) => {
   return (
     <CardBox>
-      <HiCheckCircle />
+      {icon}
       <section className="infos">
         <span>{paciente}</span>
         <p>ID: {id}</p>
@@ -88,6 +138,30 @@ const CardComponent = ({ paciente, id, data, horario }) => {
     </CardBox>
   )
 };
+
+const TableBox = styled.div`
+  width: 100%;
+  background-color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 1rem;
+  }
+  
+`
+
+const TableComponent = ({ paciente, status, tratamento }) => {
+  return (
+    <TableBox>
+      <p>{paciente}</p>
+      <p>{status}</p>
+      <p>{tratamento}</p>
+    </TableBox>
+  )
+}
 
 
 const Dashboard = () => {
@@ -100,32 +174,54 @@ const Dashboard = () => {
       <div className="fitas-section">
         <h3>Fitas Montadas</h3>
         <div className="fitas">
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
         </div>
       </div>
 
       <div className="fitas-section">
-        <h3>Fitas Montadas</h3>
+        <h3>Em andamento</h3>
         <div className="fitas">
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
         </div>
       </div>
 
-      
+      <section className="secao-atividades">
+        <h3>Acompanhamento de atividades</h3>
+        <div className="atividades">
+          <div className="chart">
+            <Chart />
+          </div>
+
+          <div className="tabela">
+            <div className="labels">
+              <span>Paciente</span>
+              <span>Status</span>
+              <span>Tratamento</span>
+            </div>
+            <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
+          </div>
+        </div>
+      </section>
+
       <footer><Footer /></footer>
     </BodyDashboard>
   );
