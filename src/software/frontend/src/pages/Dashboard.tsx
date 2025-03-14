@@ -174,28 +174,28 @@ const Dashboard = () => {
       <div className="fitas-section">
         <h3>Fitas Montadas</h3>
         <div className="fitas">
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" />
         </div>
       </div>
 
       <div className="fitas-section">
         <h3>Fitas Montadas</h3>
         <div className="fitas">
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="João Silva" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" />
         </div>
       </div>
 
