@@ -59,6 +59,7 @@ const BodyDashboard = styled.div`
     display: flex;
     justify-content: space-between;
     margin: 1rem;
+    margin-bottom: 2.5rem;
   }
 
   .chart {
@@ -66,6 +67,28 @@ const BodyDashboard = styled.div`
     background-color: #34495E;
     border-radius: 15px;
     padding: 2rem;
+  }
+
+  .tabela {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
+    overflow: auto;
+    max-height: 420px;
+  }
+
+  .labels {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .labels span {
+    color: #FFF;
+    font-size: 24px;
+    font-weight: 900;
   }
 `;
 
@@ -116,6 +139,30 @@ const CardComponent = ({ paciente, id, data, horario }) => {
   )
 };
 
+const TableBox = styled.div`
+  width: 100%;
+  background-color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 1rem;
+  }
+  
+`
+
+const TableComponent = ({ paciente, status, tratamento }) => {
+  return (
+    <TableBox>
+      <p>{paciente}</p>
+      <p>{status}</p>
+      <p>{tratamento}</p>
+    </TableBox>
+  )
+}
+
 
 const Dashboard = () => {
   return (
@@ -160,7 +207,17 @@ const Dashboard = () => {
           </div>
 
           <div className="tabela">
-            AQUI VAI A TABELA DE ÚLTIMAS MONTAGENS
+            <div className="labels">
+              <span>Paciente</span>
+              <span>Status</span>
+              <span>Tratamento</span>
+            </div>
+            <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
           </div>
         </div>
       </section>
