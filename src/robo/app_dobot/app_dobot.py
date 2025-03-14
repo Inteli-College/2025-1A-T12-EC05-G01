@@ -8,6 +8,15 @@ from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
 from .functions.montar_fita import montar_fita
+from .functions.conectar_qr_code import conectar_qr_code
+import os
+import time
+import time
+import logging
+import sys
+import serial.tools.list_ports
+from sensores.sensor_qr.leitor import SerialDevice
+from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 
 app_dobot = Flask(__name__)
 
@@ -16,18 +25,39 @@ app_dobot = Flask(__name__)
 
 DATABASE_URL = "http://127.0.0.1:3000"
 
+# Configurações iniciais
 medicamentos = carregar_medicamentos()
-
 fita = {}
-
 dobot = None
 
-ports = SerialPortFinder.find_available_ports()
-port = DobotAutoDetector.detect(ports)
-connection_handler = DobotConnectionHandler()
-connection_handler.connect(port)
-connection_handler.initialize_robot()
-dobot = connection_handler.robot
+def inicializar_dispositivos():
+    global dobot, qr_reader
+    
+    # Verifica se já foi inicializado
+    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true' and app_dobot.debug:
+        return
+
+    print("\n=== INICIALIZAÇÃO DE DISPOSITIVOS ===")
+    
+    # Conectar QR Code
+    ##print("\n[CONEXÃO QR CODE]")
+    ##qr_reader = conectar_qr_code()
+    ##time.sleep(2)
+    
+    # Conectar Dobot
+    print("\n[CONEXÃO DOBOT]")
+    ports = SerialPortFinder.find_available_ports()
+    port = DobotAutoDetector.detect(ports)
+    connection_handler = DobotConnectionHandler()
+    connection_handler.connect(port)
+    connection_handler.initialize_robot()
+    dobot = connection_handler.robot
+    print("=== DISPOSITIVOS INICIALIZADOS ===\n")
+
+# Executa a inicialização apenas uma vez
+if not app_dobot.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+    inicializar_dispositivos()
+    
 
 # @app_dobot.route("/dobot")
 # def initiate_dobot():
@@ -78,9 +108,20 @@ def move():
 
 @app_dobot.route("/dobot/medicamento/<medicamento>")
 def rotina_medicamento(medicamento):
-    executar_rotina_medicamento(dobot, medicamento, medicamentos)
+    if executar_rotina_medicamento(dobot, medicamento, medicamentos) == False:
+       # Enviar logs para o banco
+        data = {
+            "level":"INFO",
+            "origin":"sistema",
+            "action":"STARTUP",
+            "description": f"Falha ao executar a rotina para o medicamento {medicamento}",
+            "status": "SUCCESS"
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return {"message": "Falha ao executar a rotina"}, 422
     dobot.home()
 
+    # Enviar logs para o banco
     data = {
         "level":"INFO",
         "origin":"sistema",
@@ -90,7 +131,8 @@ def rotina_medicamento(medicamento):
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
-    return {"message": "Rotina executada"}, 200
+    return {"message": "Rotina executada com sucesso"}, 200
+
 
 @app_dobot.route("/dobot/limpar-todos-alarmes")
 def limpar_alarmes():
@@ -151,7 +193,8 @@ def adicionar_medicamento():
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
-    return jsonify({"status": "sucesso", "mensagem": f"Medicamento{medicamento} adicionado à fita", "fita": fita}), 200
+    return jsonify({"status": "sucesso", "mensagem": f"Medicamento {medicamento} adicionado à fita", "fita": fita}), 200
+
 
 @app_dobot.route("/dobot/fita/montar", methods=["POST"])
 def realizar_montagem():
@@ -184,6 +227,5 @@ def cancelar_montagem():
 
     return jsonify({"status": "sucesso", "mensagem": "Montagem da fita cancelada."}), 200
 
-
 if __name__ == "__main__":
-    app_dobot.run(host="0.0.0.0", port=5000, debug=True)
+    app_dobot.run(host="0.0.0.0", port=5000, debug=False)
