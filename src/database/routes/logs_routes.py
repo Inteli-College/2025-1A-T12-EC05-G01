@@ -1,21 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 from sqlalchemy.orm import Session
-from .db_conexao import engine, Base, get_db, SessionLocal
-from .models.logs import Logs
+from ..db_conexao import engine, Base, get_db, SessionLocal
+from ..models.logs import Logs
 from datetime import datetime
 
-app = Flask(__name__)
+logs_routes = Blueprint('logs', __name__)
+@logs_routes.route('/logs')
 
-# Create tables if they don't exist
-Base.metadata.create_all(bind=engine)
-
-@app.route("/")
-def connect_database():
-    return jsonify({"message": "Database connected!"})
-
-@app.route("/logs/create", methods=["POST"])
+@logs_routes.route("/logs/create", methods=["POST"])
 def create_logs():
-    db = SessionLocal()  # Open a new session
+    db = SessionLocal()
     try:
         log = Logs(
             level=request.json.get("level"),
@@ -32,7 +26,4 @@ def create_logs():
         db.rollback()
         return {"error": str(e)}, 500
     finally:
-        db.close()  # Close the session
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000, debug=True)
+        db.close()
