@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
-import { HiCheckCircle, HiOutlineClock } from "react-icons/hi2";
+import { HiCheckCircle, HiOutlineClock, HiClock } from "react-icons/hi2";
 import Chart from '../components/Chart';
 //import axios from 'axios';
 
@@ -126,10 +126,10 @@ const CardBox = styled.div`
   }
 `;
 
-const CardComponent = ({ paciente, id, data, horario }) => {
+const CardComponent = ({ paciente, id, data, horario, icon }) => {
   return (
     <CardBox>
-      <HiCheckCircle />
+      {icon}
       <section className="infos">
         <span>{paciente}</span>
         <p>ID: {id}</p>
@@ -174,28 +174,28 @@ const Dashboard = () => {
       <div className="fitas-section">
         <h3>Fitas Montadas</h3>
         <div className="fitas">
-          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
         </div>
       </div>
 
       <div className="fitas-section">
-        <h3>Fitas Montadas</h3>
+        <h3>Em andamento</h3>
         <div className="fitas">
-          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" />
-          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" />
+          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
         </div>
       </div>
 
