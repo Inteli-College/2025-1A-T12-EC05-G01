@@ -65,8 +65,8 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
         pontos_medicamento = medicamentos[medicamento - 1]['pontos'][i]  
         if i < len(medicamentos[medicamento - 1]['pontos']) - 1:
             prox_ponto = medicamentos[medicamento - 1]['pontos'][i + 1]
-        else:
-            prox_ponto = {'suctionCup': 'off'}
+        if i < len(medicamentos[medicamento - 1]['pontos']) - 2:
+            prox_prox_ponto = medicamentos[medicamento - 1]['pontos'][i + 2]
         
         x = float(pontos_medicamento['x'])
         y = float(pontos_medicamento['y'])  
@@ -84,7 +84,7 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
             robo.movel_to(x, y, z, r, wait=True)
             
         # Lógica modificada para leitura de QR code
-        if pontos_medicamento['suctionCup'].lower() == 'off' and prox_ponto['suctionCup'].lower() == 'on':
+        if prox_ponto['suctionCup'].lower() == 'off' and prox_prox_ponto['suctionCup'].lower() == 'on':
             #available_ports = list_available_ports()
             #selected_port = select_port(available_ports)
 
@@ -105,7 +105,7 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
                         print("========================")
                         qr_detectado = True  # Sair do loop após detecção
                     
-                    time.sleep(SCAN_INTERVAL)
+                    ##time.sleep(SCAN_INTERVAL)
 
             except Exception as e:
                 print(f"Erro: {e}")
@@ -126,12 +126,11 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
             try:
                 data = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 2)
                 sensor_value = (data[0] << 8) | data[1]
-                logger.debug(f"Valor do sensor: {sensor_value}")
+                print(f"Valor do sensor: {sensor_value}")
                 
-                if sensor_value > 250:
+                if sensor_value > 600:
                     logger.warning("Falha na pega do medicamento. Reiniciando rotina...")
                     robo.movel_to(x, y, 143.0, r, wait=True)
-                    # Corrigido: Removido o parâmetro qr_reader da chamada recursiva
                     return executar_rotina_medicamento(
                         robo, medicamento, medicamentos,
                         delta_z=0, tentativas=tentativas+1, max_tentativas=max_tentativas
