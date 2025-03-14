@@ -1,180 +1,231 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
-import Navbar from '../components/sidebar/Navbar';
+import Header from '../components/sidebar/Navbar';
+import { HiCheckCircle, HiOutlineClock, HiClock } from "react-icons/hi2";
+import Chart from '../components/Chart';
 //import axios from 'axios';
+
+const BodyDashboard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .topo-dash {
+    display: flex;
+    align-itens: flex-start;
+    width: 80%;
+
+    color: #34495E;
+    font-size: 28px;
+    font-weight: 900;
+  }
+
+  > nav {width: 100%;}
+  
+  > footer {width: 100%;}
+
+  .fitas-section {
+    width: 80%;
+  }
+  
+  .fitas-section h3 {
+    margin: 0;
+    color: #34495E;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  .fitas {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .secao-atividades {
+    width: 80%;
+    
+  }
+
+  .secao-atividades h3 {
+    margin: 3rem 0 0 0;
+    color: #34495E;
+    font-size: 36px;
+    font-weight: 900;
+  }
+
+  .atividades {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .chart {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
+  }
+
+  .tabela {
+    width: 40%;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 2rem;
+    overflow: auto;
+    max-height: 420px;
+  }
+
+  .labels {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .labels span {
+    color: #FFF;
+    font-size: 24px;
+    font-weight: 900;
+  }
+`;
+
+const CardBox = styled.div`
+  background-color: #34495E;
+  width: 20%;
+  border-radius: 15px;
+  padding: 1rem;
+  gap: 2.5rem;
+  color: white;
+  margin: 1rem;
+
+  display: flex;
+  flex-direction: row;
+
+  > svg {
+    width: 20%;
+    height: 20%; 
+    color: #4D925B;
+    margin-left: 1rem;
+  }
+  
+  .infos span {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  .infos p {
+    font-size: 16px;
+    font-weight: 400;
+    margin: .2rem;
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const CardComponent = ({ paciente, id, data, horario, icon }) => {
+  return (
+    <CardBox>
+      {icon}
+      <section className="infos">
+        <span>{paciente}</span>
+        <p>ID: {id}</p>
+        <p><HiOutlineClock /> {data}, {horario} </p>
+      </section>
+    </CardBox>
+  )
+};
+
+const TableBox = styled.div`
+  width: 100%;
+  background-color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+
+  p {
+    margin: 1rem;
+  }
+  
+`
+
+const TableComponent = ({ paciente, status, tratamento }) => {
+  return (
+    <TableBox>
+      <p>{paciente}</p>
+      <p>{status}</p>
+      <p>{tratamento}</p>
+    </TableBox>
+  )
+}
+
 
 const Dashboard = () => {
   return (
-    <StyledWrapper>
-      <nav><Navbar /></nav>
+    <BodyDashboard>
+      <nav><Header /></nav>
       <div className="topo-dash">
-        <h2>Métricas de acompanhamento</h2>
-        <p>Lorem ipsum dolor sit amet. Ut autem suscipit At beatae molestias est autem beatae aut libero veritatis sit placeat nihil et inventore eius.</p>
+        <h1>Dashboard</h1>
+      </div>
+      <div className="fitas-section">
+        <h3>Fitas Montadas</h3>
+        <div className="fitas">
+          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+        </div>
       </div>
 
-      <section className="cards-fitas">
-        <h3>Fitas montadas</h3>
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
+      <div className="fitas-section">
+        <h3>Em andamento</h3>
+        <div className="fitas">
+          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
+          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
         </div>
+      </div>
 
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
+      <section className="secao-atividades">
+        <h3>Acompanhamento de atividades</h3>
+        <div className="atividades">
+          <div className="chart">
+            <Chart />
           </div>
-        </div>
 
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="cards-fitas">
-        <h3>Fitas em montagem</h3>
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
-          </div>
-        </div>
-
-        <div className="card-fita">
-          <img src="" alt="imagem do remédio" />
-          <div className="infos-card-fita">
-            <span>Nome do paciente</span>
-            <p>informações da fita</p>
+          <div className="tabela">
+            <div className="labels">
+              <span>Paciente</span>
+              <span>Status</span>
+              <span>Tratamento</span>
+            </div>
+            <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
+            <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
           </div>
         </div>
       </section>
 
-      <section className="grafico">
-        <h3>Taxa de sucesso</h3>
-        <img src="" alt="" />
-      </section>
-
-      <section className="montagens">
-        <h3>Últimas montagens</h3>
-        <div className="infos-lista-montagem">
-          <p>id da montagem</p>
-          <p>Status</p>
-          <p>horário de finalização da montagem</p>
-        </div>
-
-        <ul className="lista-montagens">
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-
-          <li>
-            <p>id da montagem</p>
-            <select>
-              <option>Status</option>
-              <option>Concluída</option>
-              <option>Aguardando aprovação</option>
-              <option>Montagem com erro</option>
-            </select>
-            <p>horário de finalização da montagem</p>
-          </li>
-        </ul>
-      </section>
-
-      <Footer />
-    </StyledWrapper>
+      <footer><Footer /></footer>
+    </BodyDashboard>
   );
-}
+};
 
-const StyledWrapper = styled.div`
-  .topo-dash {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  .cards-fitas, .grafico, .montagens {
-    margin: 20px;
-  }
-
-  .card-fita, .infos-lista-montagem, .lista-montagens {
-    margin-bottom: 20px;
-  }
-
-  .infos-card-fita {
-    margin-top: 10px;
-  }
-`;
 
 export default Dashboard;
