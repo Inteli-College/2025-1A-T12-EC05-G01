@@ -13,7 +13,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Sensor infravermelho 
 
-&emsp;O sensor infravermelho funciona de modo a emitir uma luz em frequência infravermelha, ou seja, invisível ao olho humano. Essa luz emitida reflete em um objeto e volta ao receptor do sensor. A partir disso, podemos medir a intensidade com a qual a luz voltou. Assim, podemos definir se um objeto está perto ou longe do sensor. Isso se faz extremamente útil para o projeto em questão, onde é necessário verificar se o robô realmente pegou um medicamento. Dessa forma, foi montado um suporte com os sensores posicionados de maneira que, quando um objeto é coletado pelo robô, o sensor consegue perceber isso. Por conta disso, é possível tomar medidas cabíveis quando um medicamento, por exemplo, cair no meio do transporte. 
+&emsp;O sensor infravermelho é de modelo TCRT5000 e funciona de modo a emitir uma luz em frequência infravermelha, ou seja, invisível ao olho humano. Essa luz emitida reflete em um objeto e volta ao receptor do sensor. A partir disso, podemos medir a intensidade com a qual a luz voltou. Assim, podemos definir se um objeto está perto ou longe do sensor. Isso se faz extremamente útil para o projeto em questão, onde é necessário verificar se o robô realmente pegou um medicamento. Dessa forma, foi montado um suporte com os sensores posicionados de maneira que, quando um objeto é coletado pelo robô, o sensor consegue perceber isso. Por conta disso, é possível tomar medidas cabíveis quando um medicamento, por exemplo, cair no meio do transporte. 
 
 <div style={{ textAlign: 'center' }}>
   <p><strong>Figura 1 - Suporte desenvolvido com sensores</strong></p>
@@ -28,7 +28,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Leitor de QR Code
 
-&emsp;Além do sensor infravermelho, um leitor de QR Code foi conectado ao Raspberry Pi, que está sendo utilizado como computador/cérebro do robô. O leitor de QR Code está conectado ao computador via cabo USB, de modo que é possível ler os seus dados a partir de uma simples leitura da porta serial. O leitor de QR Code tem a funcionalidade de realizar a bipagem do medicamento, ou seja, registrar que tal medicamento foi retirado de um bin a fim de realizar atualizações no estoque e realizar cobranças aos pacientes. No fluxo do sistema, o braço robótico fica parado em uma posição acima do bin de medicamento até que consiga ler um QR Code válido. Caso não consiga ler, a montagem não é feita. 
+&emsp;Além do sensor infravermelho, um leitor de QR Code MH-ET foi conectado ao Raspberry Pi, que está sendo utilizado como computador/cérebro do robô. O leitor de QR Code está conectado ao computador via cabo USB, de modo que é possível ler os seus dados a partir de uma simples leitura da porta serial. O leitor de QR Code tem a funcionalidade de realizar a bipagem do medicamento, ou seja, registrar que tal medicamento foi retirado de um bin a fim de realizar atualizações no estoque e realizar cobranças aos pacientes. No fluxo do sistema, o braço robótico fica parado em uma posição acima do bin de medicamento até que consiga ler um QR Code válido. Caso não consiga ler, a montagem não é feita. 
 
 ## Diagramas e esquemáticos
 
