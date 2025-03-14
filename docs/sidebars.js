@@ -97,6 +97,13 @@ const sidebars = {
         'Sprint 2/Logs de atividades/Logs'
       ],
     },
+    {
+      type: 'category',
+      label: 'Sprint 3',
+      items: [
+        'Sprint 3/Esquemático/Esquematico'
+      ],
+    },
   ],
 };
 
