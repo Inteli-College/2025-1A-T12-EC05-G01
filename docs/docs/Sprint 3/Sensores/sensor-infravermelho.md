@@ -62,9 +62,32 @@ while True:
     
 ```
 
-A partir do recebimento da leitura constante dos valores do sensor infravermelho, foi possível fazer lógicas no código que se adequassem com as regras de negócios da farmácia do HC, de modo que através do código a seguir, será possível ver se o robô falhar ao tentar coletar um medicamento, ele irá reiniciar e tentar executar a ação novamente, o que irá impossibilitar uma fita de medicamentos ser montada com a ausência de algum remédio. Como o sensor possui um fototransistor embutido, ele identifica se o medicamento foi coletado ou não de acordo com a luminosidade.
+A partir do recebimento da leitura constante dos valores do sensor infravermelho, foi possível fazer lógicas no código que se adequassem com as regras de negócios da farmácia do HC, de modo que através do código a seguir, será possível ver se o robô falhar ao tentar coletar um medicamento, ele irá reiniciar e tentar executar a ação novamente, o que irá impossibilitar uma fita de medicamentos ser montada com a ausência de algum remédio. Como o sensor possui um fototransistor embutido, ele identifica se o medicamento foi coletado ou não de acordo com a luminosidade, se a luminosidade ficar acima de 600, significará que há muito brilho sendo recebido pelo sensor, o que indica que o medicamento não foi coletado.
 
-codigo da logica aí
+```python
+if pontos_medicamento['suctionCup'].lower() == 'on':
+            robo.suck(True)            
+            
+            try:
+                data = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 2)
+                sensor_value = (data[0] << 8) | data[1]
+                print(f"Valor do sensor: {sensor_value}")
+                
+                if sensor_value > 600:
+                    logger.warning("Falha na pega do medicamento. Reiniciando rotina...")
+                    robo.movel_to(x, y, 143.0, r, wait=True)
+                    return executar_rotina_medicamento(
+                        robo, medicamento, medicamentos,
+                        delta_z=0, tentativas=tentativas+1, max_tentativas=max_tentativas
+                    )
+                    
+            except Exception as e:
+                logger.error(f"Erro na leitura do sensor: {e}")
+                return False
+                
+        else:
+            robo.suck(False)
+```
 
 :::tip
 Na seção de Hardware, é possível ver o sensor infravermelho sendo utilizado para mostrar o uso das funcionalidades citadas nesta seção
