@@ -101,7 +101,15 @@ const sidebars = {
       type: 'category',
       label: 'Sprint 3',
       items: [
-        'Sprint 3/Esquemático/Esquematico'
+        'Sprint 3/Esquemático/Esquematico',
+        {
+          type: 'category',
+          label: 'Sensores',
+          items: [
+            'Sprint 3/Sensores/sensor-infravermelho',
+            'Sprint 3/Sensores/leitor-qrcode'
+          ],
+        }
       ],
     },
   ],
