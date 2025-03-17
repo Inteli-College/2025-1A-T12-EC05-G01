@@ -102,6 +102,8 @@ const sidebars = {
       label: 'Sprint 3',
       items: [
         'Sprint 3/Esquemático/Esquematico',
+        'Sprint 3/Desenvolvimento/Rotas para Banco de Dados',
+        'Sprint 3/Desenvolvimento/Rotas app_dobot',
         'Sprint 3/Hardware/Hardware'
       ],
     },
