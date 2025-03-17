@@ -109,7 +109,10 @@ const sidebars = {
             'Sprint 3/Sensores/sensor-infravermelho',
             'Sprint 3/Sensores/leitor-qrcode'
           ],
-        }
+        },
+        'Sprint 3/Desenvolvimento/Rotas para Banco de Dados',
+        'Sprint 3/Desenvolvimento/Rotas app_dobot',
+        'Sprint 3/Hardware/Hardware'
       ],
     },
   ],
