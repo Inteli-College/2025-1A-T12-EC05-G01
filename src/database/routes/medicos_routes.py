@@ -61,6 +61,7 @@ def update_medico():
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
 
         medico_to_update.nome = data.get("nome", medico_to_update.nome)
+        medico_to_update.crm = data.get("crm", medico_to_update.crm)
 
         db.commit()
         return {"message": f"Medico de ID {medico_id} atualizado"}, 200
