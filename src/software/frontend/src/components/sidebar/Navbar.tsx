@@ -1,56 +1,50 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import sanduiche from '../../assets/sanduiche.svg';
-import profilePic from '../../assets/profilePic.svg';
+import { FaBars, FaUserAlt } from 'react-icons/fa'
 import Sidebar from './Sidebar'; 
 
-const Navbar = () => {
+const Header = () => {
     const [sidebar, setSidebar] = useState(false);
 
-    const handleSidebar = () => {
-        setSidebar(prevState => !prevState);
-    };
+    const showSidebar = () => setSidebar(!sidebar)
 
     return (
-        <div className='body'>
-        <StyledWrapper>   
-        <div className='navbar'>
-            <img src={sanduiche} className='sanduiche' onClick={handleSidebar} alt="Menu" />
-            <img src={profilePic} className='profile-pic' alt="Perfil" />
-
-        </div> 
-
-        {sidebar ? <Sidebar /> : <div />}
-        </StyledWrapper> 
-        </div>
+        <Container className="container">
+            <FaBars onClick={showSidebar} className='fabars'/>
+            <FaUserAlt className='fauseralt' onClick={() => {window.location.href='/login'}}/>
+            {sidebar && <Sidebar active={setSidebar} />}
+            
+        </Container>
     );
 };
 
-const StyledWrapper = styled.div`
-.navbar {
-    background-color: #323848;
-    width: 100vw;
-    height: 6vh;
-    
+const Container = styled.div`
+    height: 70px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    overflow: hidden;
-}
+    background-color: #323848;
+    z-index: 1;
+    
 
-.sanduiche {
-    margin: 0;
-    padding: .7rem 1rem;
-}
+    .fabars {
+        position: fixed;
+        color: #2ECC71;
+        width: 30px;
+        height: 40px;
+        margin-top: 13px;
+        margin-left: 22px;
+        cursor: pointer;
+    }
 
-.profile-pic {
-    margin: 0;
-    padding: .5rem 1rem;
-}
-
-.navbar img:hover {
-    cursor: pointer;
-}
+    .fauseralt {
+        position: fixed;
+        right: 0%;
+        color: #2ECC71;
+        width: 30px;
+        height: 40px;
+        margin-top: 13px;
+        margin-right: 22px;
+        cursor: pointer;
+    }
 `
 
-export default Navbar;
+export default Header;

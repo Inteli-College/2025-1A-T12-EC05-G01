@@ -1,258 +1,175 @@
 import styled from 'styled-components';
+import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
-import Navbar from '../components/sidebar/Navbar'
-//import classNames from 'classnames';
 
+const BodyMontagens = styled.div`
 
-// VERIFICAR FUNCIONAMENTO NA PRÓXIMA SPRINT
-// const StatusMontagem = ({ status }) => {
-//   const statusClass = classNames("status", {
-//     "status-separado": status === "Finalizado",
-//     "status-em-separacao": status === "Em andamento",
-//     "status-não-iniciado": status === "Esperando separação"
-//   });
-
-//   return <div className={statusClass}>{status}</div>;
-// }
-
-// const StatusMedicamento = ({ statusMedicamento }) => {
-
-//   const statusMedicamentoClass = classNames("medicmaento", {
-//     "medicamento-separado": statusMedicamento === "Separado",
-//     "medicamento-em-separacao": statusMedicamento === "Em separação",
-//     "medicamento-esperando-separacao": statusMedicamento === "Esperando separação"
-//   });
-
-//   return (
-//     <div className={statusMedicamentoClass}>
-//       <li>
-//         <div className="medicamento">
-//           <span>Sertralina 500mg</span>
-//           <p>Quantidade: {quantidade}</p>
-//         </div>
-//         <span>{statusMedicamento}</span>
-//       </li>
-//     </div>
-//   )
-// }
-
-const Montagens = () => {
-
-  const quantidade = 1;
-
-  return (
-    <StyledWrapper>
-      <div className='pagina-montagens'>
-        <nav><Navbar /></nav>
-
-        <div className="topo-montagens">
-          <h1>Acompanhamento <br /> de montagens</h1>
-          <button>Pausar operação ||</button>
-        </div>
-
-        <section className="montagens">
-          <div className="card-montagem">
-            <div className="topo-card-montagem">
-              <div className="paciente-montagem">
-                <span>João Silva</span>
-                <p>Início: 24/02/2025, 16:10</p>
-              </div>
-              <div className="status">
-                <span>Finalizado</span>
-              </div>
-            </div>
-
-
-            <div className="medicamentos-montagem">
-              <ul>
-                <li>
-                  <div className="medicamento">
-                    <span>Sertralina 500mg</span>
-                    <p>Quantidade: {quantidade}</p>
-                  </div>
-                  <span> Separado </span>
-                </li>
-
-                <li>
-                  <div className="medicamento">
-                    <span>Sertralina 500mg</span>
-                    <p>Quantidade: {quantidade}</p>
-                  </div>
-                  <span> Separado </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="card-montagem">
-            <div className="topo-card-montagem">
-              <div className="paciente-montagem">
-                <span>João Silva</span>
-                <p>Início: 24/02/2025, 16:10</p>
-              </div>
-              <div className="status">
-                <span>Finalizado</span>
-              </div>
-            </div>
-
-
-            <div className="medicamentos-montagem">
-              <ul>
-                <li>
-                  <div className="medicamento">
-                    <span>Sertralina 500mg</span>
-                    <p>Quantidade: {quantidade}</p>
-                  </div>
-                  <span> Separado </span>
-                </li>
-
-                <li>
-                  <div className="medicamento">
-                    <span>Sertralina 500mg</span>
-                    <p>Quantidade: {quantidade}</p>
-                  </div>
-                  <span> Separado </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-        </section>
-
-        <section className="acompanhamento-robo">
-          <h2>Acompanhe o funcionamento do braço mecânico</h2>
-          <div className="logs-robo">
-            <p>Última atividade do dobot</p>
-            <p>Penúltima atividade do robô</p>
-            <p>Demais atividades do robô</p>
-          </div>
-        </section>
-
-        <Footer />
-
-      </div>
-    </StyledWrapper>
-  );
-}
-
-const StyledWrapper = styled.div`
-.pagina-montagens {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-}
-
-.topo-montagens {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 60%;
-}
-
-.status {
-    border-radius: 20px;
-    background-color: #4D925B;
-    color: #fff;
-    padding: .4rem 1.1rem;
-    font-size: .9rem;
-}
-
-.montagens {
-    width: 60%;
-}
-
-.topo-card-montagem {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
     gap: 1.5rem;
-    width: 100%;
-}
 
-.topo-card-montagem p {
+    > nav {
+      width: 100%; 
+    }
+    
+    > footer {
+      width: 100%; 
+    }
+    
+    .button {
+      width: 70%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;  
+    }
+    
+    .button > button {
+      background-color: #E87722; 
+      color: white; 
+      border: none; 
+      padding: 20px 25px; 
+      border-radius: 5px; 
+      font-weight: bold; 
+      cursor: pointer;
+      font-size: 16px;
+    }
+`;
+
+const StatusBox = styled.div`
+  background-color: ${(props) =>
+    props.status == "separado" ? "#71E9667D" :
+      props.status == "em separação" ? "#ECBB59" :
+        props.status == "esperando separação" ? "#E9B78A" : "gray"};
+  padding: 20px 30px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  text-transform: capitalize;
+
+
+  color: white;
+
+  .informacoes span {
+    font-size: 24px;
+    font-weight: 550;
     margin: 0;
-}
+  }
 
-.paciente-montagem {
+  .informacoes p {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .status {
+    font-size: 20px;
+    font-weight: 550;
+  }
+
+`;
+
+const StatusComponent = ({ medicamento, dosagem, quantidade, status }) => {
+  return (
+    <StatusBox status={status}>
+      <div className="informacoes">
+        <span>{medicamento} {dosagem}</span>
+        <p>Quantidade: {quantidade} </p>
+      </div>
+      <div className="status">{status}</div>
+    </StatusBox>)
+};
+
+const FitaBox = styled.div`
+    width: 70%;
+    Background-Color: #2C3E50;
+    
     display: flex;
     flex-direction: column;
-    color: #FFF;
-    padding: 0 0 0 1rem;
-}
-
-.paciente-montagem span {
-    font-weight: 400;
-    font-size: 2rem;
-}
-
-.paciente-montagem p {
-    font-weight: 200;
-    font-size: .8rem;
-    margin: 0;
-}
-
-.card-montagem {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 15px;
-    width: 100%;
-
-    background-color: #2C3E50;
-    color: aliceblue;
-}
-
-.medicamentos-montagem ul {
-    list-style-type: none;
-    padding: 0 0 0 1rem;
-}
-
-.medicamentos-montagem li {
-    margin-bottom: 10px;
-    background-color: #71E9667D;
-    padding: .5rem 2rem;
-    border-radius: 12px;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
     align-items: center;
-}
+    gap: 10px;
 
-.medicamento span {
-    font-size: 1.5rem;
-    padding: 1rem 0;
-}
+    padding: 1rem;
+    border-radius: 30px;
 
-.medicamento p {
-    margin: 0;
-}
+    .topo-fita {
+      width: 90%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
 
-.medicamentos-montagem li span {
-    font-size: 1.5rem;
+    .topo-fita h3 {
+      font-size: 24px;
+      font-weight: 550;
+      margin: 0;
+    }
 
-}
+    .topo-fita p {
+      margin: 0;
+      font-size: 16px;
+    }
 
-.logs-robo {
-    margin-top: 10px;
-}
-
-button {
-    background-color: #E67E22;
-    color: white;
-    border: none;
-    padding: 1.5rem;
-    border-radius: 5px;
-    cursor: pointer;
-    height: 100%;
-}
-
-button:hover {
-    background-color: #FF7800;
-}
+    .andamento {
+      background-color: gray;
+      padding: 15px;
+      border-radius: 20px;
+    }
 `;
+
+const FitaComponent = ({ paciente, data, horario }) => {
+  return (
+    <div className='topo-fita'>
+      <div className="dados">
+        <h3>{paciente}</h3>
+        <p>Início: {data}, {horario} </p>
+      </div>
+
+      <div className="andamento">
+        andamento
+      </div>
+    </div>
+  )
+};
+
+function Montagens() {
+  return (
+    <BodyMontagens>
+      <nav><Header /></nav>
+      <div className='button'>
+        <button> ⏸️ Pausar <br /> Montagem</button>
+      </div>
+      <FitaBox>
+        <FitaComponent paciente="João Silva" data="12/10/2025" horario="16:10" />
+        <StatusComponent medicamento="Dipirona" dosagem="500mg" quantidade={2} status="separado" />
+        <StatusComponent medicamento="Paracetamol" dosagem="750mg" quantidade={1} status="separado" />
+      </FitaBox>
+
+      <FitaBox>
+        <FitaComponent paciente="Julia Santos" data="12/10/2025" horario="16:16" />
+        <StatusComponent medicamento="Loratadina" dosagem="10mg" quantidade={2} status="separado" />
+        <StatusComponent medicamento="Dipirona" dosagem="1g" quantidade={1} status="em separação" />
+        <StatusComponent medicamento="Cloridrato de Ciclobenzaprina" dosagem="10mg" quantidade={1} status="esperando separação" />
+      </FitaBox>
+
+      <FitaBox>
+        <FitaComponent paciente="Kira Romantini" data="12/10/2025" horario="16:22" />
+        <StatusComponent medicamento="Loratadina" dosagem="10mg" quantidade={2} status="esperando separação" />
+        <StatusComponent medicamento="Dipirona" dosagem="1g" quantidade={1} status="esperando separação" />
+        <StatusComponent medicamento="Cloridrato de Ciclobenzaprina" dosagem="10mg" quantidade={1} status="esperando separação" />
+      </FitaBox>
+
+      <footer>
+        <Footer />
+      </footer>
+    </BodyMontagens>
+  )
+};
+
 
 export default Montagens;
