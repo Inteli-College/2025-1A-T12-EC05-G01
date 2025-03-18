@@ -8,39 +8,7 @@ import serial.tools.list_ports
 from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 from sensores.sensor_qr.leitor import SerialDevice
 
-def list_available_ports():
-    ports = list(serial.tools.list_ports.comports())
-    if not ports:
-        print("Nenhuma porta serial encontrada!")
-        return []
-    
-    print("\nPortas seriais disponíveis:")
-    for i, port in enumerate(ports):
-        print(f"[{i}] {port.device} - {port.description}")
-    
-    return [port.device for port in ports]
-
-def select_port(available_ports):
-    if not available_ports:
-        print(f"Usando porta padrão: {SERIAL_PORT}")
-        return SERIAL_PORT
-        
-    print(f"\nPorta padrão nas configurações: {SERIAL_PORT}")
-    choice = input("Selecione o número da porta ou pressione ENTER para usar a padrão: ")
-    
-    if choice.strip() == "":
-        return SERIAL_PORT
-    
-    try:
-        index = int(choice)
-        if 0 <= index < len(available_ports):
-            return available_ports[index]
-        else:
-            print("Índice inválido. Usando porta padrão.")
-            return SERIAL_PORT
-    except ValueError:
-        print("Entrada inválida. Usando porta padrão.")
-        return SERIAL_PORT
+from .qr_code_ports import list_available_ports, select_port
 
 # Configuração de logging
 logger = logging.getLogger(__name__)
@@ -65,8 +33,8 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
         pontos_medicamento = medicamentos[medicamento - 1]['pontos'][i]  
         if i < len(medicamentos[medicamento - 1]['pontos']) - 1:
             prox_ponto = medicamentos[medicamento - 1]['pontos'][i + 1]
-        else:
-            prox_ponto = {'suctionCup': 'off'}
+        if i < len(medicamentos[medicamento - 1]['pontos']) - 2:
+            prox_prox_ponto = medicamentos[medicamento - 1]['pontos'][i + 2]
         
         x = float(pontos_medicamento['x'])
         y = float(pontos_medicamento['y'])  
@@ -84,7 +52,7 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
             robo.movel_to(x, y, z, r, wait=True)
             
         # Lógica modificada para leitura de QR code
-        if pontos_medicamento['suctionCup'].lower() == 'off' and prox_ponto['suctionCup'].lower() == 'on':
+        if prox_ponto['suctionCup'].lower() == 'off' and prox_prox_ponto['suctionCup'].lower() == 'on':
             #available_ports = list_available_ports()
             #selected_port = select_port(available_ports)
 
@@ -105,7 +73,7 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
                         print("========================")
                         qr_detectado = True  # Sair do loop após detecção
                     
-                    time.sleep(SCAN_INTERVAL)
+                    ##time.sleep(SCAN_INTERVAL)
 
             except Exception as e:
                 print(f"Erro: {e}")
@@ -126,12 +94,11 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
             try:
                 data = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 2)
                 sensor_value = (data[0] << 8) | data[1]
-                logger.debug(f"Valor do sensor: {sensor_value}")
+                print(f"Valor do sensor: {sensor_value}")
                 
-                if sensor_value > 250:
+                if sensor_value > 600:
                     logger.warning("Falha na pega do medicamento. Reiniciando rotina...")
                     robo.movel_to(x, y, 143.0, r, wait=True)
-                    # Corrigido: Removido o parâmetro qr_reader da chamada recursiva
                     return executar_rotina_medicamento(
                         robo, medicamento, medicamentos,
                         delta_z=0, tentativas=tentativas+1, max_tentativas=max_tentativas
