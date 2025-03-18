@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from src.database.db_conexao import Base, engine
+from ..db_conexao import Base, engine
 
 class Estoque(Base):
     __tablename__ = "estoque"
