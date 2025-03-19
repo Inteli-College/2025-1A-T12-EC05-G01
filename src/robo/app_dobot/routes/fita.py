@@ -54,6 +54,10 @@ def adicionar_medicamento():
 
 @fita_bp.route("/montar", methods=["POST"])
 def realizar_montagem():
+    dobot = current_app.config.get('DOBOT')  
+    if not dobot:
+        return jsonify({"error": "Dobot não inicializado"}), 500
+    
     resultado = montar_fita(dobot, medicamentos, fita)
 
     data = {

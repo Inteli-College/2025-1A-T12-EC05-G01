@@ -1,7 +1,7 @@
 from flask import Flask
 from .routes.dobot import dobot_bp
 from .routes.fita import fita_bp
-from .utils.device_initializer import inicializar_dispositivos
+from .functions.device_initializer import inicializar_dispositivos
 
 app = Flask(__name__)
 
