@@ -64,7 +64,6 @@ function Header() {
     );
 };
 
-// Fixed to ensure consistent sticky behavior across browsers
 const Container = styled.div`
     height: 70px;
     background-color: #323848;

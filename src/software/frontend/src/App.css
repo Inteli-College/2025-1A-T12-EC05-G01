@@ -19,7 +19,6 @@ html, body {
   flex-direction: column;
 }
 
-/* Add padding to content for fixed navbar */
 .content-with-navbar {
   padding-top: 70px;
 }
