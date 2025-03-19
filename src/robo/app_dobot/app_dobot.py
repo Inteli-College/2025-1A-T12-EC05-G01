@@ -6,7 +6,7 @@ from SerialPortFinder.SerialPortFinder import SerialPortFinder
 from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from .functions.executar_rotina import executar_rotina_medicamento
-from .functions.montar_fita import montar_fita
+from .functions.montar_fita import adicionar_medicamento, cancelar_montagem, finalizar_montagem
 import os
 import time
 import logging
@@ -157,83 +157,72 @@ def posicao_atual():
 
     return jsonify({"message": f"Posição atual: ({x}, {y}, {z}, {r})"}), 200    
 
-@app_dobot.route("/dobot/fita/adicionar", methods=["POST"])
-def adicionar_medicamento():
-    data = request.json
-    medicamento = data.get("medicamento")
-    quantidade = data.get("quantidade")
-
-    if not medicamento or not quantidade:
-        data = {
-            "level":"INFO",
-            "origin":"sistema",
-            "action":"STARTUP",
-            "description": "Parâmetros 'medicamento' e 'quantidade' são obrigatórios.",
-            "status": "FAILED"
-        }
-        requests.post(f"{DATABASE_URL}/logs/create", json=data)
-        return jsonify({"status": "erro", "mensagem": "Parâmetros 'medicamento' e 'quantidade' são obrigatórios"}), 400
+@app_dobot.route("/dobot/fita/adicionar/<medicamento>/<quantidade>", methods=["POST"])
+def adicionar_medicamento(medicamento, quantidade):
+    global fita 
     
     try:
         quantidade = int(quantidade)
     except ValueError:
-        data = {
-            "level":"INFO",
-            "origin":"sistema",
-            "action":"STARTUP",
-            "description": "A quantidade deve ser um número inteiro.",
-            "status": "FAILED"
-        }
-        requests.post(f"{DATABASE_URL}/logs/create", json=data)
-        return jsonify({"status": "erro", "mensagem": "A quantidade deve ser um número inteiro"}), 400
-    
+        return jsonify){"status": "error", "message": "Quantidade deve ser um número inteiro"}, 400
+
     if medicamento not in fita:
-        fita[medicamento] = quantidade 
+        fita[medicamento] = quantidade
     else:
-        fita[medicamento] += quantidade 
+        fita[medicamento] += quantidade
+
 
     data = {
-        "level":"INFO",
-        "origin":"sistema",
-        "action":"STARTUP",
-        "description": f"Medicamento{medicamento} adicionado à fita: {fita}",
+        "level": "INFO",
+        "origin": "sistema",
+        "action": "ADD_MEDICATION",
+        "description": f"Added {quantidade} of {medicamento} to fita.",
         "status": "SUCCESS"
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
-    return jsonify({"status": "sucesso", "mensagem": f"Medicamento {medicamento} adicionado à fita", "fita": fita}), 200
+    return jsonify({"status": "success", "message": f"Medicamento {medicamento} adicionado à fita", "fita": fita}), 200
 
+@app_dobot.route("/dobot/fita/cancelar", methods=["POST"])
+def cancelar_montagem():
 
-@app_dobot.route("/dobot/fita/montar", methods=["POST"])
-def realizar_montagem():
-    resultado = montar_fita(dobot, medicamentos, fita)
+    global fita
+
+    fita.clear()
 
     data = {
-        "level":"INFO",
-        "origin":"sistema",
-        "action":"STARTUP",
-        "description": "Montagem da fita concluída",
+        "level": "INFO",
+        "origin": "sistema",
+        "action": "CANCELAR_MONTAGEM",
+        "description": "Montagem da fita cancelada.",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
+    return jsonify({"status": "success", "message": "Montagem da fita cancelada"}), 200
+
+
+@app_dobot.route("/dobot/fita/finalizar", methods=["POST"])
+def finalizar_montagem_endpoint():
+
+    global dobot, fita
+
+    if dobot is None:
+        return jsonify({"status": "error", "message": "Robot not initialized"}), 400
+
+    resultado = finalizar_montagem(dobot, medicamentos, fita)
+
+    data = {
+        "level": "INFO",
+        "origin": "sistema",
+        "action": "FINALIZAR_MONTAGEM",
+        "description": "Montagem da fita concluída.",
         "status": "SUCCESS"
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
     return jsonify(resultado), 200
 
-@app_dobot.route("/dobot/fita/cancelar", methods=["POST"])
-def cancelar_montagem():
-    global fita
-    fita = {}  # Limpa a fita
-
-    data = {
-        "level":"INFO",
-        "origin":"sistema",
-        "action":"STARTUP",
-        "description": "Montagem da fita cancelada",
-        "status": "SUCCESS"
-    }
-    requests.post(f"{DATABASE_URL}/logs/create", json=data)
-
-    return jsonify({"status": "sucesso", "mensagem": "Montagem da fita cancelada."}), 200
 
 if __name__ == "__main__":
     app_dobot.run(host="0.0.0.0", port=5000, debug=False)
