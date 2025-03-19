@@ -1,5 +1,5 @@
 from time import sleep
-from functions.executar_rotina import executar_rotina_medicamento
+from .executar_rotina import executar_rotina_medicamento
 
 CONSTANTE_Z = 12.0
 
