@@ -10,6 +10,12 @@ from sensores.sensor_qr.leitor import SerialDevice
 
 from .qr_code_ports import list_available_ports, select_port
 
+
+from SensorInfravermelho.SensorInfravermelho import SensorInfravermelho
+sensor_infravermelho = SensorInfravermelho()
+
+from LeitorQRCode.LeitorQRCode import LeitorQRCode
+
 # Configuração de logging
 logger = logging.getLogger(__name__)
 
@@ -51,61 +57,41 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
         elif pontos_medicamento['movimento'] == 'movl':
             robo.movel_to(x, y, z, r, wait=True)
             
-        # Lógica modificada para leitura de QR code
+        # Lógica para leitura de QR code
         if prox_ponto['suctionCup'].lower() == 'off' and prox_prox_ponto['suctionCup'].lower() == 'on':
-            #available_ports = list_available_ports()
-            #selected_port = select_port(available_ports)
-
             try:
-                qr_reader = SerialDevice(port=SERIAL_PORT, baudrate=SERIAL_BAUDRATE)
-                print(f"Conectado na porta {qr_reader.port} com baudrate {qr_reader.baudrate}")
-                #qr_reader.configure_device()
-                qr_reader.start_scanning()
-                print("Aguardando leitura do QR code...")
-
-                qr_detectado = False
-                while not qr_detectado:
-                    data = qr_reader.read_qr_code()
-                    if data:
-                        print("\n=== QR CODE DETECTADO ===")
-                        print(f"Conteúdo: {data['content']}")
-                        print(f"Timestamp: {data['timestamp']}")
-                        print("========================")
-                        qr_detectado = True  # Sair do loop após detecção
+                with LeitorQRCode() as leitor:
+                    leitor.iniciar_leitura()
+                    print("Aguardando leitura do QR code...")
                     
-                    ##time.sleep(SCAN_INTERVAL)
+                    qr_detectado = False
+                    while not qr_detectado:
+                        dados = leitor.ler_codigo()
+                        if dados:
+                            print("\n=== QR CODE DETECTADO ===")
+                            print(f"Conteúdo: {dados['conteudo']}")
+                            print(f"Timestamp: {dados['timestamp']}")
+                            print("========================")
+                            qr_detectado = True
 
             except Exception as e:
-                print(f"Erro: {e}")
+                logger.error(f"Falha no processo de leitura QR Code: {str(e)}")
                 return False
-            
-            finally:
-                if 'qr_reader' in locals():
-                    try:
-                        qr_reader.stop_scanning()
-                        qr_reader.close()
-                        print("Leitura concluída, continuando operação...")
-                    except:
-                        pass
             
         if pontos_medicamento['suctionCup'].lower() == 'on':
             robo.suck(True)            
             
             try:
-                data = bus.read_i2c_block_data(SLAVE_ADDRESS, 0, 2)
-                sensor_value = (data[0] << 8) | data[1]
-                print(f"Valor do sensor: {sensor_value}")
-                
-                if sensor_value > 600:
+                if sensor_infravermelho.verificar_objeto_detectado():
                     logger.warning("Falha na pega do medicamento. Reiniciando rotina...")
                     robo.movel_to(x, y, 143.0, r, wait=True)
                     return executar_rotina_medicamento(
                         robo, medicamento, medicamentos,
                         delta_z=0, tentativas=tentativas+1, max_tentativas=max_tentativas
                     )
-                    
+                
             except Exception as e:
-                logger.error(f"Erro na leitura do sensor: {e}")
+                logger.error(f"Erro na verificação do sensor: {e}")
                 return False
                 
         else:
