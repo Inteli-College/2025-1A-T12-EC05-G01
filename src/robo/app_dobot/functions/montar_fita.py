@@ -35,8 +35,13 @@ def finalizar_montagem(robo, medicamentos, fita):
             if not success:
                 return {"status": "error", "message": f"Falha ao executar rotina para {medicamento}"}
             
+            robo.home()
             x, y, z, r, *_ = robo.pose()
-            sleep(0.1)
+            while round(x, 1) != 242.2 and round(z, 1) != 151.4:  # Posição home aproximada
+                x, y, z, r, *_ = robo.pose()   
+
+
+            
 
 
     print("Montagem da fita concluida")
