@@ -6,10 +6,11 @@ import sys
 import serial.tools.list_ports
 from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 from sensores.sensor_qr.leitor import SerialDevice
-
+from smbus2 import SMBus  # Ou use 'import smbus' se estiver usando a biblioteca smbus
 from .qr_code_ports import list_available_ports, select_port
 
-# Configuração de logging
+bus = SMBus(1)  
+
 logger = logging.getLogger(__name__)
 
 
