@@ -38,11 +38,7 @@ def finalizar_montagem(robo, medicamentos, fita):
             robo.home()
             x, y, z, r, *_ = robo.pose()
             while round(x, 1) != 242.2 and round(z, 1) != 151.4:  # Posição home aproximada
-                x, y, z, r, *_ = robo.pose()   
-
-
+                x, y, z, r, *_ = robo.pose()  
             
-
-
     print("Montagem da fita concluida")
     return { "status": "success", "message": "Montagem da fita concluida"}

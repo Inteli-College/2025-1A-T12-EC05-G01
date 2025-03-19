@@ -223,6 +223,13 @@ def finalizar_montagem_endpoint():
 
     return jsonify(resultado), 200
 
+@app_dobot.route("/dobot/fita", methods=["GET"])
+def visualizar_fita():
+
+    global fita 
+
+    return jsonify({"status": "success", "fita": fita}), 200
+
 
 if __name__ == "__main__":
     app_dobot.run(host="0.0.0.0", port=5000, debug=False)
