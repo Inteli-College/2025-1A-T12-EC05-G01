@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
 import Chart from '../components/Chart';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 
 const BodyDashboard = styled.div`
   display: flex;
@@ -108,27 +106,6 @@ const BodyDashboard = styled.div`
   }
 `;
 
-interface CardComponentProps {
-  paciente: string;
-  id: string;
-  data: string;
-  horario: string;
-  icon: React.ReactNode;
-}
-
-const CardComponent: React.FC<CardComponentProps> = ({ paciente, id, data, horario, icon }) => {
-  return (
-    <CardBox>
-      {icon}
-      <section className="infos">
-        <span>{paciente}</span>
-        <p>ID: {id}</p>
-        <p><HiOutlineClock /> {data}, {horario} </p>
-      </section>
-    </CardBox>
-  )
-};
-
 const TableBox = styled.div`
   width: 100%;
   background-color: #FFF;
@@ -172,7 +149,11 @@ const LogBox = styled.div`
   }
 `;
 
-const LogComponent = ({ log }) => {
+interface LogComponentProps {
+  log: string;
+}
+
+const LogComponent: React.FC<LogComponentProps> = ({ log }) => {
   return (
     <LogBox>
       <p>{log}</p>
@@ -212,7 +193,13 @@ const CardBox = styled.div`
   }
 `;
 
-const CardComponent = ({ color, title, quantidade }) => {
+interface CardComponentProps {
+  color: string;
+  title: string;
+  quantidade: string | number;
+}
+
+const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade }) => {
   return (
     <CardBox color={ color } >
       <span>{title}</span>
