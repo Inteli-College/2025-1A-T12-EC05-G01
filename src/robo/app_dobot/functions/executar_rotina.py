@@ -9,7 +9,7 @@ from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRA
 from sensores.sensor_qr.leitor import SerialDevice
 from .qr_code_ports import list_available_ports, select_port
 
-bus = SMBus(1)  
+bus = smbus(1)  
 
 logger = logging.getLogger(__name__)
 
