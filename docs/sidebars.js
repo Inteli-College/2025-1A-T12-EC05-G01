@@ -84,6 +84,13 @@ const sidebars = {
         'Sprint 2/User Flow/user-flow',
       ],
     },
+    {
+      type: 'category',
+      label: 'Sprint 4',
+      items: [
+        'Sprint 4/Banco De Dados',
+      ]
+    }
   ],
 };
 

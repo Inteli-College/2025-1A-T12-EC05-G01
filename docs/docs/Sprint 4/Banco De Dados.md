@@ -129,7 +129,6 @@ Esta seção detalha as tabelas, atributos e relações do banco de dados utiliz
 |------------------------|--------------|-----------|
 | `id`                   | Inteiro      | Identificador único. |
 | `id_prescricao_on_hold`| Inteiro      |
-::contentReference[oaicite:0]{index=0}
  
 
 
