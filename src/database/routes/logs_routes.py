@@ -87,7 +87,6 @@ def read_all_logs():
     db = SessionLocal()
     try:
         if request.method == "GET":
-            # Handle GET request (fetch all logs)
             logs = db.query(Logs).all()
             
             if not logs:
@@ -106,18 +105,13 @@ def read_all_logs():
             return {"logs": logs_list}, 200
 
         elif request.method == "POST":
-            # Handle POST request (filter logs based on JSON body)
             data = request.json
-            if not data:
-                raise HTTPException(status_code=400, detail="No data provided in the request body")
 
-            # Safely access dictionary keys using .get()
             level = data.get("level")
             status = data.get("status")
             origin = data.get("origin")
             action = data.get("action")
 
-            # Build the query with filters
             query = db.query(Logs)
             if level:
                 query = query.filter(Logs.level == level)
