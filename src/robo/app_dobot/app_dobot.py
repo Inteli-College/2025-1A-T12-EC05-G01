@@ -164,7 +164,7 @@ def adicionar_medicamento(medicamento, quantidade):
     try:
         quantidade = int(quantidade)
     except ValueError:
-        return jsonify){"status": "error", "message": "Quantidade deve ser um número inteiro"}, 400
+        return jsonify({"status": "error", "message": "Quantidade deve ser um número inteiro"}), 400
 
     if medicamento not in fita:
         fita[medicamento] = quantidade
