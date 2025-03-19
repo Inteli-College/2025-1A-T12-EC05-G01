@@ -126,7 +126,15 @@ const CardBox = styled.div`
   }
 `;
 
-const CardComponent = ({ paciente, id, data, horario, icon }) => {
+interface CardComponentProps {
+  paciente: string;
+  id: string;
+  data: string;
+  horario: string;
+  icon: React.ReactNode;
+}
+
+const CardComponent: React.FC<CardComponentProps> = ({ paciente, id, data, horario, icon }) => {
   return (
     <CardBox>
       {icon}
@@ -153,7 +161,13 @@ const TableBox = styled.div`
   
 `
 
-const TableComponent = ({ paciente, status, tratamento }) => {
+interface TableComponentProps {
+  paciente: string;
+  status: string;
+  tratamento: string;
+}
+
+const TableComponent: React.FC<TableComponentProps> = ({ paciente, status, tratamento }) => {
   return (
     <TableBox>
       <p>{paciente}</p>
