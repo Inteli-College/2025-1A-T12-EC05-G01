@@ -2,19 +2,30 @@ import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
 import Chart from '../components/Chart';
+import Section from '../components/common/Section';
+import Card from '../components/common/Card';
 
 const BodyDashboard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
+  .content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 70px; /* Added to account for fixed navbar */
+  }
+
   .topo-dash {
     display: flex;
-    align-itens: flex-start;
-    width: 80%;
-
+    align-items: flex-start;
+    width: 90%;
+    max-width: 1200px;
+    padding: 0 15px;
     color: #34495E;
-    font-size: 28px;
+    font-size: clamp(20px, 5vw, 28px);
     font-weight: 900;
   }
 
@@ -25,37 +36,52 @@ const BodyDashboard = styled.div`
   h3 {
     margin: 3rem 0 0 0;
     color: #34495E;
-    font-size: 36px;
+    font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
    }
 
   .secao-atividades {
-    width: 80%;
-    
+    width: 90%;
+    max-width: 1200px;
   }
 
   .atividades {
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    margin: 1rem;
+    margin: 1rem 0;
     margin-bottom: 2.5rem;
+    gap: 20px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
   .chart {
-    width: 40%;
+    width: 100%;
     background-color: #34495E;
     border-radius: 15px;
     padding: 2rem;
+    
+    @media (min-width: 769px) {
+      width: 48%;
+    }
   }
 
   .tabela {
-    width: 40%;
+    width: 100%;
     background-color: #34495E;
     border-radius: 15px;
     padding: 2rem;
     overflow: auto;
     max-height: 420px;
+    
+    @media (min-width: 769px) {
+      width: 48%;
+    }
   }
 
   .labels {
@@ -63,11 +89,15 @@ const BodyDashboard = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
+    
+    @media (max-width: 480px) {
+      font-size: 18px;
+    }
   }
 
   .labels span {
     color: #FFF;
-    font-size: 24px;
+    font-size: clamp(16px, 4vw, 24px);
     font-weight: 900;
   }
 
@@ -76,22 +106,24 @@ const BodyDashboard = styled.div`
     margin-top: 1rem;
     background-color: #34495E;
     border-radius: 15px;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow: auto;
     max-height: 420px;
   }
 
   .logs {
-    width: 80%;
+    width: 90%;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 1rem;
+    margin: 1rem 0;
     margin-bottom: 2.5rem;
   }
 
   .volume-fitas {
-    width: 80%;
+    width: 90%;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -103,6 +135,8 @@ const BodyDashboard = styled.div`
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
   }
 `;
 
@@ -113,11 +147,20 @@ const TableBox = styled.div`
   justify-content: space-between;
   border-radius: 10px;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 
   p {
     margin: 1rem;
+    flex: 1;
+    min-width: 80px;
+    color: #34495E; /* Added text color for visibility */
+    font-weight: 500;
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+      margin: 0.5rem;
+    }
   }
-  
 `
 
 interface TableComponentProps {
@@ -146,6 +189,13 @@ const LogBox = styled.div`
 
   p {
     margin: 1rem;
+    color: #34495E; /* Added text color for visibility */
+    font-weight: 500;
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+      margin: 0.5rem;
+    }
   }
 `;
 
@@ -163,20 +213,24 @@ const LogComponent: React.FC<LogComponentProps> = ({ log }) => {
 
 const CardBox = styled.div`
   width: 30%;
-  gap: 1rem;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
-
   background-color: #34495E;
   border-radius: 15px;
   padding: 1rem .5rem;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 
   span {
     color: ${(props) => props.color};
     text-align: center;
     font-family: Montserrat;
-    font-size: 32px;
+    font-size: clamp(20px, 5vw, 32px);
     font-weight: 900;
   }
 
@@ -186,8 +240,6 @@ const CardBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-
     background-color: #ECF0F1;
     border-radius: 15px;
   }
@@ -208,9 +260,7 @@ const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade 
       </div>
     </CardBox>
   )
-
 }
-
 
 function Dashboard() {
   // LÓGICA PARA PUXAR OS LOGS DO BANCO
@@ -225,64 +275,60 @@ function Dashboard() {
   return (
     <BodyDashboard>
       <nav><Header /></nav>
-      <div className="topo-dash">
-        <h1>Dashboard</h1>
-      </div>
-
-      <section className="secao-atividades">
-        <h3>Acompanhamento de atividades</h3>
-        <div className="atividades">
-          <div className="chart">
-            <Chart />
-          </div>
-
-          <div className="tabela">
-            <div className="labels">
-              <span>Paciente</span>
-              <span>Status</span>
-              <span>Tratamento</span>
-            </div>
-            <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
-          </div>
+      <div className="content-wrapper">
+        <div className="topo-dash">
+          <h1>Dashboard</h1>
         </div>
-      </section>
 
-      <section className="logs">
-        <h3>Logs do robô</h3>
-        <div className="card-logs">
-          {/* FUNÇÃO PARA PUXAR OS LOGS DO BANCO {listOfLogs.map((value, key) => {
-              return <LogComponent log={value} />
+        <Section title="Acompanhamento de atividades">
+          <div className="atividades">
+            <Card className="chart">
+              <Chart />
+            </Card>
+
+            <Card className="tabela">
+              <div className="labels">
+                <span>Paciente</span>
+                <span>Status</span>
+                <span>Tratamento</span>
+              </div>
+              <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
+            </Card>
+          </div>
+        </Section>
+
+        <Section title="Logs do robô">
+          <Card className="card-logs">
+            {/* FUNÇÃO PARA PUXAR OS LOGS DO BANCO {listOfLogs.map((value, key) => {
+                return <LogComponent log={value} />
             })} */}
-          <LogComponent log='robô em posição de home' />
-          <LogComponent log='fita finalizada com sucesso' />
-          <LogComponent log='medicamento 1 separado' />
-          <LogComponent log='medicamento 1 bipado' />
-          <LogComponent log='falha ao bipar medicamento 1' />
-          <LogComponent log='medicamento 2 separado' />
-          <LogComponent log='medicamento 2 coletado' />
-          <LogComponent log='medicamento 2 bipado' />
-        </div>
-      </section>
+            <LogComponent log='robô em posição de home' />
+            <LogComponent log='fita finalizada com sucesso' />
+            <LogComponent log='medicamento 1 separado' />
+            <LogComponent log='medicamento 1 bipado' />
+            <LogComponent log='falha ao bipar medicamento 1' />
+            <LogComponent log='medicamento 2 separado' />
+            <LogComponent log='medicamento 2 coletado' />
+            <LogComponent log='medicamento 2 bipado' />
+          </Card>
+        </Section>
 
-      <section className="volume-fitas">
-        <h3>Acompanhamento de volume das fitas</h3>
-        <div className="cards">
-          <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={192} />
-          <CardComponent color='#E67E22' title='Fitas em espera' quantidade={25} />
-          <CardComponent color='#E9B78A' title='Tempo estimado' quantidade='2h45min' />
-        </div>
-      </section>
-
-
+        <Section title="Acompanhamento de volume das fitas">
+          <div className="cards">
+            <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={192} />
+            <CardComponent color='#E67E22' title='Fitas em espera' quantidade={25} />
+            <CardComponent color='#E9B78A' title='Tempo estimado' quantidade='2h45min' />
+          </div>
+        </Section>
+      </div>
       <footer><Footer /></footer>
     </BodyDashboard>
   );
-};
-
+}
 
 export default Dashboard;

@@ -1,85 +1,88 @@
 import Popup from 'reactjs-popup';
 import { useState } from "react";
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import alertaImg from '../assets/alerta.png';
 import maisImg from '../assets/mais.png';
 import menosImg from '../assets/menos.png';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
 
-// Add a GlobalStyle component for body styling
-const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: #ECF0F1;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-  }
-
-`;
-
 export default function Estoque() {
     return (
-        <>
-            <GlobalStyle />
-            <EstoqueContainer>
-              <nav><Header /> </nav>
-                <TopoEstoque>
-                    <TituloPagina>Controle de Estoque</TituloPagina>
+        <PageContainer>
+            <nav><Header /></nav>
+            <PageContent>
+                <PageHeader>
+                    <h1>Controle de Estoque</h1>
                     <PopupAdicionarMedicamentos />
-                </TopoEstoque>
+                </PageHeader>
 
-                <SecaoContainer>
-                    <TituloSecao>
-                        Reabastecimentos Necessários
-                    </TituloSecao>
-
-                    <AlertasContainer>
-                    {medicamentosReabastecer.map(medicamento => 
-                        <AlertaMedicamento imagem={alertaImg} medicamento={medicamento.medicamento} bin={medicamento.bin} classe={ClasseUnidades({ unidades: medicamento.unidades })} unidades={medicamento.unidades} />
-                    )}
-                    </AlertasContainer>
-                </SecaoContainer>
-
-                <SecaoContainer>
-                    <TituloSecao>
-                        Últimas Adições
-                    </TituloSecao>
-
-                    <AlertasContainer>
-                        {medicamentosAdicionados.map(medicamento =>
-                            <AlertaMedicamento imagem={maisImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio-add"} unidades={medicamento.unidades} />
+                <SectionWrapper>
+                    <SectionTitle>Reabastecimentos Necessários</SectionTitle>
+                    <SectionContent>
+                        {medicamentosReabastecer.map((medicamento, index) => 
+                            <AlertaMedicamento 
+                                key={index}
+                                imagem={alertaImg} 
+                                medicamento={medicamento.medicamento} 
+                                bin={medicamento.bin} 
+                                classe={ClasseUnidades({ unidades: medicamento.unidades })} 
+                                unidades={medicamento.unidades} 
+                            />
                         )}
-                    </AlertasContainer>
-                </SecaoContainer>
+                    </SectionContent>
+                </SectionWrapper>
 
-                <SecaoContainer>
-                    <TituloSecao>
-                        Últimas Retiradas
-                    </TituloSecao>
-
-                    <AlertasContainer>
-                        {medicamentosRetirados.map(medicamento => 
-                            <AlertaMedicamento imagem={menosImg} medicamento={medicamento.nome} bin={medicamento.bin} classe={"quantidade-remedio"} unidades={medicamento.unidades} />
+                <SectionWrapper>
+                    <SectionTitle>Últimas Adições</SectionTitle>
+                    <SectionContent>
+                        {medicamentosAdicionados.map((medicamento, index) =>
+                            <AlertaMedicamento 
+                                key={index}
+                                imagem={maisImg} 
+                                medicamento={medicamento.nome} 
+                                bin={medicamento.bin} 
+                                classe={"quantidade-remedio-add"} 
+                                unidades={medicamento.unidades} 
+                            />
                         )}
-                    </AlertasContainer>
-                </SecaoContainer>
+                    </SectionContent>
+                </SectionWrapper>
 
-                <SecaoContainer>
-                    <TituloSecao>
-                        Visão Geral
-                    </TituloSecao>
+                <SectionWrapper>
+                    <SectionTitle>Últimas Retiradas</SectionTitle>
+                    <SectionContent>
+                        {medicamentosRetirados.map((medicamento, index) => 
+                            <AlertaMedicamento 
+                                key={index}
+                                imagem={menosImg} 
+                                medicamento={medicamento.nome} 
+                                bin={medicamento.bin} 
+                                classe={"quantidade-remedio"} 
+                                unidades={medicamento.unidades} 
+                            />
+                        )}
+                    </SectionContent>
+                </SectionWrapper>
 
+                <SectionWrapper>
+                    <SectionTitle>Visão Geral</SectionTitle>
                     <QuadroContainer>
                         <TituloQuadro />
-                        {medicamentosEstoque.map((medicamento) => (
-                            <MedicamentoQuadro bin={medicamento.bin} nome={medicamento.nome} unidades={medicamento.unidades} />
+                        {medicamentosEstoque.map((medicamento, index) => (
+                            <MedicamentoQuadro 
+                                key={index}
+                                bin={medicamento.bin} 
+                                nome={medicamento.nome} 
+                                unidades={medicamento.unidades} 
+                            />
                         ))}
                     </QuadroContainer>
-                </SecaoContainer>
-                <footer><Footer /> </footer>
-            </EstoqueContainer>
-        </>
+                </SectionWrapper>
+
+                <footer><Footer /></footer>
+            </PageContent>
+        </PageContainer>
     );
 }
 
@@ -191,7 +194,7 @@ interface MedicamentoProps {
 function AlertaMedicamento ({imagem, medicamento, bin, classe, unidades}: MedicamentoProps){
     return (
         <AlertaMedicamentoContainer>
-            <img src={imagem} alt="Alerta" width="60" />
+            <img src={imagem} alt="Alerta" />
             <TextosAlertasContainer>
                 <LinhaContainer>
                     <NomeRemedio>{medicamento}</NomeRemedio>
@@ -305,37 +308,93 @@ const medicamentosEstoque = [{
 }]
 
 // Styled Components
-const EstoqueContainer = styled.div`
+const PageContainer = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  background-color: #ECF0F1;
   width: 100%;
-  min-height: 100vh;
-  
-  > nav {
-    width: 100%; 
-  }
-
-  > footer {
-    width: 100%; 
-  }
 `;
 
-const TopoEstoque = styled.div`
+const PageContent = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin: 30px;
-  width: 800px;
+  width: 100%;
+  padding: 0 15px;
+  margin-top: 70px; /* Added to account for fixed navbar */
 `;
 
-const TituloPagina = styled.h1`
-  color: #2C3E50;
-  font-family: 'Montserrat';
-  font-size: 70px;
+const PageHeader = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0 1rem;
+  gap: 20px;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  h1 {
+    color: #34495E;
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 900;
+    text-align: center;
+    
+    @media (min-width: 768px) {
+      text-align: left;
+    }
+  }
 `;
+
+const SectionWrapper = styled.section`
+  width: 90%;
+  max-width: 1200px;
+  margin: 1.5rem 0;
+  background-color: #D9D9D9;
+  border-radius: 15px;
+  padding: 1.5rem;
+`;
+
+const SectionTitle = styled.h3`
+  color: #34495E;
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 700;
+  margin-bottom: 1rem;
+`;
+
+const SectionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const AlertaMedicamentoContainer = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 600px;
+  align-items: center;
+  gap: 20px;
+  background-color: #34495E;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  
+  img {
+    width: 40px;
+    height: auto;
+    
+    @media (min-width: 576px) {
+      width: 60px;
+    }
+  }
+`;
+
+
 
 const AddMedicamentoButton = styled.button`
   background-color: #2ECC71;
@@ -492,39 +551,6 @@ const BotaoSalvar = styled.button`
   }
 `;
 
-const SecaoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: top;
-  background-color: #D9D9D9;
-  border-radius: 26px;
-  padding: 5px;
-  width: 800px;
-  margin: 30px;
-`;
-
-const TituloSecao = styled.h2`
-  font-family: 'Montserrat';
-  margin: 30px;
-  color: #2C3E50;
-`;
-
-const AlertasContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const AlertaMedicamentoContainer = styled.div`
-  display: flex;
-  width: 400px;
-  align-items: center;
-  gap: 20px;
-  background-color: #34495E;
-  padding: 10px 20px;
-  border-radius: 26px;
-  margin: 10px;
-`;
-
 const LinhaContainer = styled.div`
   display: flex;
   align-items: center;
@@ -541,7 +567,9 @@ const NomeRemedio = styled.p`
   font-weight: bold;
   color: #FFFFFF;
   font-family: 'Montserrat';
-  font-size: 24px;
+  font-size: clamp(16px, 4vw, 24px);
+  margin: 0;
+  word-break: break-word;
 `;
 
 const QuantidadeRemedio = styled.p`
@@ -572,35 +600,48 @@ const TitulosQuadroContainer = styled.div`
   background-color: #323848;
   display: flex;
   justify-content: space-between;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   align-items: center;
   margin: 10px;
   border-radius: 20px;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: 50px;
-  font-size: 24px;
+  font-size: clamp(16px, 4vw, 24px);
   color: #FFFFFF;
   font-family: 'Montserrat';
+  
+  @media (min-width: 576px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 `;
 
 const MedicamentoQuadroContainer = styled.div`
   background-color: #2C3E50;
   display: flex;
   justify-content: space-between;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   align-items: center;
   margin: 10px;
   border-radius: 20px;
-  width: 500px;
-  height: 50px;
+  width: 100%;
+  max-width: 500px;
+  min-height: 50px;
+  
+  @media (min-width: 576px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 `;
 
 const QuadroContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 `;
 
 const QuadroText = styled.p`

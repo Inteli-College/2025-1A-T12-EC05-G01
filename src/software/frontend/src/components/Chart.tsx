@@ -1,22 +1,30 @@
 import ApexChart from 'react-apexcharts';
+import styled from 'styled-components';
+
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 function Chart() {
-
     const options = {
         chart: {
             type: 'line',
             zoom: {
                 enable: false
-            }
+            },
+            background: '#34495E',
+            fontFamily: 'Montserrat, sans-serif',
         },
         title: {
             text: 'Taxa de sucesso',
             align: 'left',
             style: {
-                fontSize:  '24px',
-                fontWeight:  'bold',
-                color:  '#ffff'
-              },
+                fontSize: '24px',
+                fontWeight: 'bold',
+                color: '#ffff',
+                fontFamily: 'Montserrat, sans-serif'
+            },
         },
         grid:{
             row: {
@@ -29,6 +37,7 @@ function Chart() {
             labels: {
                 style: {
                     colors: '#FFF',
+                    fontFamily: 'Montserrat, sans-serif'
                 }
             }
         },
@@ -36,11 +45,21 @@ function Chart() {
             labels:{
                 style: {
                     colors: '#FFF',
+                    fontFamily: 'Montserrat, sans-serif'
                 }
             }
         },
-
-        colors: ['#FFF']
+        colors: ['#2ECC71'],
+        stroke: {
+            width: 3,
+            curve: 'smooth'
+        },
+        markers: {
+            size: 5,
+            colors: '#2ECC71',
+            strokeColors: '#fff',
+            strokeWidth: 2
+        }
     }
 
     const series = [{
@@ -49,11 +68,13 @@ function Chart() {
     }]
 
     return(
-        <ApexChart 
-            options={options}
-            series={series} 
-        />
+        <ChartContainer>
+            <ApexChart 
+                options={options}
+                series={series}
+            />
+        </ChartContainer>
     )
 }
 
-export default Chart
+export default Chart;

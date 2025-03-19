@@ -20,9 +20,23 @@ const StyledFooter = styled.footer`
   align-items: center;
   padding: 10px 20px;
   height: 10vh;
+  margin-top: 2rem;
+  width: 100%;
 
   .footer-image {
     height: 90%;
+    max-height: 50px;
+    
+    @media (max-width: 576px) {
+      height: 70%;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    padding: 15px;
   }
 `;
 
