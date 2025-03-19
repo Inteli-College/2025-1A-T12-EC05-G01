@@ -1,4 +1,3 @@
-import smbus
 import time
 import serial
 import logging
@@ -13,8 +12,6 @@ from .qr_code_ports import list_available_ports, select_port
 # Configuração de logging
 logger = logging.getLogger(__name__)
 
-SLAVE_ADDRESS = 8       # Endereço do Arduino no barramento I2C
-bus = smbus.SMBus(1)    # Utiliza o barramento I2C 1 (padrão no Raspberry Pi)
 
 def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tentativas=0, max_tentativas=3):
     if isinstance(medicamento, str):

@@ -35,7 +35,7 @@ def finalizar_montagem(robo, medicamentos, fita):
             if not success:
                 return {"status": "error", "message": f"Falha ao executar rotina for {medicamento}"}
             
-            x, y, z, r *_ = robo.pode()
+            x, y, z, r *_ == robo.pose()
             sleep(0.1)
 
 

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, Blueprint
 from sqlalchemy.orm import Session
-from ..db_conexao import engine, Base, get_db, SessionLocal
-from ..models.logs import Logs
+from database.db_conexao import engine, Base, get_db, SessionLocal
+from database.models.logs import Logs
 from datetime import datetime
 
 logs_routes = Blueprint('logs', __name__)

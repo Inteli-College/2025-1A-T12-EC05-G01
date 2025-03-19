@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, Blueprint
-from .routes.logs_routes import logs_routes
+from database.routes.logs_routes import logs_routes
 
 database_app = Flask(__name__)
 
