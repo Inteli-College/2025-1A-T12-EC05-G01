@@ -6,7 +6,7 @@ from sensores.sensor_qr.leitor import SerialDevice
 import serial
 import logging
 from typing import Optional, Dict
-from ..functions.qr_code_ports import list_available_ports, select_port
+from app_dobot.functions.qr_code_ports import list_available_ports, select_port
 
 
 class LeitorQRCode:

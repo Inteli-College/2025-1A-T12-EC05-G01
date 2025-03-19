@@ -11,10 +11,10 @@ from sensores.sensor_qr.leitor import SerialDevice
 from .qr_code_ports import list_available_ports, select_port
 
 
-from ..SensorInfravermelho.SensorInfravermelho import SensorInfravermelho
+from SensorInfravermelho.SensorInfravermelho import SensorInfravermelho
 sensor_infravermelho = SensorInfravermelho()
 
-from ..LeitorQRCode.LeitorQRCode import LeitorQRCode
+from LeitorQRCode.LeitorQRCode import LeitorQRCode
 
 # Configuração de logging
 logger = logging.getLogger(__name__)
