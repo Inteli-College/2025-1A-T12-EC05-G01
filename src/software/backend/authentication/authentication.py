@@ -1,7 +1,6 @@
 import pyrebase
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
-from ..backend import backend_app
 import os
 from dotenv import load_dotenv
 
@@ -21,8 +20,6 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
-
-backend_app.secret_key = os.getenv('SECRET_KEY')
 
 def get_auth():
     return auth
