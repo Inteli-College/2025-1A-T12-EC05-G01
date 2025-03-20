@@ -12,19 +12,19 @@ import Montagens from './pages/Montagens';
 function App() {
   return (
     <div className='body'>
-    <Router>
-      <Routes>
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/recuperar-senha" element={<RecuperarSenha />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/verificacao" element={<Verificacao />} />
-        <Route path="/prescricoes" element={<Prescricoes />} />
-        <Route path="/estoque" element={<Estoque />} />
-        <Route path="/montagens" element={<Montagens />} />
-        <Route path="/" element={<Login />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Routes>
+          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/verificacao" element={<Verificacao />} />
+          <Route path="/prescricoes" element={<Prescricoes />} />
+          <Route path="/estoque" element={<Estoque />} />
+          <Route path="/montagens" element={<Montagens />} />
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
