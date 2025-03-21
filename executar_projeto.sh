@@ -63,7 +63,7 @@ else
   tmux rename-window -t dose_certa:0 'Frontend'
   tmux send-keys -t dose_certa:0 "cd ${raiz_projeto}/src/software/frontend && npm install && npm run dev" C-m
 
-  # Janela 1: Backend 
+  # Janela 1: Backend (com venv)
   tmux new-window -t dose_certa -n 'Backend'
   tmux send-keys -t dose_certa:1 "cd ${raiz_projeto} && source venv/bin/activate" C-m
   tmux send-keys -t dose_certa:1 "cd ${raiz_projeto}/src && python3 -m software.backend.backend" C-m
