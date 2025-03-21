@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 from fastapi import HTTPException
-from ..db_conexao import engine, Base, get_db, SessionLocal
-from ..models.saida import Saidas
+from ....database.db_conexao import engine, Base, get_db, SessionLocal
+from ...models.saida import Saidas
 
 saida_routes = Blueprint('saidas', __name__, url_prefix="/saidas")
 

@@ -1,12 +1,12 @@
 from flask import request, Blueprint
 from fastapi import HTTPException
-from ..db_conexao import engine, Base, get_db, SessionLocal
-from ..models.prescricao_on_hold import PrescricaoOnHold
-from ..models.medico import Medico
-from ..models.paciente import Paciente
+from ....database.db_conexao import engine, Base, get_db, SessionLocal
+from ...models.prescricao_on_hold import PrescricaoOnHold
+from ...models.medico import Medico
+from ...models.paciente import Paciente
 
 
-from ..models.prescricao_on_hold import PrescricaoOnHold
+from ...models.prescricao_on_hold import PrescricaoOnHold
 
 prescricao_on_hold_routes = Blueprint('prescricao_on_hold', __name__, url_prefix="/prescricao_on_hold")
 
