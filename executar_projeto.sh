@@ -61,10 +61,10 @@ elif [ "$executar_WEB" = true ]; then
   tmux rename-window -t dose_certa:0 'Frontend'
   tmux send-keys -t dose_certa:0 "cd ${raiz_projeto}/src/software/frontend && npm run dev" C-m
 
-  # Janela 1: Backend 
+  # Janela 1: Backend (com venv)
   tmux new-window -t dose_certa -n 'Backend'
   tmux send-keys -t dose_certa:1 "cd ${raiz_projeto} && source venv/bin/activate" C-m
-  tmux send-keys -t dose_certa:1 "cd ${raiz_projeto}/src/software && python3 app/main.py" C-m
+  tmux send-keys -t dose_certa:1 "cd ${raiz_projeto}/src && python3 -m software.backend.backend" C-m
 
 else
   # Sem flags: Inicia todas as janelas padrão: Frontend, Backend e App Dobot
