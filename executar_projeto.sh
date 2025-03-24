@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# --------------------------
+# Instala o tmux caso não esteja instalado
+# --------------------------
+if ! command -v tmux &> /dev/null; then
+  echo "tmux não encontrado. Instalando tmux..."
+  sudo apt update && sudo apt install -y tmux
+else
+  echo "tmux já está instalado."
+fi
+
 # Função de uso do script
 usage() {
   echo "Uso: $0 [opções]"
