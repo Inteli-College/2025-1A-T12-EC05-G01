@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 import requests
+from datetime import datetime
+import json
 from ..functions.montar_fita import finalizar_montagem
 from pontos.carregar_medicamentos import carregar_medicamentos
 
@@ -8,12 +10,20 @@ medicamentos = carregar_medicamentos()
 dobot_bp = Blueprint('dobot', __name__)
 fita_bp = Blueprint('fita', __name__)
 DATABASE_URL = "http://127.0.0.1:3000"
-fita = {}  
+fita = {}
+
+def publicar_acao_mqtt(acao, detalhes=""):
+    """Publica uma ação do Dobot via MQTT"""
+    payload = {
+        "acao": acao,
+        "timestamp": datetime.now().isoformat(),
+        "detalhes": detalhes
+    }
+    current_app.mqtt.publish('dobot/acoes', json.dumps(payload), retain=True)
 
 @fita_bp.route("/adicionar/<medicamento>/<quantidade>", methods=["POST"])
 def adicionar_medicamento(medicamento, quantidade):
-    
-    global fita 
+    global fita
     
     try:
         quantidade = int(quantidade)
@@ -25,6 +35,9 @@ def adicionar_medicamento(medicamento, quantidade):
     else:
         fita[medicamento] += quantidade
 
+    # Publica via MQTT
+    publicar_acao_mqtt("medicamento_adicionado", 
+                      f"{quantidade}x {medicamento}")
 
     data = {
         "level": "INFO",
@@ -39,10 +52,12 @@ def adicionar_medicamento(medicamento, quantidade):
 
 @fita_bp.route("/cancelar", methods=["POST"])
 def cancelar_montagem():
-
     global fita
 
     fita.clear()
+    
+    # Publica via MQTT
+    publicar_acao_mqtt("montagem_cancelada")
 
     data = {
         "level": "INFO",
@@ -55,18 +70,22 @@ def cancelar_montagem():
 
     return jsonify({"status": "success", "message": "Montagem da fita cancelada"}), 200
 
-
 @fita_bp.route("/finalizar", methods=["POST"])
 def finalizar_montagem_endpoint():
-
-    dobot = current_app.config.get('DOBOT')  
+    dobot = current_app.config.get('DOBOT')
     if not dobot:
         return jsonify({"error": "Dobot não inicializado"}), 500
 
-    if dobot is None:
-        return jsonify({"status": "error", "message": "Robot not initialized"}), 400
+    publicar_acao_mqtt("inicio_montagem", f"{len(fita)} medicamentos")
 
-    resultado = finalizar_montagem(dobot, medicamentos, fita)
+    resultado = finalizar_montagem(
+        dobot,
+        medicamentos,
+        fita,
+        callback_status=lambda msg: publicar_acao_mqtt("status_operacao", msg)
+    )
+
+    publicar_acao_mqtt("fim_montagem", resultado.get("message", ""))
 
     data = {
         "level": "INFO",
@@ -81,7 +100,5 @@ def finalizar_montagem_endpoint():
 
 @fita_bp.route("/visualizar", methods=["GET"])
 def visualizar_fita():
-
-    global fita 
-
+    global fita
     return jsonify({"status": "success", "fita": fita}), 200
