@@ -8,6 +8,7 @@ import Verificacao from './pages/Verificacao';
 import Prescricoes from './pages/Prescricoes';
 import Estoque from './pages/Estoque';
 import Montagens from './pages/Montagens';
+import Adicionar_prescricao from './pages/Adicionar_prescricao';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/prescricoes" element={<Prescricoes />} />
           <Route path="/estoque" element={<Estoque />} />
           <Route path="/montagens" element={<Montagens />} />
+          <Route path="/adicionar-prescricao" element={<Adicionar_prescricao />} />
           <Route path="/" element={<Login />} />
         </Routes>
       </Router>
