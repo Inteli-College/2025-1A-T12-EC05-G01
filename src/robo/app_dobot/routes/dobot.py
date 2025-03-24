@@ -126,6 +126,9 @@ def posicao_atual():
 
 @dobot_bp.route("/reconectar", methods=["GET"])
 def reconectar_dobot():
+    dobot = current_app.config.get('DOBOT')
+    if dobot is not None:
+        return jsonify({"message": "Dobot ja esta conectado"}), 200
     try:
         result = inicializar_dispositivos(current_app)
         if result is None:
