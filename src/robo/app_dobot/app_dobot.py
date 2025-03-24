@@ -7,32 +7,42 @@ import json
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
+import os
+from .MQTT_config import MQTT_CONFIG
 
 app = Flask(__name__)
 
 # Configurações MQTT
-app.config.update({
-    'MQTT_BROKER_URL': 'localhost',
-    'MQTT_BROKER_PORT': 1883,
-    'MQTT_KEEPALIVE': 5
-})
-
+app.config.update(MQTT_CONFIG)
 mqtt = Mqtt(app)
 app.mqtt = mqtt 
 
 def check_dobot_connection():
-    """Verificação ultra-rápida da conexão"""
+    """Verificação otimizada da conexão"""
     try:
+        # Primeiro verifica se a porta serial ainda existe
+        dobot_port = app.config.get('DOBOT_PORT')
+        if not dobot_port or not os.path.exists(dobot_port):
+            return "desconectado"
+            
+        # Depois verifica a comunicação com o robô
         dobot = app.config.get('DOBOT')
-        return "conectado" if dobot.pose() else "desconectado"
+        if dobot and dobot.pose():
+            return "conectado"
+        return "desconectado"
     except Exception:
         return "desconectado"
 
 def publish_dobot_status():
-    """Publicação de status com garantia de execução contínua"""
     try:
-        status = check_dobot_connection()
-        
+        # Verificação otimizada
+        port = app.config.get('DOBOT_PORT')
+        if not port or not os.path.exists(port):
+            status = "desconectado"
+        else:
+            dobot = app.config.get('DOBOT')
+            status = "conectado" if dobot and dobot.pose() else "desconectado"
+            
         app.mqtt.publish(
             'dobot/status',
             json.dumps({
@@ -42,7 +52,7 @@ def publish_dobot_status():
             retain=True
         )
     except Exception as e:
-        pass  # Evita qualquer interrupção no scheduler
+        pass
 
 # Registrar Blueprints
 app.register_blueprint(dobot_bp, url_prefix='/dobot')
@@ -56,17 +66,17 @@ with app.app_context():
         app.config['DOBOT'] = None
     
     scheduler = BackgroundScheduler(
-        job_defaults={
-            'max_instances': 5,  # Amplamente aumentado
-            'misfire_grace_time': 60  # Tempo máximo de atraso
+    job_defaults={
+        'max_instances': 1,  # Permite apenas 1 instância simultânea
+        'misfire_grace_time': 3  # Tempo igual ao intervalo
         }
     )
     scheduler.add_job(
         publish_dobot_status,
         'interval',
-        seconds=1,
+        seconds=3,  # Intervalo aumentado para 3 segundos
         id='dobot_heartbeat',
-        coalesce=False  # Permite execuções paralelas
+        coalesce=True  # Agrupa execuções pendentes
     )
     scheduler.start()
     atexit.register(lambda: scheduler.shutdown())
