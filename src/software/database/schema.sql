@@ -84,6 +84,7 @@ CREATE TABLE prescricao_aceita (
   id_prescricao_on_hold INTEGER NOT NULL,  -- Relaciona diretamente com a prescrição inicial
   id_farmaceutico INTEGER NOT NULL,
   data_validacao TEXT DEFAULT (datetime('now')),
+  status_prescricao TEXT DEFAULT 'aguardando_separacao',  -- SQLite não suporta CHECK ENUM, validação deve ser na aplicação
   FOREIGN KEY (id_prescricao_on_hold) REFERENCES prescricao_on_hold(id) ON DELETE CASCADE,
   FOREIGN KEY (id_farmaceutico) REFERENCES farmaceutico(id) ON DELETE CASCADE
 );
