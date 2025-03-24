@@ -115,6 +115,13 @@ const sidebars = {
         'Sprint 3/Hardware/Hardware'
       ],
     },
+    {
+      type: 'category',
+      label: 'Sprint 4',
+      items: [
+        'Sprint 4/Banco De Dados',
+      ]
+    }
   ],
 };
 
