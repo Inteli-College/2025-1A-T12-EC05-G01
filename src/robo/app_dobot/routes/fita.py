@@ -7,13 +7,14 @@ from pontos.carregar_medicamentos import carregar_medicamentos
 
 medicamentos = carregar_medicamentos()
 
-dobot_bp = Blueprint('dobot', __name__)
 fita_bp = Blueprint('fita', __name__)
 DATABASE_URL = "http://127.0.0.1:3000"
 fita = {}
 
-def publicar_acao_mqtt(acao, detalhes=""):
-    """Publica uma ação do Dobot via MQTT"""
+def publicar_acao_mqtt(acao, detalhes=None):
+    """Publica uma ação do Dobot via MQTT com estrutura JSON"""
+    if detalhes is None:
+        detalhes = {}
     payload = {
         "acao": acao,
         "timestamp": datetime.now().isoformat(),
@@ -76,16 +77,17 @@ def finalizar_montagem_endpoint():
     if not dobot:
         return jsonify({"error": "Dobot não inicializado"}), 500
 
-    publicar_acao_mqtt("inicio_montagem", f"{len(fita)} medicamentos")
+    publicar_acao_mqtt("inicio_montagem", {"etapa": "inicio"})
 
+    # Callback aprimorado para capturar todos os estágios
     resultado = finalizar_montagem(
         dobot,
         medicamentos,
         fita,
-        callback_status=lambda msg: publicar_acao_mqtt("status_operacao", msg)
+        callback=lambda acao, detalhes: publicar_acao_mqtt(acao, detalhes)
     )
 
-    publicar_acao_mqtt("fim_montagem", resultado.get("message", ""))
+    publicar_acao_mqtt("fim_montagem", resultado)
 
     data = {
         "level": "INFO",
