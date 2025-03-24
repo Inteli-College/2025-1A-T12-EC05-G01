@@ -2,7 +2,21 @@ import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
 
-function Fita() {
+const Fita: React.FC = () => {
+  const handleClearAlarms = async (): Promise<void> => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/limpar-todos-alarmes');
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+      const data: { message: string } = await response.json();
+      alert(data.message);
+    } catch (error) {
+      alert('Erro ao limpar alarmes');
+      console.error('Erro:', error);
+    }
+  };
+
   return (
     <PageContainer>
       <nav><Header /></nav>
@@ -10,24 +24,23 @@ function Fita() {
         <PageHeader>
           <h1>Fitas</h1>
         </PageHeader>
-        <div className='buttonAlarme'>
-          <button> Limpar alarmes</button>
+        <div className="buttonAlarme">
+          <button onClick={handleClearAlarms}>Limpar alarmes</button>
         </div>
       </PageContent>
-      
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
     </PageContainer>
-  )
+  );
 };
 
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh; /* Ensure full viewport height */
-  position: relative; /* For footer positioning */
+  min-height: 100vh;
+  position: relative;
 `;
 
 const PageContent = styled.div`
@@ -37,8 +50,8 @@ const PageContent = styled.div`
   width: 100%;
   padding: 0 15px;
   gap: 1.5rem;
-  margin-top: 70px; /* Added to account for fixed navbar */
-  padding-bottom: 80px; /* Add space for footer */
+  margin-top: 70px;
+  padding-bottom: 80px;
   
   .buttonAlarme {
     width: 90%;
@@ -53,7 +66,7 @@ const PageContent = styled.div`
     background-color: #2ECC71; 
     color: white; 
     border: none; 
-    padding 20px; 
+    padding: 20px; 
     border-radius: 20px; 
     font-weight: bold; 
     cursor: pointer;
@@ -80,13 +93,11 @@ const PageHeader = styled.div`
 
 const FooterWrapper = styled.div`
   width: 100%;
-  margin-top: auto; /* Push to bottom if content is short */
+  margin-top: auto;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
 `;
-
-
 
 export default Fita;
