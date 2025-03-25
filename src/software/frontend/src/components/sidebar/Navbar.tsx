@@ -20,10 +20,27 @@ function Header() {
         window.alert('redirecionamento para a tela de adição de novo bin');
     }
 
-    const backHome = () => {
+    const backHome = async () => {
         // Colocar aqui a lógica para o robô voltar para a posição de home
-        window.alert('Robô redirecionado para a posição de Home');
+        try {
+            console.log('Fazendo requisição para o Flask...');
+            const response = await fetch('http://127.0.0.1:5000/dobot/home', {
+                method: 'GET',
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Erro ao chamar API: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            window.alert(data.message);  // Exibe a resposta de sucesso do backend
+    
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            window.alert('Erro ao mover o robô para a posição home');
+        }
     }
+    
 
     const handleUserClick = () => {
         navigate('/login');
