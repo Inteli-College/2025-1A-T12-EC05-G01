@@ -1,16 +1,16 @@
 from sqlalchemy.exc import IntegrityError
-from ..database.db_conexao import SessionLocal, engine, Base 
+from .db_conexao import SessionLocal, engine, Base 
 
-from ..backend.models.saida import Saidas
-from ..backend.models.prescricao_medicamento import PrescricaoMedicamento
-from ..backend.models.prescricao_aceita import PrescricaoAceita
-from ..backend.models.prescricao_on_hold import PrescricaoOnHold
-from ..backend.models.paciente import Paciente
-from ..backend.models.medico import Medico
-from ..backend.models.medicamento import Medicamento
-from ..backend.models.farmaceuticos import Farmaceutico
-from ..backend.models.estoque import Estoque
-from ..backend.models.perdas import Perdas
+from software.backend.models.saida import Saidas
+from software.backend.models.prescricao_medicamento import PrescricaoMedicamento
+from software.backend.models.prescricao_aceita import PrescricaoAceita
+from software.backend.models.prescricao_on_hold import PrescricaoOnHold
+from software.backend.models.paciente import Paciente
+from software.backend.models.medico import Medico
+from software.backend.models.medicamento import Medicamento
+from software.backend.models.farmaceuticos import Farmaceutico
+from software.backend.models.estoque import Estoque
+from software.backend.models.perdas import Perdas
 
 def clear_database():
     """Remove e recria toda a estrutura do banco de dados"""
@@ -192,7 +192,7 @@ def test_farmaceutico():
     db = SessionLocal()
     try:
         print("\n⚡ Registrando novo farmacêutico...")
-        novo_farmaceutico = Farmaceutico(nome="Dra. Julia Mendes")
+        novo_farmaceutico = Farmaceutico(nome="Dra. Julia Mendes", email="julia@gmail.com"  )
         db.add(novo_farmaceutico)
         db.commit()
         print(f"✅ Farmacêutico cadastrado | ID: {novo_farmaceutico.id}")
@@ -221,7 +221,7 @@ def test_prescricao_completa():
         print("\n⚡ Etapa 1/5 - Cadastrando profissionais e paciente...")
         medico = Medico(nome="Dr. Roberto Almeida", crm="CRM/RJ-654321")
         paciente = Paciente(nome="Pedro Costa", leito="UTI-03", hc="HC-112233")
-        farmaceutico = Farmaceutico(nome="Farmac. Luiza Gomes")
+        farmaceutico = Farmaceutico(nome="Farmac. Luiza Gomes", email="luiza@gmail.com")
         
         db.add_all([medico, paciente, farmaceutico])
         db.commit()
