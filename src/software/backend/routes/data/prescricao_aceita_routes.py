@@ -14,7 +14,8 @@ def create_prescricao_aceita():
             id=request.json.get("id"),
             id_prescricao_on_hold=request.json.get("id_prescricao_on_hold"),
             id_farmaceutico=request.json.get("id_farmaceutico"),
-            data_validacao=request.json.get("data_validacao")
+            data_validacao=request.json.get("data_validacao"),
+            status_prescricao=request.json.get("status_prescricao")
         )
         db.add(prescricao)
         db.commit()
@@ -42,6 +43,7 @@ def update_prescricao_aceita():
         prescricao_aceita_to_update.id_prescricao_on_hold = data.get("id_prescricao_on_hold", prescricao_aceita_to_update.id_prescricao_on_hold)
         prescricao_aceita_to_update.id_farmaceutico = data.get("id_farmaceutico", prescricao_aceita_to_update.id_farmaceutico)
         prescricao_aceita_to_update.data_validacao = data.get("data_validacao", prescricao_aceita_to_update.data_validacao)
+        prescricao_aceita_to_update.status_prescricao = data.get("status_prescricao", prescricao_aceita_to_update.status_prescricao)
         
         db.commit()
         return {"message": f"Prescricao {prescricao_aceita_id} atualizada com sucesso"}, 200
@@ -92,7 +94,8 @@ def read_all_prescricao_aceita():
                 "id": prescricao.id,
                 "id_prescricao_on_hold": prescricao.id_prescricao_on_hold,
                 "id_farmaceutico": prescricao.id_farmaceutico,
-                "data_validacao": prescricao.data_validacao.isoformat() if prescricao.data_validacao else None
+                "data_validacao": prescricao.data_validacao.isoformat() if prescricao.data_validacao else None,
+                "status_prescricao": prescricao.status_prescricao
             } for prescricao in prescricoes]
             
             return {"prescricoes": prescricoes_list}, 200
@@ -120,7 +123,8 @@ def read_all_prescricao_aceita():
                 "id": prescricao.id,
                 "id_prescricao_on_hold": prescricao.id_prescricao_on_hold,
                 "id_farmaceutico": prescricao.id_farmaceutico,
-                "data_validacao": prescricao.data_validacao.isoformat() if prescricao.data_validacao else None
+                "data_validacao": prescricao.data_validacao.isoformat() if prescricao.data_validacao else None,
+                "status_prescricao": prescricao.status_prescricao
             } for prescricao in prescricoes]
             
             return {"prescricoes": prescricoes_list}, 200
@@ -148,7 +152,8 @@ def read_prescricao_aceita_id():
             "id": prescricao_aceita.id,
             "id_prescricao_on_hold": prescricao_aceita.id_prescricao_on_hold,
             "id_farmaceutico": prescricao_aceita.id_farmaceutico,
-            "data_validacao": prescricao_aceita.data_validacao.isoformat() if prescricao_aceita.data_validacao else None
+            "data_validacao": prescricao_aceita.data_validacao.isoformat() if prescricao_aceita.data_validacao else None,
+            "status_prescricao": prescricao_aceita.status_prescricao
         }
         
         return {"message": "Prescrição encontrada", "prescricao": prescricao_detalhes}, 200

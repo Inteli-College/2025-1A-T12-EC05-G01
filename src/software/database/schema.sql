@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS perdas;
 CREATE TABLE medico (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nome TEXT NOT NULL,
-  crm TEXT UNIQUE NOT NULL
 );
 
 -- ---
@@ -37,7 +36,8 @@ CREATE TABLE paciente (
 -- ---
 CREATE TABLE farmaceutico (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL
+  nome TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL 
 );
 
 -- ---
