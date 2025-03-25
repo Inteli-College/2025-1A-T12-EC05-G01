@@ -1,28 +1,73 @@
-import { useState, useEffect } from "react"
-import styled from "styled-components"
-import Header from "../components/sidebar/Navbar"
-import Footer from "../components/Footer"
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import Header from "../components/sidebar/Navbar";
+import Footer from "../components/Footer";
 
-export default function Adicionar_prescricao() {
-    const [availableMeds, setAvailableMeds] = useState<any[]>([])
+export default function AdicionarPrescricao() {
+    // Estados para os medicamentos
+    const [availableMeds, setAvailableMeds] = useState<any[]>([]);
     const [medications, setMedications] = useState([
         { id: Date.now(), name: "", quantity: "" }
-    ])
+    ]);
 
     useEffect(() => {
         fetch("http://127.0.0.1:3000/medicamento/read-all")
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
                 if (data.medicamentos) {
-                    setAvailableMeds(data.medicamentos)
+                    setAvailableMeds(data.medicamentos);
                 }
             })
-            .catch(err => console.error("Erro ao buscar medicamentos:", err))
-    }, [])
-    
+            .catch((err) => console.error("Erro ao buscar medicamentos:", err));
+    }, []);
+
     const handleAddMedication = () => {
-        setMedications([...medications, { id: Date.now(), name: "", quantity: "" }])
-    }
+        setMedications([...medications, { id: Date.now(), name: "", quantity: "" }]);
+    };
+
+    // Estados para informações do paciente
+    const [nomePaciente, setNomePaciente] = useState("");
+    const [nomeMedico, setNomeMedico] = useState("");
+    const [idPaciente, setIdPaciente] = useState("");
+
+    // Função para salvar a prescrição (on_hold inicialmente)
+    const handleSavePrescricao = async () => {
+        // Campos adicionados automaticamente:
+        // id_prescricao_on_hold: gerado via Date.now
+        // data_validacao: data/hora atual
+        // status_prescricao: fixado como "aguardaando_separacao"
+        const payload = {
+            paciente_nome: nomePaciente,
+            medico_nome: nomeMedico,
+            paciente_id: idPaciente,
+            medicamentos: medications,
+            id_prescricao_on_hold: Date.now().toString(),
+            data_validacao: new Date().toISOString(),
+            status_prescricao: "aguardando_separacao"
+        };
+
+        try {
+            const res = await fetch("http://127.0.0.1:3000/prescricao_aceita/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert("Prescrição salva com sucesso!");
+                // Limpa os campos após sucesso
+                setNomePaciente("");
+                setNomeMedico("");
+                setIdPaciente("");
+                setMedications([{ id: Date.now(), name: "", quantity: "" }]);
+            } else {
+                alert("Erro ao salvar: " + data.error);
+            }
+        } catch (error) {
+            console.error("Erro ao salvar a prescrição:", error);
+            alert("Erro de conexão com o servidor.");
+        }
+    };
 
     return (
         <PageContainer>
@@ -32,23 +77,37 @@ export default function Adicionar_prescricao() {
 
             <PageContent>
                 <PageHeader>
-                    <h1>Adicionar uma nova prescrição</h1>
+                    <h1>Adicionar Prescrição e Medicamentos</h1>
                 </PageHeader>
 
+                {/* Formulário único para informações do paciente, medicamentos e prescrição */}
                 <FormCard>
+                    <SectionTitle>Dados da Prescrição</SectionTitle>
                     <FormSection>
                         <FormLabel>Nome do paciente</FormLabel>
-                        <FormInput type="text" />
+                        <FormInput
+                            type="text"
+                            value={nomePaciente}
+                            onChange={(e) => setNomePaciente(e.target.value)}
+                        />
                     </FormSection>
 
                     <FormSection>
                         <FormLabel>Nome do médico</FormLabel>
-                        <FormInput type="text" />
+                        <FormInput
+                            type="text"
+                            value={nomeMedico}
+                            onChange={(e) => setNomeMedico(e.target.value)}
+                        />
                     </FormSection>
 
                     <FormSection>
                         <FormLabel>ID do paciente</FormLabel>
-                        <FormInput type="text" />
+                        <FormInput
+                            type="text"
+                            value={idPaciente}
+                            onChange={(e) => setIdPaciente(e.target.value)}
+                        />
                     </FormSection>
 
                     <FormSection>
@@ -58,9 +117,9 @@ export default function Adicionar_prescricao() {
                                 <MedicationSelect
                                     value={med.name}
                                     onChange={(e) => {
-                                        const updatedMeds = [...medications]
-                                        updatedMeds[index].name = e.target.value
-                                        setMedications(updatedMeds)
+                                        const updatedMeds = [...medications];
+                                        updatedMeds[index].name = e.target.value;
+                                        setMedications(updatedMeds);
                                     }}
                                 >
                                     <option value="">Selecionar</option>
@@ -77,9 +136,9 @@ export default function Adicionar_prescricao() {
                                         type="text"
                                         value={med.quantity}
                                         onChange={(e) => {
-                                            const updatedMeds = [...medications]
-                                            updatedMeds[index].quantity = e.target.value
-                                            setMedications(updatedMeds)
+                                            const updatedMeds = [...medications];
+                                            updatedMeds[index].quantity = e.target.value;
+                                            setMedications(updatedMeds);
                                         }}
                                     />
                                 </QuantityContainer>
@@ -91,10 +150,9 @@ export default function Adicionar_prescricao() {
                         <AddMoreButton onClick={handleAddMedication}>
                             Adicionar mais
                         </AddMoreButton>
-                        <ActionButtons>
-                            <CancelButton>Cancelar</CancelButton>
-                            <SaveButton>Salvar</SaveButton>
-                        </ActionButtons>
+                        <SaveButton onClick={handleSavePrescricao}>
+                            Salvar
+                        </SaveButton>
                     </ButtonRow>
                 </FormCard>
             </PageContent>
@@ -103,10 +161,10 @@ export default function Adicionar_prescricao() {
                 <Footer />
             </FooterWrapper>
         </PageContainer>
-    )
+    );
 }
 
-// Styled Components (mantidos)
+/* Styled Components */
 
 const PageContainer = styled.div`
     display: flex;
@@ -114,7 +172,7 @@ const PageContainer = styled.div`
     width: 100%;
     min-height: 100vh;
     position: relative;
-`
+`;
 
 const PageContent = styled.div`
     display: flex;
@@ -125,7 +183,7 @@ const PageContent = styled.div`
     gap: 1.5rem;
     margin-top: 70px;
     padding-bottom: 80px;
-`
+`;
 
 const PageHeader = styled.div`
     width: 90%;
@@ -139,7 +197,7 @@ const PageHeader = styled.div`
         font-size: clamp(24px, 5vw, 36px);
         font-weight: 900;
     }
-`
+`;
 
 const FooterWrapper = styled.div`
     width: 100%;
@@ -148,7 +206,7 @@ const FooterWrapper = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-`
+`;
 
 const FormCard = styled.div`
     background-color: #34495e;
@@ -157,17 +215,23 @@ const FormCard = styled.div`
     width: 100%;
     max-width: 800px;
     color: white;
-`
+`;
+
+const SectionTitle = styled.h2`
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+`;
 
 const FormSection = styled.div`
     margin-bottom: 20px;
-`
+`;
 
 const FormLabel = styled.label`
     display: block;
     font-size: 18px;
     margin-bottom: 10px;
-`
+`;
 
 const FormInput = styled.input`
     width: 100%;
@@ -176,7 +240,7 @@ const FormInput = styled.input`
     border: none;
     font-size: 16px;
     background-color: white;
-`
+`;
 
 const MedicationRow = styled.div`
     display: flex;
@@ -191,7 +255,7 @@ const MedicationRow = styled.div`
         flex-direction: row;
         align-items: center;
     }
-`
+`;
 
 const MedicationSelect = styled.select`
     flex: 1;
@@ -201,18 +265,18 @@ const MedicationSelect = styled.select`
     font-size: 16px;
     background-color: white;
     color: #333;
-`
+`;
 
 const QuantityContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-`
+`;
 
 const QuantityLabel = styled.span`
     color: #333;
     font-size: 16px;
-`
+`;
 
 const QuantityInput = styled.input`
     width: 70px;
@@ -220,7 +284,7 @@ const QuantityInput = styled.input`
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
-`
+`;
 
 const ButtonRow = styled.div`
     display: flex;
@@ -232,7 +296,7 @@ const ButtonRow = styled.div`
         flex-direction: row;
         justify-content: space-between;
     }
-`
+`;
 
 const AddMoreButton = styled.button`
     background-color: #f5f5f7;
@@ -247,31 +311,7 @@ const AddMoreButton = styled.button`
     &:hover {
         background-color: #e5e5e7;
     }
-`
-
-const ActionButtons = styled.div`
-    display: flex;
-    gap: 10px;
-    
-    @media (min-width: 768px) {
-        margin-left: auto;
-    }
-`
-
-const CancelButton = styled.button`
-    background-color: #f5f5f7;
-    color: #34495e;
-    border: none;
-    border-radius: 5px;
-    padding: 12px 25px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-
-    &:hover {
-        background-color: #e5e5e7;
-    }
-`
+`;
 
 const SaveButton = styled.button`
     background-color: #2ecc71;
@@ -286,4 +326,4 @@ const SaveButton = styled.button`
     &:hover {
         background-color: #27ae60;
     }
-`
+`;
