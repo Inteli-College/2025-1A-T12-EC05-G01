@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
-SERIAL_PORT = os.getenv("SCANNER_SERIAL_PORT", "/dev/ttyUSB0")
+SERIAL_PORT = os.getenv("SCANNER_SERIAL_PORT", "/dev/ttyUSB1")
 SERIAL_BAUDRATE = int(os.getenv("SCANNER_SERIAL_BAUDRATE", "9600"))
 WS_HOST = os.getenv("SCANNER_WS_HOST", "0.0.0.0")
 WS_PORT = int(os.getenv("SCANNER_WS_PORT", "8765"))
