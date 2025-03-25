@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mqtt import Mqtt
 from .routes.dobot import dobot_bp
 from .routes.fita import fita_bp
+from .routes.bin import bin_bp
 from .functions.device_initializer import inicializar_dispositivos
 import json
 from datetime import datetime
@@ -62,6 +63,7 @@ def publish_dobot_status():
 # Registrar Blueprints
 app.register_blueprint(dobot_bp, url_prefix='/dobot')
 app.register_blueprint(fita_bp, url_prefix='/dobot/fita')
+app.register_blueprint(bin_bp, url_prefix='/dobot/bin')
 
 # Configuração do Scheduler
 with app.app_context(): 
