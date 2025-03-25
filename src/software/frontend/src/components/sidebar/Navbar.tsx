@@ -10,9 +10,20 @@ function Header() {
 
     const showSidebar = () => setSidebar(!sidebar);
 
-    const reconnect = () => {
-        // Adicionar futuramente a função de reconexão com o robô
-        window.alert('Reconexão com o robô concluída');
+    const reconnect = async() => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/dobot/reconectar', {
+                method: 'GET',
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao chamar API: ${response.status}`);
+            }
+
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            window.alert('Erro ao mover o robô para a posição home');
+        }
     }
 
     const addBin = () => {
@@ -23,7 +34,6 @@ function Header() {
     const backHome = async () => {
         // Colocar aqui a lógica para o robô voltar para a posição de home
         try {
-            console.log('Fazendo requisição para o Flask...');
             const response = await fetch('http://127.0.0.1:5000/dobot/home', {
                 method: 'GET',
             });
