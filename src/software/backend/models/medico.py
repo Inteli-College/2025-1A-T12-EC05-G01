@@ -6,9 +6,10 @@ class Medico(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
+    crm = Column(String, unique=True, nullable=False)
 
     def __repr__(self):
-        return f"<Medico(nome={self.nome})>"
+        return f"<Medico(nome={self.nome}, crm={self.crm})>"
     
 if __name__ == "__main__":
     Medico.__table__.create(bind=engine, checkfirst=True)
