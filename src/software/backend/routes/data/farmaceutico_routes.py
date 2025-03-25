@@ -11,7 +11,8 @@ def create_farmaceutico():
     db = SessionLocal()
     try:
         farmaceutico = Farmaceutico(
-            nome = data.get("nome")
+            nome = data.get("nome"),
+            email = data.get("email")
         )
         db.add(farmaceutico)
         db.commit()
@@ -84,7 +85,8 @@ def read_all_farmeceuticos():
 
             farmeceuticos = [{
                 "id": farmaceutico.id,
-                "nome": farmaceutico.nome
+                "nome": farmaceutico.nome,
+                "email": farmaceutico.email
             } for farmaceutico in farmeceuticos]
             
             return {"farmaceuticos": farmeceuticos}, 200
@@ -106,7 +108,8 @@ def read_all_farmeceuticos():
             
             farmeceuticos = [{
                 "id": farmaceutico.id,
-                "nome": farmaceutico.nome                
+                "nome": farmaceutico.nome,
+                "email": farmaceutico.email               
             } for farmaceutico in farmeceuticos]
             
             return {"farmeceuticos": f"{farmeceuticos}"}, 200
@@ -130,7 +133,8 @@ def read_farmaceuticos_id():
         row = db.query(Farmaceutico).filter(Farmaceutico.id == row_id).first()
         farmaceutico = {
             "id": row.id,
-            "nome": row.nome            
+            "nome": row.nome,
+            "email": row.email            
         }
         
         if not farmaceutico:
