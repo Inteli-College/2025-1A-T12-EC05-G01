@@ -5,7 +5,6 @@ import Chart from '../components/Chart';
 import Section from '../components/common/Section';
 import Card from '../components/common/Card';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const BodyDashboard = styled.div`
   display: flex;
