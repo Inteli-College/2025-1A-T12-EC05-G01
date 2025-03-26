@@ -74,33 +74,6 @@ def cancelar_montagem():
 
 @fita_bp.route("/finalizar", methods=["POST"])
 def finalizar_montagem_endpoint():
-
-    dobot = current_app.config.get('DOBOT')  
-    if not dobot:
-        return jsonify({"error": "Dobot não inicializado"}), 500
-
-    if dobot is None:
-        return jsonify({"status": "error", "message": "Robot not initialized"}), 400
-
-    resultado = finalizar_montagem(dobot, medicamentos, fita)
-    fita.clear()
-    
-    # Publica via MQTT
-    publicar_acao_mqtt("montagem_cancelada")
-
-    data = {
-        "level": "INFO",
-        "origin": "sistema",
-        "action": "CANCELAR_MONTAGEM",
-        "description": "Montagem da fita cancelada.",
-        "status": "SUCCESS"
-    }
-    requests.post(f"{DATABASE_URL}/logs/create", json=data)
-
-    return jsonify({"status": "success", "message": "Montagem da fita cancelada"}), 200
-
-@fita_bp.route("/finalizar", methods=["POST"])
-def finalizar_montagem_endpoint():
     dobot = current_app.config.get('DOBOT')
     if not dobot:
         return jsonify({"error": "Dobot não inicializado"}), 500
