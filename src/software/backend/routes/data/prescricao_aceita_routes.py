@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.prescricao_aceita import PrescricaoAceita
@@ -27,6 +27,7 @@ def create_prescricao_aceita():
 
 @prescricao_aceita_routes.route("/update", methods=["PUT"])
 def update_prescricao_aceita():
+
     db = SessionLocal()
     try:
         data = request.json

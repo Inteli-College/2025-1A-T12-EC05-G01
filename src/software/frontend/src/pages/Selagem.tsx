@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import Navbar from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
@@ -5,8 +6,6 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 const Verificacao = () => {
-  const quantidade = 1;
-
   return (
     <PageContainer>
       <nav><Navbar /></nav>
@@ -16,75 +15,15 @@ const Verificacao = () => {
         </PageHeader>
 
         <CardContainer>
-          <Card>
-            <div className="infos-card-fita">
-              <div className="paciente-fita">
-                <span>Maria Oliveira</span>
-                <p>24/02/2025, 16:00</p>
-              </div>
-              <Button variant="success">Iniciar selagem</Button>
-            </div>
-            <div className="interacao-card-fita">
-              <ul>
-                <li>
-                  <span>Paracetamol 750mg</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-                <li>
-                  <span>Dipirona 1g</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-              </ul>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="infos-card-fita">
-              <div className="paciente-fita">
-                <span>José Santos</span>
-                <p>24/02/2025, 16:05</p>
-              </div>
-              <Button variant="success">Iniciar selagem</Button>
-            </div>
-            <div className="interacao-card-fita">
-              <ul>
-                <li>
-                  <span>Loratadina 10mg</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-                <li>
-                  <span>Dipirona 1g</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-                <li>
-                  <span>Miosan 10mg</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-              </ul>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="infos-card-fita">
-              <div className="paciente-fita">
-                <span>Ana Silva</span>
-                <p>24/02/2025, 16:10</p>
-              </div>
-              <Button variant="success">Iniciar selagem</Button>
-            </div>
-            <div className="interacao-card-fita">
-              <ul>
-                <li>
-                  <span>Sertralina 500mg</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-                <li>
-                  <span>Paracetamol 750mg</span>
-                  <p>Quantidade: {quantidade}</p>
-                </li>
-              </ul>
-            </div>
-          </Card>
+            {Fitas.map((fita, index) => 
+              <CardSelagem
+                key={index}
+                id={fita.id}
+                nome={fita.nome}
+                dateTime={fita.dateTime}
+                medicamentos={fita.medicamentos}
+              />
+            )}
         </CardContainer>
       </PageContent>
       
@@ -92,8 +31,75 @@ const Verificacao = () => {
         <Footer />
       </FooterWrapper>
     </PageContainer>
+
   );
 };
+
+function CardSelagem({id, nome, dateTime, medicamentos}) {
+  return (
+    <Card>
+      <div className="infos-card-fita">
+        <div className="paciente-fita">
+          <span>{nome}</span>
+          <p>{dateTime}</p>
+        </div>
+        <BotoesSeparacao>
+          <Button variant="success" onClick={() => ButtonSelagemRealizada(id)}>Selagem Realizada</Button>
+          <Button variant="warning">Erro na separação</Button>
+        </BotoesSeparacao>
+      </div>
+      <div className="interacao-card-fita">
+        <ul>
+          {medicamentos .map((medicamento, index) => 
+            <CardMedicamento 
+              key={index}
+              medicamento={medicamento.medicamento} 
+              quantidade={medicamento.quantidade}
+            />
+          )}
+        </ul>
+      </div>
+    </Card>
+  );
+}
+
+function CardMedicamento ({medicamento, quantidade}){
+  return(
+      <li>
+        <span>{medicamento}</span>
+        <p>Quantidade: {quantidade}</p>
+      </li>
+  );
+}
+
+async function ButtonSelagemRealizada ({id}){
+  const payload = {
+    id: id,
+    status_prescricao: "SELADA"
+  }
+  try {
+    const res = await fetch("http://127.0.0.1:3000/prescricao_aceita/update", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (res.ok) {
+        alert("Selagem salva no banco de dados");
+    } else {
+        alert("Erro ao salvar: " + data.error);
+    }
+  } catch (error) {
+      console.error("Erro ao salvar a selagem:", error);
+      alert("Erro ao salvar a selagem.");
+  }
+}
+
+const BotoesSeparacao = styled.div`
+  display:flex;
+  gap: 10px;
+
+`;
 
 const PageContainer = styled.div`
   display: flex;
@@ -192,5 +198,35 @@ const FooterWrapper = styled.div`
   left: 0;
   right: 0;
 `;
+
+const Fitas = [
+  {
+    id: 1,
+    nome: "Maria Oliveira",
+    dateTime: "24/02/2025, 16:00",
+    medicamentos: [
+      {
+        medicamento: "Paracetamol 750mg",
+        quantidade: 3
+      },
+      {
+        medicamento: "Dipirona 1g",
+        quantidade: 1
+      }
+    ]
+  },
+  {
+    id: 2,
+    nome: "José Santos",
+    dateTime: "24/02/2025, 16:05",
+    medicamentos: [ 
+      {
+        medicamento: "Loratadina 10mg",
+        quantidade: 1 
+      }
+    ]
+  }
+]
+
 
 export default Verificacao;
