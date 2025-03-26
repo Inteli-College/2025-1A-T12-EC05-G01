@@ -47,6 +47,8 @@ source venv/bin/activate
 
 cd src 
 pip install --break-system-packages -r requirements.txt
+pip install flask-mqtt
+pip install apscheduler
 
 if [ "$executar_CLI" = true ]; then
   # Se a flag CLI for passada, inicia somente a janela da CLI
@@ -80,8 +82,10 @@ else
 
   # Janela 3: App Dobot (com venv)
   tmux new-window -t dose_certa -n 'App Dobot'
-  tmux send-keys -t dose_certa:2 "cd ${raiz_projeto} && source ../venv/bin/activate" C-m
-  tmux send-keys -t dose_certa:2 " cd src/robo/ && python3 -m app_dobot.app_dobot" C-m
+  tmux send-keys -t dose_certa:2 "cd ${raiz_projeto}" C-m  
+  tmux send-keys -t dose_certa:2 "cd src/robo/" C-m
+  tmux send-keys -t dose_certa:2 "source venv/bin/activate" C-m
+  tmux send-keys -t dose_certa:2 "python -m app_dobot.app_dobot" C-m
 fi
 
 # Remove a janela dummy se ainda existir
