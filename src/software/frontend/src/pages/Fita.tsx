@@ -28,7 +28,7 @@ const Fita: React.FC = () => {
     }
   };
 
-  const handlePickMedication = async (med: string, qty: string): Promise<void> => {
+  const handlePickMedication = async (med: string,): Promise<void> => {
     try {
       const response = await fetch(`http://localhost:5000/dobot/medicamento/${med}`);
       if (!response.ok) {

@@ -28,6 +28,7 @@ function App() {
           <Route path="/adicionar-prescricao" element={<Adicionar_prescricao />} />
           <Route path="/" element={<Login />} />
           <Route path="/addBin" element={<AdicionarBin />} />
+          <Route path="/fita" element={<Fita />} />
         </Routes>
       </Router>
     </div>
