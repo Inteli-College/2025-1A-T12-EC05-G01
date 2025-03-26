@@ -12,7 +12,7 @@ const Verificacao = () => {
       <nav><Navbar /></nav>
       <PageContent>
         <PageHeader>
-          <h1>Fitas Montadas</h1>
+          <h1>Selagem</h1>
         </PageHeader>
 
         <CardContainer>
