@@ -16,7 +16,7 @@ const Fita: React.FC = () => {
 
   const handleClearAlarms = async (): Promise<void> => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/limpar-todos-alarmes');
+      const response = await fetch('http://127.0.0.1:5000/dobot/limpar-todos-alarmes');
       if (!response.ok) {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
@@ -42,17 +42,81 @@ const Fita: React.FC = () => {
     }
   };
 
+  const handleAdicionarMais = async () => {
+    if (!medicamento || !quantidade) {
+      alert("Selecione o medicamento e a quantidade!");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        alert("Medicamento adicionado com sucesso!");
+      } else {
+        alert("Erro ao adicionar medicamento.");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao se conectar com o servidor.");
+    }
+  };
+  
+  const handleCancelar = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/dobot/fita/cancelar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        alert("Operação cancelada com sucesso!");
+      } else {
+        alert("Erro ao cancelar operação.");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao se conectar com o servidor.");
+    }
+  };
+  
+  const handleEnviar = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/dobot/fita/finalizar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        alert("Operação finalizada com sucesso!");
+      } else {
+        alert("Erro ao finalizar operação.");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro ao se conectar com o servidor.");
+    }
+  };
+  
+
   return (
     <PageContainer>
       <nav><Header /></nav>
       <PageContent>
-        {/* Cabeçalho */}
         <PageHeader>
           <h1>Fitas</h1>
           <button onClick={handleClearAlarms}>Limpar alarmes</button>
         </PageHeader>
 
-        {/* Formulário para montar fita */}
         <MontarFitaContainer>
           <h2>Enviar fita</h2>
           <DropdownContainer>
@@ -69,14 +133,13 @@ const Fita: React.FC = () => {
               placeholder="Quantidade"
             />
           </DropdownContainer>
-          <ButtonContainer>
-            <button>Adicionar mais</button>
-            <button>Cancelar</button>
-            <button>Enviar</button>
-          </ButtonContainer>
+          <div className="botoes-container">
+            <button onClick={handleAdicionarMais}>Adicionar mais</button>
+            <button onClick={handleCancelar}>Cancelar</button>
+            <button onClick={handleEnviar}>Enviar</button>
+          </div>
         </MontarFitaContainer>
 
-        {/* Lista de medicamentos disponíveis */}
         <BuscarMedicamentoContainer>
           <h2>Buscar medicamento</h2>
           {medicamentos.map((med) => (
@@ -100,6 +163,7 @@ const PageContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   position: relative;
+  z-index> 0;
 `;
 
 const PageContent = styled.div`
@@ -110,16 +174,20 @@ const PageContent = styled.div`
 `;
 
 const PageHeader = styled.div`
-  width: 90%;
-  max-width: 1200px;
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  padding: 16px;
+  margin-top: 70px; 
+  z-index: 10; 
   display: flex;
   justify-content: space-between;
-  align-items: center;
 
   h1 {
     color: #34495E;
     font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
+    align-items: left;
   }
 
   button {
@@ -132,6 +200,7 @@ const PageHeader = styled.div`
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s;
+    align-items: right;
 
     &:hover {
       background-color: #27AE60;
@@ -152,7 +221,33 @@ const MontarFitaContainer = styled.div`
     font-size: 24px;
     margin-bottom: 15px;
   }
+
+  .botoes-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.botoes-container button {
+  background-color: #2ECC71;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #27AE60;
+  }
+}
+  
+
 `;
+
 
 const DropdownContainer = styled.div`
   display: flex;
@@ -168,26 +263,6 @@ const DropdownContainer = styled.div`
   }
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-
-  button {
-    background-color: #2ECC71;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #27AE60;
-    }
-  }
-`;
 
 const BuscarMedicamentoContainer = styled.div`
   width: 90%;

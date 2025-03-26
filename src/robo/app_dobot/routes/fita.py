@@ -72,10 +72,6 @@ def cancelar_montagem():
 
     return jsonify({"status": "success", "message": "Montagem da fita cancelada"}), 200
 
-@fita_bp.route("/cancelar", methods=["POST"])
-def cancelar_montagem():
-    global fita
-
 @fita_bp.route("/finalizar", methods=["POST"])
 def finalizar_montagem_endpoint():
 
