@@ -1,8 +1,19 @@
 import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
+import { useState } from 'react';
+
+const medicamentos = [
+  '1',
+  '2',
+  '3',
+  '4',
+];
 
 const Fita: React.FC = () => {
+  const [medicamento, setMedicamento] = useState('');
+  const [quantidade, setQuantidade] = useState('');
+
   const handleClearAlarms = async (): Promise<void> => {
     try {
       const response = await fetch('http://127.0.0.1:5000/limpar-todos-alarmes');
@@ -17,16 +28,64 @@ const Fita: React.FC = () => {
     }
   };
 
+  const handlePickMedication = async (med: string, qty: string): Promise<void> => {
+    try {
+      const response = await fetch(`http://localhost:5000/dobot/medicamento/${med}`);
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+      const data: { message: string } = await response.json();
+      alert(data.message);
+    } catch (error) {
+      alert('Erro ao pegar medicamento');
+      console.error('Erro:', error);
+    }
+  };
+
   return (
     <PageContainer>
       <nav><Header /></nav>
       <PageContent>
+        {/* Cabeçalho */}
         <PageHeader>
           <h1>Fitas</h1>
-        </PageHeader>
-        <div className="buttonAlarme">
           <button onClick={handleClearAlarms}>Limpar alarmes</button>
-        </div>
+        </PageHeader>
+
+        {/* Formulário para montar fita */}
+        <MontarFitaContainer>
+          <h2>Enviar fita</h2>
+          <DropdownContainer>
+            <select value={medicamento} onChange={(e) => setMedicamento(e.target.value)}>
+              <option value="" disabled>Selecione o medicamento</option>
+              {medicamentos.map((med) => (
+                <option key={med} value={med}>{med}</option>
+              ))}
+            </select>
+            <input
+              type="number"
+              value={quantidade}
+              onChange={(e) => setQuantidade(e.target.value)}
+              placeholder="Quantidade"
+            />
+          </DropdownContainer>
+          <ButtonContainer>
+            <button>Adicionar mais</button>
+            <button>Cancelar</button>
+            <button>Enviar</button>
+          </ButtonContainer>
+        </MontarFitaContainer>
+
+        {/* Lista de medicamentos disponíveis */}
+        <BuscarMedicamentoContainer>
+          <h2>Buscar medicamento</h2>
+          {medicamentos.map((med) => (
+            <MedicamentoItem key={med}>
+              <span>{med}</span>
+              <button onClick={() => handlePickMedication(med, '1')}>Pegar</button>
+            </MedicamentoItem>
+          ))}
+        </BuscarMedicamentoContainer>
       </PageContent>
       <FooterWrapper>
         <Footer />
@@ -47,47 +106,125 @@ const PageContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding: 0 15px;
-  gap: 1.5rem;
-  margin-top: 70px;
-  padding-bottom: 80px;
-  
-  .buttonAlarme {
-    width: 90%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    margin-bottom: 1rem;
-  }
-  
-  .buttonAlarme > button {
-    background-color: #2ECC71; 
-    color: white; 
-    border: none; 
-    padding: 20px; 
-    border-radius: 20px; 
-    font-weight: bold; 
-    cursor: pointer;
-    font-size: 20px;
-    
-    @media (min-width: 576px) {
-      padding: 20px 25px;
-    }
-  }
+  padding: 20px;
 `;
 
 const PageHeader = styled.div`
   width: 90%;
   max-width: 1200px;
-  padding: 0 15px;
-  margin: 2rem 0 1rem;
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   h1 {
     color: #34495E;
     font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
+  }
+
+  button {
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #27AE60;
+    }
+  }
+`;
+
+const MontarFitaContainer = styled.div`
+  background-color: #2C3E50;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 1200px;
+  color: white;
+  margin-top: 20px;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+`;
+
+const DropdownContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  select, input {
+    width: 50%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #27AE60;
+    }
+  }
+`;
+
+const BuscarMedicamentoContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  margin-top: 20px;
+
+  h2 {
+    color: #34495E;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+`;
+
+const MedicamentoItem = styled.div`
+  background-color: #2C3E50;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+
+  button {
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #27AE60;
+    }
   }
 `;
 
