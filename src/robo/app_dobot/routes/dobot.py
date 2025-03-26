@@ -122,7 +122,7 @@ def posicao_atual():
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
-    return jsonify({"message": f"Posição atual: ({x}, {y}, {z}, {r})"}), 200   
+    return jsonify({"message": "`Pontos retornados", "pontos": {"x": x, "y": y, "z": z, "r": r}}), 200  
 
 @dobot_bp.route("/reconectar", methods=["GET"])
 def reconectar_dobot():
