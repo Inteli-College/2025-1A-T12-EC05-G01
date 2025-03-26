@@ -9,6 +9,8 @@ import Prescricoes from './pages/Prescricoes';
 import Estoque from './pages/Estoque';
 import Montagens from './pages/Montagens';
 import Fita from './pages/Fita';
+import Adicionar_prescricao from './pages/Adicionar_prescricao';
+import AdicionarBin from './pages/AdicionarBin';
 
 function App() {
   return (
@@ -23,8 +25,9 @@ function App() {
           <Route path="/prescricoes" element={<Prescricoes />} />
           <Route path="/estoque" element={<Estoque />} />
           <Route path="/montagens" element={<Montagens />} />
+          <Route path="/adicionar-prescricao" element={<Adicionar_prescricao />} />
           <Route path="/" element={<Login />} />
-          <Route path="/fita" element={<Fita />} />
+          <Route path="/addBin" element={<AdicionarBin />} />
         </Routes>
       </Router>
     </div>

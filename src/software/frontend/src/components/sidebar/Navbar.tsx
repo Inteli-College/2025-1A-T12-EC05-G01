@@ -28,7 +28,7 @@ function Header() {
 
     const addBin = () => {
         // substituir pelo caminho da tela de adição de bin, que até o momento ainda não foi criada
-        window.alert('redirecionamento para a tela de adição de novo bin');
+        window.location.href='/addBin';
     }
 
     const backHome = async () => {

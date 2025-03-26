@@ -1,42 +1,50 @@
-# utils/device_initializer.py
 import os
-import time
 from SerialPortFinder.SerialPortFinder import SerialPortFinder
 from DobotAutoDetector.DobotAutoDetector import DobotAutoDetector
 from DobotConnectionHandler.DobotConnectionHandler import DobotConnectionHandler
-import requests
+import json
+from datetime import datetime
 
 DATABASE_URL = "http://127.0.0.1:3000"
 
-
 def inicializar_dispositivos(app):
-    if os.environ.get('WERKZEUG_RUN_MAIN') != 'true' and app.debug:
-        return None
+    if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
+        print("\n=== INICIALIZAÇÃO DE DISPOSITIVOS ===")
+        
+        try:
+            old_dobot = app.config.get('DOBOT')
 
-    print("\n=== INICIALIZAÇÃO DE DISPOSITIVOS ===")
-    
+            # Sempre desconectar qualquer instância anterior antes de criar nova conexão
+            if old_dobot:
+                safe_disconnect(old_dobot)
+                app.config['DOBOT'] = None
+
+            # Detecção e inicialização do Dobot
+            ports = SerialPortFinder.find_available_ports()
+            port = DobotAutoDetector.detect(ports)
+            app.config['DOBOT_PORT'] = port
+
+            handler = DobotConnectionHandler()
+            handler.connect(port)
+            handler.initialize_robot()
+
+            # Armazenar nova instância do robô
+            app.config['DOBOT'] = handler.robot
+
+            app.logger.info("Dobot inicializado com sucesso")
+            return handler.robot
+        except Exception as e:
+            app.config['DOBOT'] = None
+            app.config['DOBOT_PORT'] = None
+            app.logger.error(f"Falha na inicialização: {str(e)}")
+            raise
+
+    return None
+
+def safe_disconnect(robot):
+    """Desconexão segura do Dobot"""
     try:
-        ports = SerialPortFinder.find_available_ports()
-        port = DobotAutoDetector.detect(ports)
-        connection_handler = DobotConnectionHandler()
-        connection_handler.connect(port)
-        connection_handler.initialize_robot()
-        
-        # Armazena no contexto da aplicação
-        app.config['DOBOT'] = connection_handler.robot
-        app.logger.info("Dobot inicializado com sucesso")
-        
-        data = {
-        "level":"INFO",
-        "origin":"sistema",
-        "action":"STARTUP",
-        "description": "Dispositivos inicializados.",
-        "status": "SUCCESS"
-        }
-        requests.post(f"{DATABASE_URL}/logs/create", json=data)
-        
-        return connection_handler.robot
+        if robot:
+            robot.close()
     except Exception as e:
-        app.logger.error(f"Erro na inicialização do Dobot: {str(e)}")
-        raise
-    
+        pass

@@ -6,6 +6,7 @@ import API_BASE_URL from '../config/api';
 
 const Cadastro = () => {
   const [email, setEmail] = useState('');
+  const [nome, setNome] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,7 +19,12 @@ const Cadastro = () => {
       return;
     }
     try {
+      // Cria o usuário
       await axios.post(`${API_BASE_URL}/cadastro`, { email, password, confirm_password: confirmPassword });
+      
+      // Cria o registro na tabela de farmaceuticos
+      await axios.post(`${API_BASE_URL}/farmaceutico/create`, { email, nome });
+
       navigate('/login');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -43,6 +49,15 @@ const Cadastro = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              className="input"
+              name="nome"
+              placeholder="Nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
               required
             />
             <input

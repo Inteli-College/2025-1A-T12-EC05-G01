@@ -4,6 +4,7 @@ import Header from '../components/sidebar/Navbar';
 import Chart from '../components/Chart';
 import Section from '../components/common/Section';
 import Card from '../components/common/Card';
+import { useState, useEffect } from 'react';
 
 const BodyDashboard = styled.div`
   display: flex;
@@ -253,7 +254,7 @@ interface CardComponentProps {
 
 const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade }) => {
   return (
-    <CardBox color={ color } >
+    <CardBox color={color} >
       <span>{title}</span>
       <div className="card-interno">
         <span>{quantidade}</span>
@@ -263,14 +264,20 @@ const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade 
 }
 
 function Dashboard() {
-  // LÓGICA PARA PUXAR OS LOGS DO BANCO
-  // const [listOfLogs, setListOfLogs] = useState([]);
+  // lógica para puxar os logs do banco de dados
+  const [listOfLogs, setListOfLogs] = useState([]);
 
-  // useEffect(() => {
-  //   axios.get('/logs').then((response) => {
-  //     setListOfLogs(response.data)
-  //   })
-  // }, [])
+  useEffect(() => {
+    fetch("http://127.0.0.1:3000/logs/read-all")
+      .then(res => res.json())
+      .then(data => {
+        if (data.logs) {
+          const descriptions = data.logs.map(log => log.description);
+          setListOfLogs(descriptions);
+        }
+      })
+      .catch(error => console.error("Error fetching logs:", error));
+  }, [])
 
   return (
     <BodyDashboard>
@@ -304,17 +311,9 @@ function Dashboard() {
 
         <Section title="Logs do robô">
           <Card className="card-logs">
-            {/* FUNÇÃO PARA PUXAR OS LOGS DO BANCO {listOfLogs.map((value, key) => {
-                return <LogComponent log={value} />
-            })} */}
-            <LogComponent log='robô em posição de home' />
-            <LogComponent log='fita finalizada com sucesso' />
-            <LogComponent log='medicamento 1 separado' />
-            <LogComponent log='medicamento 1 bipado' />
-            <LogComponent log='falha ao bipar medicamento 1' />
-            <LogComponent log='medicamento 2 separado' />
-            <LogComponent log='medicamento 2 coletado' />
-            <LogComponent log='medicamento 2 bipado' />
+            {listOfLogs.map((value, key) => {
+              return <LogComponent log={value} key={key} />
+            })}
           </Card>
         </Section>
 
