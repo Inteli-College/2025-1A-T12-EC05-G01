@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, current_app
 import requests
 from ..functions.executar_rotina import executar_rotina_medicamento
 from pontos.carregar_medicamentos import carregar_medicamentos
+from ..functions.device_initializer import inicializar_dispositivos
 
 dobot_bp = Blueprint('dobot', __name__)
 DATABASE_URL = "http://127.0.0.1:3000"
@@ -121,5 +122,22 @@ def posicao_atual():
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
-    return jsonify({"message": f"Posição atual: ({x}, {y}, {z}, {r})"}), 200   
+    return jsonify({"message": "`Pontos retornados", "pontos": {"x": x, "y": y, "z": z, "r": r}}), 200  
 
+@dobot_bp.route("/reconectar", methods=["GET"])
+def reconectar_dobot():
+    dobot = current_app.config.get('DOBOT')
+    if dobot is not None:
+        return jsonify({"message": "Dobot ja esta conectado"}), 200
+    try:
+        result = inicializar_dispositivos(current_app)
+        if result is None:
+            return jsonify({"message": "Falha ao reconectar Dobot"}), 422
+            
+        return jsonify({"message": "Dobot reconectado com sucesso"}), 200
+        
+    except Exception as e:
+        current_app.logger.error(f"Erro na reconexão: {str(e)}")
+        return jsonify({"message": "Erro interno na reconexão"}), 500
+    
+    

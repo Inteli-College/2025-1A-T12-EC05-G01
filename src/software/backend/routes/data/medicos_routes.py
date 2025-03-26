@@ -15,7 +15,6 @@ def create_medico():
     try:
         medico = Medico(
             nome = data.get("nome"),
-            crm = data.get("crm")
         )
         db.add(medico)
         db.commit()
@@ -66,7 +65,6 @@ def update_medico():
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
 
         medico_to_update.nome = data.get("nome", medico_to_update.nome)
-        medico_to_update.crm = data.get("crm", medico_to_update.crm)
 
         db.commit()
         return {"message": f"Medico de ID {medico_id} atualizado"}, 200
@@ -101,15 +99,12 @@ def read_all_medicos():
             data = request.json
 
             nome = data.get("nome")
-            crm = data.get("crm")
 
             query = db.query(Medico)
             
             if nome:
                 query = query.filter(Medico.nome == nome)
-            if crm:
-                query = query.filter(Medico.crm == crm)
-            
+
             medicos = query.all()
             
             if not medicos:
@@ -118,7 +113,6 @@ def read_all_medicos():
             medicos = [{
                 "id": medico.id,
                 "nome": medico.nome,
-                "crm": medico.crm              
             } for medico in medicos]
             
             return {"message": "Lista de Medicos Retornada", "Medicos": f"{medicos}"}, 200
@@ -143,8 +137,7 @@ def read_medicos_id():
         medico = db.query(Medico).filter(Medico.id == medico_id).first()
         medico = {
             "id": medico.id,
-            "nome": medico.nome,
-            "crm": medico.crm            
+            "nome": medico.nome
         }
         
         if not medico:
