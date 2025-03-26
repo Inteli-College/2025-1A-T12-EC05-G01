@@ -25,7 +25,7 @@ const PageContainer = styled.div`
     margin-top: 2rem;
 
     color: #ECF0F1;
-    font-size: clamp(20px, 5vw, 28px);;
+    font-size: clamp(20px, 5vw, 28px);
     font-weight: 900;
   }
 
@@ -41,10 +41,6 @@ const PageContainer = styled.div`
     min-width: 200px; 
   }
   
-  h1 {
-  
-  }
-
   .ponto p {
     margin-right: 0.5rem; 
   }
@@ -64,7 +60,7 @@ const PageContainer = styled.div`
     background-color: #178B48;
   }
 
-   .checkboxes {
+  .checkboxes {
     margin-top: 3rem;
     display: flex;
     flex-direction: column;
@@ -114,33 +110,112 @@ const PageContainer = styled.div`
     cursor: pointer;
   }
 
+  .pontos-adicionados {
+    margin: 2rem 0;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+
+    h3 {
+      margin-bottom: 1rem;
+      color: #34495E;
+    }
+
+    div {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
 `;
 
-let DOBOT_URL = "http://localhost:5000";
+let DOBOT_URL = "http://127.0.0.1:5000";
+
+interface Ponto {
+  ponto: number;
+  x: number;
+  y: number;
+  z: number;
+  r: number;
+  movimento: string;
+  suctionCup: string;
+}
 
 function AdicionarBin() {
   const [moveL, setMoveL] = useState(false);
   const [suction, setSuction] = useState(false);
   const [medicamentoId, setMedicamentoId] = useState('');
-  const [pontos, setPontos] = useState(null);
+  const [pontos, setPontos] = useState<Ponto[]>([]);
 
-  const addPonto = () => {
-    fetch(`${DOBOT_URL}/dobot/posicao`)
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newId = e.target.value;
+    
+    if (pontos.length > 0 && newId !== medicamentoId) {
+      const confirmChange = window.confirm(
+        "Alterar o ID irá limpar todos os pontos. Deseja continuar?"
+      );
+      
+      if (confirmChange) {
+        setPontos([]);
+        setMedicamentoId(newId);
+      } else {
+        setMedicamentoId(medicamentoId);
+      }
+    } else {
+      setMedicamentoId(newId);
+    }
+  };
+
+  function fetchPontos() {
+    return fetch(`${DOBOT_URL}/dobot/posicao`)
       .then(response => response.json())
       .then(data => {
-        if (data && data.pontos) {
-          const { x, y, z } = data.pontos;
-          setPontos({ x, y, z });
-          window.alert("Ponto adicionado com sucesso!");
-          console.log("Posição do Dobot:", x, y, z);
+        if (data.pontos && 
+            data.pontos.x !== undefined && 
+            data.pontos.y !== undefined && 
+            data.pontos.z !== undefined && 
+            data.pontos.r !== undefined) {
+          
+          const novoPonto: Ponto = {
+            ponto: pontos.length + 1,
+            x: data.pontos.x.toFixed(2),
+            y: data.pontos.y.toFixed(2),
+            z: data.pontos.z.toFixed(2),
+            r: data.pontos.r.toFixed(2),
+            movimento: moveL ? "movl" : "movj",
+            suctionCup: suction ? "on" : "off"
+          };
+          
+          setPontos(prev => [...prev, novoPonto]);
+          return novoPonto;
         } else {
-          console.error("Dados de pontos inválidos:", data);
+          console.error("Estrutura de dados inválida:", data);
+          return null;
         }
       })
       .catch(error => {
-        console.error("Erro ao obter posição do Dobot:", error);
-        window.alert("Erro ao obter posição do Dobot");
+        console.error("Erro ao obter posição:", error);
+        return null;
       });
+  }
+
+  const addPonto = () => {
+    if (!medicamentoId) {
+      window.alert("Por favor, insira o ID do medicamento primeiro.");
+      return;
+    }
+    
+    fetchPontos().then(ponto => {
+      if (!ponto) {
+        window.alert("Falha ao obter posição do Dobot");
+      }
+    });
   };
 
   const sendBin = () => {
@@ -149,8 +224,8 @@ function AdicionarBin() {
       return;
     }
     
-    if (!pontos) {
-      window.alert("Por favor, adicione um ponto.");
+    if (pontos.length === 0) {
+      window.alert("Por favor, adicione pelo menos um ponto.");
       return;
     }
 
@@ -166,20 +241,30 @@ function AdicionarBin() {
       return;
     }
 
+    const dadosParaEnvio = {
+      medicamento: id,
+      pontos: pontos.map(p => ({
+        ponto: p.ponto,
+        x: p.x,
+        y: p.y,
+        z: p.z,
+        r: p.r,
+        movimento: p.movimento,
+        suctionCup: p.suctionCup
+      }))
+    };
+
     fetch(`${DOBOT_URL}/dobot/bin/adicionar`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        medicamento: id,
-        pontos: pontos
-      }),
+      body: JSON.stringify(dadosParaEnvio),
     })
       .then(response => {
         if (response.ok) {
           window.alert("Bin cadastrado com sucesso!");
-          setPontos(null);
+          setPontos([]);
           setMedicamentoId('');
         } else {
           response.json().then(err => {
@@ -193,13 +278,31 @@ function AdicionarBin() {
       });
   }
 
-  const selectMove = () => {
-    setMoveL(!moveL)
-  }
-
+  const selectMove = () => setMoveL(!moveL);
+  
   const selectSuction = () => {
-    setSuction(!suction)
-  }
+    const newState = !suction;
+    const suctionEndpoint = newState ? 'on' : 'off';
+    
+    fetch(`${DOBOT_URL}/dobot/suction/${suctionEndpoint}`, {
+      method: 'POST'
+    })
+    .then(response => {
+      if (response.ok) {
+        setSuction(newState);
+      } else {
+        response.json().then(err => {
+          window.alert(`Erro: ${err.error}`);
+          setSuction(suction);
+        });
+      }
+    })
+    .catch(error => {
+      console.error("Erro na sucção:", error);
+      window.alert("Falha ao comunicar com o Dobot");
+      setSuction(suction);
+    });
+  };
 
   return (
     <PageContainer>
@@ -213,7 +316,7 @@ function AdicionarBin() {
         <input 
           type="number" 
           value={medicamentoId} 
-          onChange={(e) => setMedicamentoId(e.target.value)}
+          onChange={handleIdChange}
           placeholder="Digite o ID"
         />
       </div>
@@ -248,10 +351,25 @@ function AdicionarBin() {
         </div>
       </section>
 
+      {pontos.length > 0 && (
+        <div className="pontos-adicionados">
+          <h3>Pontos Capturados ({pontos.length})</h3>
+          {pontos.map(ponto => (
+            <div key={ponto.ponto}>
+              Ponto {ponto.ponto}: 
+              X: {ponto.x.toFixed(2)}, 
+              Y: {ponto.y.toFixed(2)}, 
+              Z: {ponto.z.toFixed(2)}, 
+              Movimento: {ponto.movimento}, 
+              Sucção: {ponto.suctionCup}
+            </div>
+          ))}
+        </div>
+      )}
+
       <button className="btn-send" onClick={sendBin}>
         Cadastrar bin
       </button>
-
     </PageContainer>
   )
 }

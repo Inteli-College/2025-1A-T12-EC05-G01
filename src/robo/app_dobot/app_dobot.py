@@ -10,8 +10,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 import os
 from .MQTT_config import MQTT_CONFIG
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Configurações MQTT
 app.config.update(MQTT_CONFIG)

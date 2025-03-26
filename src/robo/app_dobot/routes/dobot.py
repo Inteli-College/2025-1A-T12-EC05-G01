@@ -26,6 +26,42 @@ def move_home():
 
     return jsonify({"message": "Moved to home position"}), 200
 
+@dobot_bp.route("/suction/<state>", methods=["POST"])
+def suction(state):
+    dobot = current_app.config.get('DOBOT') 
+    if not dobot:
+        return jsonify({"error": "Dobot não inicializado"}), 500
+    
+    if state not in ("on", "off"):
+        return jsonify({"error": "Invalid state"}), 400
+    
+    try: 
+        if state == "on":
+            dobot.suck(True)
+        else:
+            dobot.suck(False)
+            
+        data = {
+            "level":"INFO",
+            "origin":"sistema",
+            "action":"STARTUP",
+            "description":f"Suction turned {state}",
+            "status": "SUCCESS"
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"message": f"Suction turned {state}"}), 200
+    except Exception as e:
+        data = {
+            "level":"ERROR",
+            "origin":"sistema",
+            "action":"STARTUP",
+            "description":f"Failed to turn suction {state}",
+            "status": "FAILED"
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"error": f"Failed to turn suction {state}"}), 422
+    
+
 @dobot_bp.route("/move", methods=["POST"])
 def move():
     dobot = current_app.config.get('DOBOT') 

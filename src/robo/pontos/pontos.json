@@ -375,6 +375,166 @@
                     "suctionCup": "off"
                 }
             ]
+        },
+        {
+            "medicamento": 6,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 2,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movl",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 3,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 4,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 5,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                }
+            ]
+        },
+        {
+            "medicamento": 7,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 2,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 2,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 3,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 5,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 6,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                }
+            ]
+        },
+        {
+            "medicamento": 8,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 2,
+                    "x": 239.51651000976562,
+                    "y": 144.10891723632812,
+                    "z": 131.75302124023438,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                }
+            ]
+        },
+        {
+            "medicamento": 10,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 242.2293243408203,
+                    "y": 0,
+                    "z": 151.3549041748047,
+                    "r": 0,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 2,
+                    "x": 227.42579650878906,
+                    "y": 140.3699493408203,
+                    "z": 84.69383239746094,
+                    "r": 31.68338394165039,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 3,
+                    "x": 306.35211181640625,
+                    "y": 86.722900390625,
+                    "z": 119.27880859375,
+                    "r": 15.805886268615723,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 4,
+                    "x": 223.72320556640625,
+                    "y": -162.6360321044922,
+                    "z": 150.80960083007812,
+                    "r": -36.015350341796875,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                }
+            ]
         }
     ]
 }
