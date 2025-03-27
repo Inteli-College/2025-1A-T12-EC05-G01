@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import Header from "../components/sidebar/Navbar";
+// Removido: import Header from "../components/sidebar/Navbar";
 import Footer from "../components/Footer";
 
 export default function AdicionarPrescricao() {
-    // Estados para os medicamentos
     const [availableMeds, setAvailableMeds] = useState<any[]>([]);
     const [medications, setMedications] = useState([
         { id: Date.now(), name: "", quantity: "" }
@@ -25,17 +24,11 @@ export default function AdicionarPrescricao() {
         setMedications([...medications, { id: Date.now(), name: "", quantity: "" }]);
     };
 
-    // Estados para informações do paciente
     const [nomePaciente, setNomePaciente] = useState("");
     const [nomeMedico, setNomeMedico] = useState("");
     const [idPaciente, setIdPaciente] = useState("");
 
-    // Função para salvar a prescrição (on_hold inicialmente)
     const handleSavePrescricao = async () => {
-        // Campos adicionados automaticamente:
-        // id_prescricao_on_hold: gerado via Date.now
-        // data_validacao: data/hora atual
-        // status_prescricao: fixado como "aguardaando_separacao"
         const payload = {
             paciente_nome: nomePaciente,
             medico_nome: nomeMedico,
@@ -47,7 +40,7 @@ export default function AdicionarPrescricao() {
         };
 
         try {
-            const res = await fetch("http://127.0.0.1:3000/prescricao_aceita/create", {
+            const res = await fetch("http://127.0.0.1:3000/prescricao_on_hold/create", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
@@ -55,7 +48,6 @@ export default function AdicionarPrescricao() {
             const data = await res.json();
             if (res.ok) {
                 alert("Prescrição salva com sucesso!");
-                // Limpa os campos após sucesso
                 setNomePaciente("");
                 setNomeMedico("");
                 setIdPaciente("");
@@ -71,16 +63,12 @@ export default function AdicionarPrescricao() {
 
     return (
         <PageContainer>
-            <nav>
-                <Header />
-            </nav>
-
+            {/* Removido a sidebar */}
             <PageContent>
                 <PageHeader>
                     <h1>Adicionar Prescrição e Medicamentos</h1>
                 </PageHeader>
 
-                {/* Formulário único para informações do paciente, medicamentos e prescrição */}
                 <FormCard>
                     <SectionTitle>Dados da Prescrição</SectionTitle>
                     <FormSection>
