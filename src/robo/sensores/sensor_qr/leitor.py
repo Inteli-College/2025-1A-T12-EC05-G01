@@ -1,8 +1,8 @@
 import serial
 import logging
 import time
-from robo.base_scanner.configuracoes import SERIAL_PORT, SERIAL_BAUDRATE
-from robo.sensores.sensor_qr.comandos import CONFIG_SEQUENCE, TRIGGER_SCAN, STOP_SCAN
+from base_scanner.configuracoes import SERIAL_PORT, SERIAL_BAUDRATE
+from sensores.sensor_qr.comandos import CONFIG_SEQUENCE, TRIGGER_SCAN, STOP_SCAN
 
 logger = logging.getLogger(__name__)
 

@@ -98,6 +98,8 @@ def finalizar_montagem_endpoint():
     }
     requests.post(f"{DATABASE_URL}/logs/create", json=data)
 
+    fita.clear()
+
     return jsonify(resultado), 200
 
 @fita_bp.route("/visualizar", methods=["GET"])
