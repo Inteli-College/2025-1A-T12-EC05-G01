@@ -333,12 +333,12 @@ const MedicamentoItem = styled.div`
 `;
 
 const FitaContainer = styled.div`
-  background-color: #ECF0F1;
+  background-color: #2C3E50;
   padding: 20px;
   border-radius: 12px;
   width: 90%;
   max-width: 1200px;
-  color: #34495E;
+  color: #ECF0F1;
   margin-top: 20px;
 
   h2 {
