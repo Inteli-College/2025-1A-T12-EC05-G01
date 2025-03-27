@@ -22,8 +22,8 @@ const Sidebar: React.FC<SidebarProps> = ({ active }) => {
         <SidebarItem to="/dashboard" onClick={closeSidebar}>
           Dashboard
         </SidebarItem>
-        <SidebarItem to="/prescricoes" onClick={closeSidebar}>
-          Prescrições
+        <SidebarItem to="/triagem" onClick={closeSidebar}>
+          Triagem de Prescrições
         </SidebarItem>
         <SidebarItem to="/fila-separacao" onClick={closeSidebar}>
           Fila de Separação
