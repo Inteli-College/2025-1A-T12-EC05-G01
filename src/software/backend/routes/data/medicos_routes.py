@@ -2,10 +2,13 @@ from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.medico import Medico
+from flask_cors import CORS, cross_origin
 
-medicos_routes = Blueprint('medicos', __name__, url_prefix="/medicos")
+medicos_routes = Blueprint('medico', __name__, url_prefix="/medico")
+CORS(medicos_routes, resources={r"/*": {"origins": "*"}})
 
 @medicos_routes.route("/create", methods=["POST"])
+@cross_origin()
 def create_medico():
     data = request.json
     db = SessionLocal()
@@ -25,7 +28,8 @@ def create_medico():
     finally:
         db.close()
 
-@medicos_routes.route("/delete", methods=["DELETE"])
+@medicos_routes.route("/delete", methods=["DELETE", "OPTIONS"])
+@cross_origin()
 def delete_medico():
     db = SessionLocal()
     try:
@@ -49,7 +53,8 @@ def delete_medico():
     finally:
         db.close()
 
-@medicos_routes.route("/update", methods=["PUT"])
+@medicos_routes.route("/update", methods=["PUT", "OPTIONS"])
+@cross_origin()
 def update_medico():
     db = SessionLocal()
     try:
@@ -77,7 +82,8 @@ def update_medico():
     finally:
         db.close()
 
-@medicos_routes.route("/read-all", methods=["GET", "POST"])
+@medicos_routes.route("/read-all", methods=["GET", "POST", "OPTIONS"])
+@cross_origin()
 def read_all_medicos():
     db = SessionLocal()
     try:
@@ -125,7 +131,8 @@ def read_all_medicos():
     finally:
         db.close()
 
-@medicos_routes.route("/read-id", methods=["POST"])
+@medicos_routes.route("/read-id", methods=["POST", "OPTIONS"])
+@cross_origin()
 def read_medicos_id():
     db = SessionLocal()
     try:

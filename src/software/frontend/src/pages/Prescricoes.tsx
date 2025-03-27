@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
@@ -318,7 +319,7 @@ const Prescricoes = () => {
       <nav><Navbar /></nav>
       <PageContent>
         <PageHeader>
-          <h1>Triagem</h1>
+          <h1>Prescrições pendentes</h1>
         </PageHeader>
         
         {isLoading && !selectedPrescricao && <LoadingMessage>Carregando prescrições...</LoadingMessage>}

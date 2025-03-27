@@ -37,7 +37,6 @@ backend_app.register_blueprint(authentication_routes)
 backend_app.register_blueprint(prescricao_aceita_routes)
 backend_app.register_blueprint(prescricao_on_hold_routes)
 backend_app.register_blueprint(prescricao_medicamento_routes)
-backend_app.register_blueprint(prescricao_aceita_routes)
 backend_app.register_blueprint(saida_routes)
 backend_app.register_blueprint(fitas_routes)
 
