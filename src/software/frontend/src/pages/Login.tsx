@@ -15,8 +15,9 @@ const Login = () => {
     try {
       // Realiza o login via backend/Firebase
       const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
-      // Supondo que a resposta contenha a propriedade "role" que indica se o usuário é médico
       console.log(response.data.role);
+      // Salva o email no localStorage para uso futuro
+      localStorage.setItem("email", email);
       const userRole = response.data.role;
       if (userRole === 'medico') {
         navigate('/adicionar-prescricao');
@@ -31,6 +32,7 @@ const Login = () => {
       }
     }
   };
+  
 
   return (
     <StyledWrapper>

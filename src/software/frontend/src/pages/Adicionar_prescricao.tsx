@@ -88,80 +88,100 @@ export default function AdicionarPrescricao() {
   };
 
   // Função para criar a prescrição e os medicamentos associados
-  const handlePrescriptionSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-        // Obtém os dados dos médicos
+const handlePrescriptionSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    // Obtém os dados dos médicos
     const doctorRes = await fetch(`${API_BASE_URL}/medicos/read-all`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const doctorData = await doctorRes.json();
-      if (!doctorRes.ok) {
-        setError(doctorData.error || "Erro ao obter dados do médico");
-        return;
-      }
-      // Obtém o email do médico armazenado na sessão/localStorage
-      const loggedEmail = localStorage.getItem("email");
-      if (!loggedEmail) {
-        setError("Email não encontrado na sessão");
-        return;
-      }
-      // A rota retorna um objeto com a propriedade "Medicos"
-      const medicosArray = doctorData.Medicos || [];
-      // Procura o médico cujo email corresponde ao email logado
-      const doctor = medicosArray.find((d: any) => d.email === loggedEmail);
-      if (!doctor) {
-        setError("Médico não encontrado");
-        return;
-      }
-      const doctorId = doctor.id;
-      console.log("Doctor ID:", doctorId);
-  
-      // Cria a prescrição em espera (prescricao_on_hold)
-      const resHold = await fetch(`${API_BASE_URL}/prescricao_on_hold/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_medico: doctorId, id_paciente: pacienteId , data_prescricao : new Date().toISOString() })
-      });
-      const dataHold = await resHold.json();
-      if (!resHold.ok) {
-        setError(dataHold.error || "Erro ao criar a prescrição");
-        return;
-      }
-      // Assume que o id da prescrição criada seja retornado em dataHold.id
-      const prescricaoOnHoldId = dataHold.id;
-
-      // Para cada medicamento, cria um registro na tabela prescricao_medicamento
-      for (const med of medications) {
-        if (med.id_medicamento === "" || !med.quantity) continue;
-        const payload = {
-          id_prescricao_on_hold: prescricaoOnHoldId,
-          id_medicamento: med.id_medicamento,
-          quantidade: med.quantity,
-          status_medicamento: "aguardando"
-        };
-        const resMed = await fetch(
-          `${API_BASE_URL}/prescricao_medicamento/create`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          }
-        );
-        const dataMed = await resMed.json();
-        if (!resMed.ok) {
-          setError(dataMed.error || "Erro ao adicionar medicamento à prescrição");
-          return;
-        }
-      }
-      // Redireciona para a dashboard ou outra página de sucesso
-      navigate("/adicionar-prescricao");
-    } catch (err) {
-      console.error(err);
-      setError("Erro de conexão com o servidor");
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const doctorData = await doctorRes.json();
+    if (!doctorRes.ok) {
+      setError(doctorData.error || "Erro ao obter dados do médico");
+      return;
     }
-  };
+    // Obtém o email do médico armazenado na sessão/localStorage
+    const loggedEmail = localStorage.getItem("email");
+    if (!loggedEmail) {
+      setError("Email não encontrado na sessão");
+      return;
+    }
+    // A rota retorna um objeto com a propriedade "Medicos"
+    const medicosArray = doctorData.Medicos || [];
+    // Procura o médico cujo email corresponde ao email logado
+    const doctor = medicosArray.find((d: any) => d.email === loggedEmail);
+    if (!doctor) {
+      setError("Médico não encontrado");
+      return;
+    }
+    const doctorId = doctor.id;
+    console.log("Doctor ID:", doctorId);
+
+    // Cria a prescrição em espera (prescricao_on_hold)
+    const resHold = await fetch(`${API_BASE_URL}/prescricao_on_hold/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_medico: doctorId,
+        id_paciente: pacienteId,
+        data_prescricao: new Date().toISOString(),
+      }),
+    });
+    const dataHold = await resHold.json();
+    if (!resHold.ok) {
+      setError(dataHold.error || "Erro ao criar a prescrição");
+      return;
+    }
+    // Assume que o id da prescrição criada seja retornado em dataHold.id
+    const prescricaoOnHoldId = dataHold.id;
+    console.log("PrescricaoOnHold ID:", prescricaoOnHoldId);
+
+    // Para cada medicamento, cria um registro na tabela prescricao_medicamento
+    for (const med of medications) {
+      if (med.id_medicamento === "" || !med.quantity) continue;
+      const payload = {
+        id_prescricao_on_hold: prescricaoOnHoldId,
+        id_medicamento: med.id_medicamento,
+        quantidade: med.quantity,
+        status_medicamento: "aguardando",
+      };
+      const resMed = await fetch(
+        `${API_BASE_URL}/prescricao_medicamento/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      const dataMed = await resMed.json();
+      if (!resMed.ok) {
+        setError(dataMed.error || "Erro ao adicionar medicamento à prescrição");
+        return;
+      }
+    }
+    
+    // Exibe feedback de sucesso
+    alert("Prescrição criada com sucesso!");
+    
+    // Reseta os estados para voltar ao formulário inicial (dados do paciente)
+    setPacienteNome("");
+    setLeito("");
+    setHC("");
+    setPacienteId(null);
+    setMedications([{ id: Date.now(), id_medicamento: "", quantity: "" }]);
+    setStep(1);
+    
+    // Opcional: se desejar forçar um remount, você pode usar:
+    // window.location.reload();
+    // ou, se o componente estiver sendo renderizado por uma rota, navegar com replace:
+    // navigate("/adicionar-prescricao", { replace: true });
+    
+  } catch (err) {
+    console.error(err);
+    setError("Erro de conexão com o servidor");
+  }
+};
 
   return (
     <PageContainer>
@@ -400,5 +420,11 @@ const SaveButton = styled.button`
   &:hover {
     background-color: #27ae60;
   }
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  text-align: center;
+  margin-top: 0.5rem;
 `;
 
