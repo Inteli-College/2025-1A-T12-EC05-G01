@@ -18,7 +18,13 @@ export default function AdicionarPrescricao() {
   const [pacienteId, setPacienteId] = useState<number | null>(null);
 
   // Dados da prescrição (Passo 2)
-  const [availableMeds, setAvailableMeds] = useState<any[]>([]);
+  interface MedicationData {
+    id: number;
+    nome: string;
+    dosagem: string;
+  }
+
+  const [availableMeds, setAvailableMeds] = useState<MedicationData[]>([]);
   const [medications, setMedications] = useState<Medication[]>([
     { id: Date.now(), id_medicamento: "", quantity: "" }
   ]);
@@ -108,7 +114,13 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
     // A rota retorna um objeto com a propriedade "Medicos"
     const medicosArray = doctorData.Medicos || [];
     // Procura o médico cujo email corresponde ao email logado
-    const doctor = medicosArray.find((d: any) => d.email === loggedEmail);
+    interface Medico {
+      id: number;
+      email: string;
+      // Add other properties of the Medico object if needed
+    }
+
+    const doctor = medicosArray.find((d: Medico) => d.email === loggedEmail);
     if (!doctor) {
       setError("Médico não encontrado");
       return;

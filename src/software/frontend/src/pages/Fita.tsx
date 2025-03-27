@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
 import { useState } from 'react';
-import { ImInsertTemplate } from 'react-icons/im';
 
 const medicamentos = [
   '1',
@@ -14,7 +13,7 @@ const medicamentos = [
 const Fita: React.FC = () => {
   const [medicamento, setMedicamento] = useState('');
   const [quantidade, setQuantidade] = useState('');
-  const [fita, setFita] = useState<{medicamento: String; quantidade: String}[]>([]);
+  const [fita, setFita] = useState<{medicamento: string; quantidade: string}[]>([]);
 
   const handleClearAlarms = async (): Promise<void> => {
     try {
