@@ -20,6 +20,11 @@ def dashboard():
 def estoque():
     return jsonify({"page": "estoque"})
 
+@views_routes.route('/adicionar_prescricao')
+@login_required
+def estoque():
+    return jsonify({"page": "adicionar_prescricao"})
+
 @views_routes.route('/prescricoes')
 @login_required
 def prescricoes():

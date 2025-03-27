@@ -318,7 +318,7 @@ const Prescricoes = () => {
       <nav><Navbar /></nav>
       <PageContent>
         <PageHeader>
-          <h1>Prescrições pendentes</h1>
+          <h1>Triagem</h1>
         </PageHeader>
         
         {isLoading && !selectedPrescricao && <LoadingMessage>Carregando prescrições...</LoadingMessage>}
