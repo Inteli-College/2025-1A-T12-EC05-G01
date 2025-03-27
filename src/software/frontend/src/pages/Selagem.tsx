@@ -6,6 +6,25 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 const Verificacao = () => {
+  const [Fitas, setFitas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchFitas() {
+      try {
+        setLoading(true);
+        const data = await LerFitas();
+        setFitas(data || []);  // Garante que sempre seja array
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchFitas();
+  }, []);
+
   return (
     <PageContainer>
       <nav><Navbar /></nav>
@@ -15,7 +34,8 @@ const Verificacao = () => {
         </PageHeader>
 
         <CardContainer>
-            {Fitas.map((fita, index) => 
+          {Fitas.length > 0 ? (
+            Fitas.map((fita, index) => 
               <CardSelagem
                 key={index}
                 id={fita.id}
@@ -23,7 +43,10 @@ const Verificacao = () => {
                 dateTime={fita.dateTime}
                 medicamentos={fita.medicamentos}
               />
-            )}
+            )
+          ) : (
+            !loading && <p>Nenhuma fita encontrada</p>
+          )}
         </CardContainer>
       </PageContent>
       
@@ -44,8 +67,8 @@ function CardSelagem({id, nome, dateTime, medicamentos}) {
           <p>{dateTime}</p>
         </div>
         <BotoesSeparacao>
-          <Button variant="success" onClick={() => ButtonSelagemRealizada(id)}>Selagem Realizada</Button>
-          <Button variant="warning">Erro na separação</Button>
+          <Button variant="success" onClick={() => ButtonSelagemRealizada({id})}>Selagem Realizada</Button>
+          <Button variant="warning" onClick={() => ButtonErroSeparacao({id})}>Erro na separação</Button>
         </BotoesSeparacao>
       </div>
       <div className="interacao-card-fita">
@@ -75,7 +98,7 @@ function CardMedicamento ({medicamento, quantidade}){
 async function ButtonSelagemRealizada ({id}){
   const payload = {
     id: id,
-    status_prescricao: "SELADA"
+    status_prescricao: "selada"
   }
   try {
     const res = await fetch("http://127.0.0.1:3000/prescricao_aceita/update", {
@@ -86,12 +109,57 @@ async function ButtonSelagemRealizada ({id}){
     const data = await res.json();
     if (res.ok) {
         alert("Selagem salva no banco de dados");
+        window.location.reload();
     } else {
         alert("Erro ao salvar: " + data.error);
     }
   } catch (error) {
       console.error("Erro ao salvar a selagem:", error);
       alert("Erro ao salvar a selagem.");
+  }
+}
+
+async function ButtonErroSeparacao ({id}){
+  const payload = {
+    id: id,
+    status_prescricao: "erro_separacao"
+  }
+  try {
+    const res = await fetch("http://127.0.0.1:3000/prescricao_aceita/update", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (res.ok) {
+        alert("Salvo no banco de dados");
+        window.location.reload(); 
+    } else {
+        alert("Erro ao salvar: " + data.error);
+    }
+  } catch (error) {
+      console.error("Erro ao salvar o erro:", error);
+      alert("Erro ao salvar.");
+  }
+}
+
+async function LerFitas(){
+  try {
+    const res = await fetch("http://127.0.0.1:3000/fitas/aguardando-selagem", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+    });
+    const data = await res.json();
+    if (res.ok) {
+      return data.fitas || [];
+    } else {
+      alert("Erro ao ler: " + (data.error || res.statusText));
+      return [];  // Retorna array vazio em caso de erro
+    }
+  } catch (error) {
+    console.error("Erro ao ler:", error);
+    alert("Erro ao ler: " + error.message);
+    return [];  // Retorna array vazio em caso de erro
   }
 }
 
@@ -198,35 +266,6 @@ const FooterWrapper = styled.div`
   left: 0;
   right: 0;
 `;
-
-const Fitas = [
-  {
-    id: 1,
-    nome: "Maria Oliveira",
-    dateTime: "24/02/2025, 16:00",
-    medicamentos: [
-      {
-        medicamento: "Paracetamol 750mg",
-        quantidade: 3
-      },
-      {
-        medicamento: "Dipirona 1g",
-        quantidade: 1
-      }
-    ]
-  },
-  {
-    id: 2,
-    nome: "José Santos",
-    dateTime: "24/02/2025, 16:05",
-    medicamentos: [ 
-      {
-        medicamento: "Loratadina 10mg",
-        quantidade: 1 
-      }
-    ]
-  }
-]
 
 
 export default Verificacao;
