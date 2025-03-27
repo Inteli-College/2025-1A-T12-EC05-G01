@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 
 interface Medication {
@@ -10,7 +9,6 @@ interface Medication {
 }
 
 export default function AdicionarPrescricao() {
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
   // Dados do paciente (Passo 1)
@@ -359,17 +357,6 @@ const MedicationSelect = styled.select`
   font-size: 16px;
   background-color: white;
   color: #333;
-`;
-
-const QuantityContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const QuantityLabel = styled.span`
-  color: #333;
-  font-size: 16px;
 `;
 
 const QuantityInput = styled.input`
