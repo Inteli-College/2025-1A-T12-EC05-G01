@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
 import { useState } from 'react';
+import { ImInsertTemplate } from 'react-icons/im';
 
 const medicamentos = [
   '1',
@@ -13,6 +14,7 @@ const medicamentos = [
 const Fita: React.FC = () => {
   const [medicamento, setMedicamento] = useState('');
   const [quantidade, setQuantidade] = useState('');
+  const [fita, setFita] = useState<{medicamento: String; quantidade: String}[]>([]);
 
   const handleClearAlarms = async (): Promise<void> => {
     try {
@@ -69,11 +71,14 @@ const handleAdicionarMedicamento = async (): Promise<void> => {
 
       const data: { message: string } = await response.json();
       alert(data.message); // Exibe a mensagem de sucesso do backend
+      setFita((prevFita) => [...prevFita, { medicamento, quantidade }]); // Atualiza o estado da fita
   } catch (error) {
       alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
       console.error('Erro:', error);
   }
 };
+
+
 
 const handleCancelarMontagem = async (): Promise<void> => {
   try {
@@ -88,6 +93,9 @@ const handleCancelarMontagem = async (): Promise<void> => {
 
       const data: { message: string } = await response.json();
       alert(data.message); // Exibe a mensagem de sucesso do backend
+
+      // Limpa o estado da fita na interface
+      setFita([]);
   } catch (error) {
       alert('Erro ao cancelar montagem. Verifique o console para mais detalhes.');
       console.error('Erro:', error);
@@ -106,7 +114,9 @@ const handleFinalizarMontagem = async (): Promise<void> => {
       }
 
       const data: { message: string } = await response.json();
+      
       alert(data.message); // Exibe a mensagem de sucesso do backend
+      setFita([]);
   } catch (error) {
       alert('Erro ao finalizar montagem. Verifique o console para mais detalhes.');
       console.error('Erro:', error);
@@ -146,6 +156,17 @@ const handleFinalizarMontagem = async (): Promise<void> => {
               <button onClick={handleFinalizarMontagem}>Enviar</button>
           </ButtonContainer>
         </MontarFitaContainer>
+
+        {fita.length > 0 && (
+          <FitaContainer>
+            <h2>Medicamentos na Fita</h2>
+            {fita.map((item, index) => (
+              <div key={index}>
+                Medicamento: {item.medicamento}, Quantidade: {item.quantidade}
+              </div>
+            ))}
+          </FitaContainer>
+        )}
 
         {/* Lista de medicamentos disponíveis */}
         <BuscarMedicamentoContainer>
@@ -295,6 +316,30 @@ const MedicamentoItem = styled.div`
 
     &:hover {
       background-color: #27AE60;
+    }
+  }
+`;
+
+const FitaContainer = styled.div`
+  background-color: #ECF0F1;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 1200px;
+  color: #34495E;
+  margin-top: 20px;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+
+  div {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+
+    &:last-child {
+      border-bottom: none;
     }
   }
 `;
