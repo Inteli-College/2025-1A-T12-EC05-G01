@@ -11,7 +11,9 @@ def create_medico():
     db = SessionLocal()
     try:
         medico = Medico(
-            nome = data.get("nome"),
+            nome=data.get("nome"),
+            email=data.get("email"),
+            crm=data.get("crm")
         )
         db.add(medico)
         db.commit()
@@ -60,6 +62,8 @@ def update_medico():
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
 
         medico_to_update.nome = data.get("nome", medico_to_update.nome)
+        medico_to_update.email = data.get("email", medico_to_update.email)
+        medico_to_update.crm = data.get("crm", medico_to_update.crm)
 
         db.commit()
         return {"message": f"Medico de ID {medico_id} atualizado"}, 200
@@ -82,18 +86,18 @@ def read_all_medicos():
             if not medicos:
                 return {"message": "No rows found"}, 200
 
-            medicos = [{
+            medicos_data = [{
                 "id": medico.id,
-                "nome": medico.nome
+                "nome": medico.nome,
+                "email": medico.email,
+                "crm": medico.crm
             } for medico in medicos]
             
-            return {"message": "Lista de medicos retornada", "Medicos": medicos}, 200
+            return {"message": "Lista de medicos retornada", "Medicos": medicos_data}, 200
 
         elif request.method == "POST":
             data = request.json
-
             nome = data.get("nome")
-
             query = db.query(Medico)
             
             if nome:
@@ -104,12 +108,14 @@ def read_all_medicos():
             if not medicos:
                 return {"message": "No rows found with the provided filters"}, 200
             
-            medicos = [{
+            medicos_data = [{
                 "id": medico.id,
                 "nome": medico.nome,
+                "email": medico.email,
+                "crm": medico.crm
             } for medico in medicos]
             
-            return {"message": "Lista de Medicos Retornada", "Medicos": f"{medicos}"}, 200
+            return {"message": "Lista de medicos retornada", "Medicos": medicos_data}, 200
 
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
@@ -128,17 +134,19 @@ def read_medicos_id():
             raise HTTPException(status_code=400, detail="ID is required")
         
         medico = db.query(Medico).filter(Medico.id == medico_id).first()
-        medico = {
-            "id": medico.id,
-            "nome": medico.nome
-        }
-        
         if not medico:
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
-        return {"message": "Medico Retornado", "Medico": f"{medico}"}, 200
+        
+        medico_data = {
+            "id": medico.id,
+            "nome": medico.nome,
+            "email": medico.email,
+            "crm": medico.crm
+        }
+        
+        return {"message": "Medico retornado", "Medico": medico_data}, 200
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
-    
