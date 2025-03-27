@@ -398,6 +398,79 @@
                     "suctionCup": "off"
                 }
             ]
+        },
+        {
+            "medicamento": 11,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 242.23,
+                    "y": 0,
+                    "z": 151.35,
+                    "r": 0,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 2,
+                    "x": 286.81,
+                    "y": 113.7,
+                    "z": 0.16,
+                    "r": 21.624385833740234,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                },
+                {
+                    "ponto": 3,
+                    "x": 287.63,
+                    "y": 105.58,
+                    "z": -32.59,
+                    "r": 20.15738296508789,
+                    "movimento": "movl",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 4,
+                    "x": 288.29,
+                    "y": 101.77,
+                    "z": 3.08,
+                    "r": 19.44338607788086,
+                    "movimento": "movl",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 5,
+                    "x": 239.56,
+                    "y": -116.28,
+                    "z": 123.21,
+                    "r": -25.890350341796875,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                }
+            ]
+        },
+        {
+            "medicamento": 7,
+            "pontos": [
+                {
+                    "ponto": 1,
+                    "x": 328.51,
+                    "y": -28.93,
+                    "z": 36.09,
+                    "r": -5.032317161560059,
+                    "movimento": "movj",
+                    "suctionCup": "on"
+                },
+                {
+                    "ponto": 2,
+                    "x": 127.67,
+                    "y": -271.3,
+                    "z": 116.97,
+                    "r": -64.79812622070312,
+                    "movimento": "movj",
+                    "suctionCup": "off"
+                }
+            ]
         }
     ]
 }
