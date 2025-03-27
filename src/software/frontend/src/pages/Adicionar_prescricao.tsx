@@ -142,7 +142,7 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
         id_prescricao_on_hold: prescricaoOnHoldId,
         id_medicamento: med.id_medicamento,
         quantidade: med.quantity,
-        status_medicamento: "aguardando",
+        status_medicamento: "pendente",
       };
       const resMed = await fetch(
         `${API_BASE_URL}/prescricao_medicamento/create`,

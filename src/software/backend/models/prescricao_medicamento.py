@@ -10,7 +10,7 @@ class PrescricaoMedicamento(Base):
     id_prescricao_aceita = Column(Integer, ForeignKey('prescricao_aceita.id', ondelete='SET NULL'), nullable=True)
     id_medicamento = Column(Integer, ForeignKey('medicamento.id', ondelete='CASCADE'), nullable=False)
     quantidade = Column(Integer, nullable=False)
-    status_medicamento = Column(String, CheckConstraint("status_medicamento IN ('dispensado', 'aprovado', 'pendente')"), nullable=False)
+    status_medicamento = Column(String, CheckConstraint("status_medicamento IN ('dispensado', 'aprovado', 'pendente')"), nullable=False, default="pendente")
 
     prescricao_aceita = relationship("PrescricaoAceita", back_populates="prescricoes_medicamentos")
     prescricao_on_hold = relationship("PrescricaoOnHold", back_populates="prescricoes_medicamentos")
