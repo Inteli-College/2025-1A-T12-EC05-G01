@@ -96,7 +96,7 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
     // Obtém os dados dos médicos
-    const doctorRes = await fetch(`${API_BASE_URL}/medicos/read-all`, {
+    const doctorRes = await fetch(`${API_BASE_URL}/medico/read-all`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
