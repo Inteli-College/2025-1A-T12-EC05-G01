@@ -88,7 +88,7 @@ def move():
 
     return jsonify({"message": f"Moved to ({x}, {y}, {z})"}), 200
     
-@dobot_bp.route("/medicamento/<medicamento>")
+@dobot_bp.route("/medicamento/<medicamento>", methods=["POST"])
 def rotina_medicamento(medicamento):
     dobot = current_app.config.get('DOBOT')  
     if not dobot:
