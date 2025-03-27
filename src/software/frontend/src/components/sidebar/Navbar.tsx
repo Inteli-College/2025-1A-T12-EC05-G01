@@ -68,9 +68,39 @@ function Header() {
             });
     };
 
-    const addBin = () => navigate('/addBin');
-    const backHome = () => window.alert('Robô retornando à posição inicial');
-    const handleUserClick = () => navigate('/login');
+
+    const addBin = () => {
+        // substituir pelo caminho da tela de adição de bin, que até o momento ainda não foi criada
+        window.location.href='/addBin';
+    }
+
+    const backHome = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/dobot/home', {
+                method: 'GET',
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.text(); // Aqui pode ocorrer o problema
+                throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
+            }
+    
+            const data = await response.json();
+            if (data && data.message) {
+                window.alert(data.message);
+            } else {
+                window.alert('Robô movido para a posição home com sucesso!');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            window.alert('Erro ao mover o robô para a posição home');
+        }
+    };
+    
+
+    const handleUserClick = () => {
+        navigate('/login');
+    }
 
     return (
         <Container>
