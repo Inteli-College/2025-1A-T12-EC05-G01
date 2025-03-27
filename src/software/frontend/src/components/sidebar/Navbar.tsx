@@ -4,6 +4,8 @@ import { FaBars, FaUserAlt, FaHome, FaBell } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 
+let DOBOT_URL = "http://127.0.0.1:5000";
+
 function Header() {
     const [sidebar, setSidebar] = useState(false);
     const navigate = useNavigate();
@@ -11,8 +13,26 @@ function Header() {
     const showSidebar = () => setSidebar(!sidebar);
 
     const reconnect = () => {
-        // Adicionar futuramente a função de reconexão com o robô
-        window.alert('Reconexão com o robô concluída');
+        console.log('Attempting to reconnect to Dobot...');
+        fetch(`${DOBOT_URL}/dobot/reconectar`)
+            .then(response => {
+                console.log('Received response:', response);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Parsed response data:', data);
+                if (data.message === 'Dobot ja esta conectado' || data.message === 'Dobot reconectado com sucesso') {
+                    window.alert('Dobot está conectado');
+                } else if (data.status === 'success') {
+                    window.alert('Reconectou com sucesso');
+                } else {
+                    window.alert('Falhou ao reconectar');
+                }
+            })
+            .catch(error => {
+                console.error('Error during reconnection:', error);
+                window.alert('Falhou ao reconectar');
+            });
     }
 
     const addBin = () => {
