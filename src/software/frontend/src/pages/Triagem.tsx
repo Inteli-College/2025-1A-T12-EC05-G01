@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/sidebar/Navbar';
 import { HiOutlineClock } from "react-icons/hi2";
+import { FaPills } from "react-icons/fa";
 import Popup from 'reactjs-popup';
 import API_BASE_URL from '../config/api';
 
@@ -39,6 +40,10 @@ const Prescricoes = () => {
   const [medicationToAdd, setMedicationToAdd] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [medicationsCache, setMedicationsCache] = useState<{[key: number]: Medication}>({});
+  const [prescriptionMedications, setPrescriptionMedications] = useState<{
+    [prescriptionId: number]: Array<PrescricaoMedicamento>
+  }>({});
 
   useEffect(() => {
     fetchPrescricoesOnHold();
@@ -49,44 +54,173 @@ const Prescricoes = () => {
     setIsLoading(true);
     setError(null);
     try {
+      console.log('Fetching prescriptions from:', `${API_BASE_URL}/prescricao_on_hold/read-all`);
       const response = await fetch(`${API_BASE_URL}/prescricao_on_hold/read-all`, { method: 'GET' });
       const data = await response.json();
+      console.log('Prescriptions response:', data);
+      
       if (response.ok) {
+        // Certifica-se de que estamos acessando o array correto
+        const prescricoesData = data.PrescricaoOnHold || data.prescricoes_on_hold || [];
+        console.log('Prescriptions data array:', prescricoesData);
+        
+        if (prescricoesData.length === 0) {
+          console.log('No prescriptions found');
+          setPrescricoesOnHold([]);
+          setIsLoading(false);
+          return;
+        }
+        
         // Para cada prescrição, buscar dados do paciente e médico
-        const prescricoesDetalhadas = await Promise.all((data.PrescricaoOnHold || []).map(async (prescricao: PrescricaoOnHold) => {
-          // Buscar dados do paciente
-          const pacienteResponse = await fetch(`${API_BASE_URL}/paciente/read-id`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: prescricao.id_paciente })
-          });
-          const pacienteData = await pacienteResponse.json();
-          
-          // Buscar dados do médico.
-          const medicoResponse = await fetch(`${API_BASE_URL}/medico/read-id`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: prescricao.id_medico })
-          });
-          const medicoData = await medicoResponse.json();
-          
-          return {
-            ...prescricao,
-            nome_paciente: pacienteData.paciente?.nome || '',
-            hc_paciente: pacienteData.paciente?.hc || '',
-            nome_medico: medicoData.medico?.nome || ''
-          };
+        const prescricoesDetalhadas = await Promise.all(prescricoesData.map(async (prescricao: PrescricaoOnHold) => {
+          try {
+            // Buscar dados do paciente
+            console.log('Fetching patient data for ID:', prescricao.id_paciente);
+            const pacienteResponse = await fetch(`${API_BASE_URL}/paciente/read-id`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: prescricao.id_paciente })
+            });
+            
+            let pacienteNome = '';
+            let pacienteHC = '';
+            
+            if (pacienteResponse.ok) {
+              const pacienteData = await pacienteResponse.json();
+              console.log('Patient data:', pacienteData);
+              pacienteNome = pacienteData.paciente?.nome || 
+                            pacienteData.nome || 
+                            `Paciente ${prescricao.id_paciente}`;
+              pacienteHC = pacienteData.paciente?.hc || 
+                          pacienteData.hc || 
+                          `HC${prescricao.id_paciente}`;
+            } else {
+              console.error('Failed to fetch patient data');
+            }
+            
+            // Buscar dados do médico
+            console.log('Fetching doctor data for ID:', prescricao.id_medico);
+            const medicoResponse = await fetch(`${API_BASE_URL}/medico/read-id`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: prescricao.id_medico })
+            });
+            
+            let medicoNome = '';
+            
+            if (medicoResponse.ok) {
+              const medicoData = await medicoResponse.json();
+              console.log('Doctor data:', medicoData);
+              medicoNome = medicoData.medico?.nome || 
+                          medicoData.nome || 
+                          `Médico ${prescricao.id_medico}`;
+            } else {
+              console.error('Failed to fetch doctor data');
+            }
+
+            // Additionally fetch medications for each prescription
+            await fetchMedicationsForPrescription(prescricao.id);
+            
+            return {
+              ...prescricao,
+              nome_paciente: pacienteNome,
+              hc_paciente: pacienteHC,
+              nome_medico: medicoNome
+            };
+          } catch (error) {
+            console.error('Error processing prescription:', error);
+            return {
+              ...prescricao,
+              nome_paciente: `Paciente ${prescricao.id_paciente}`,
+              hc_paciente: `HC${prescricao.id_paciente}`,
+              nome_medico: `Médico ${prescricao.id_medico}`
+            };
+          }
         }));
         
+        console.log('Processed prescriptions:', prescricoesDetalhadas);
         setPrescricoesOnHold(prescricoesDetalhadas);
       } else {
+        console.error('Failed to fetch prescriptions:', data.error);
         setError(data.error || 'Erro ao buscar prescrições');
       }
     } catch (error) {
+      console.error('Error fetching prescriptions:', error);
       setError('Erro ao conectar ao backend');
-      console.error('Erro ao conectar ao backend:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // New function to fetch medications for a specific prescription
+  const fetchMedicationsForPrescription = async (prescricaoId: number) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/prescricao_medicamento/read-all`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_prescricao_on_hold: prescricaoId }),
+      });
+      
+      if (!response.ok) {
+        console.error(`Failed to fetch medications for prescription ${prescricaoId}`);
+        return;
+      }
+      
+      const data = await response.json();
+      const medicamentos = data.prescricoes_medicamento || [];
+      
+      if (medicamentos.length === 0) {
+        setPrescriptionMedications(prev => ({...prev, [prescricaoId]: []}));
+        return;
+      }
+      
+      // For each medication, get additional details
+      const medicationPromises = medicamentos.map(async (med: PrescricaoMedicamento) => {
+        // Check cache first
+        let medData = medicationsCache[med.id_medicamento];
+        
+        if (!medData) {
+          try {
+            const medResponse = await fetch(`${API_BASE_URL}/medicamento/read-id`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: med.id_medicamento }),
+            });
+            
+            if (medResponse.ok) {
+              const responseData = await medResponse.json();
+              medData = responseData.medicamento;
+              
+              // Update cache
+              if (medData) {
+                setMedicationsCache(prev => ({
+                  ...prev,
+                  [med.id_medicamento]: medData
+                }));
+              }
+            } else {
+              console.error(`Failed to fetch medication ${med.id_medicamento}`);
+            }
+          } catch (error) {
+            console.error(`Error fetching medication ${med.id_medicamento}:`, error);
+          }
+        }
+        
+        return {
+          ...med,
+          nome_medicamento: medData?.nome || `Medicamento ${med.id_medicamento}`,
+          dosagem: medData?.dosagem || 'Dosagem não disponível'
+        };
+      });
+      
+      const medicamentosDetalhados = await Promise.all(medicationPromises);
+      setPrescriptionMedications(prev => ({
+        ...prev,
+        [prescricaoId]: medicamentosDetalhados
+      }));
+      
+    } catch (error) {
+      console.error(`Error fetching medications for prescription ${prescricaoId}:`, error);
     }
   };
 
@@ -95,7 +229,15 @@ const Prescricoes = () => {
       const response = await fetch(`${API_BASE_URL}/medicamento/read-all`, { method: 'GET' });
       const data = await response.json();
       if (response.ok) {
-        setAvailableMedications(data.medicamentos || []);
+        const medications = data.medicamentos || [];
+        setAvailableMedications(medications);
+        
+        // Atualizar o cache de medicamentos para referência rápida
+        const cache = {...medicationsCache};
+        medications.forEach((med: Medication) => {
+          cache[med.id] = med;
+        });
+        setMedicationsCache(cache);
       } else {
         console.error(data.error || 'Erro ao buscar medicamentos disponíveis');
       }
@@ -104,53 +246,131 @@ const Prescricoes = () => {
     }
   };
 
+  // Função para buscar detalhes de um medicamento específico por ID
+  const fetchMedicationDetails = async (medicationId: number) => {
+    try {
+      // Verificar primeiro no cache
+      if (medicationsCache[medicationId]) {
+        return medicationsCache[medicationId];
+      }
+      
+      // Se não estiver no cache, buscar da API
+      const response = await fetch(`${API_BASE_URL}/medicamento/read-id`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: medicationId }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Medicamento não encontrado');
+      }
+      
+      const data = await response.json();
+      const medicamento = data.medicamento || null;
+      
+      // Atualizar o cache
+      if (medicamento) {
+        setMedicationsCache(prev => ({
+          ...prev,
+          [medicationId]: medicamento
+        }));
+      }
+      
+      return medicamento;
+    } catch (error) {
+      console.error(`Erro ao buscar detalhes do medicamento ${medicationId}:`, error);
+      return null;
+    }
+  };
+
   const handleEditClick = async (prescricaoId: number, patientName: string) => {
     setIsLoading(true);
     setError(null);
+    setSelectedMedications([]); // Limpa medicamentos selecionados anteriormente
+    
     try {
+      console.log('Fetching medications for prescription:', prescricaoId);
+      
       // Buscar medicamentos associados a esta prescrição
       const response = await fetch(`${API_BASE_URL}/prescricao_medicamento/read-all`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_prescricao_on_hold: prescricaoId }),
       });
-      const data = await response.json();
       
-      if (response.ok) {
-        const medicamentos = data.prescricoes_medicamento || [];
-        
-        // Para cada medicamento, buscar detalhes complementares
-        const medicamentosDetalhados = await Promise.all(medicamentos.map(async (med: PrescricaoMedicamento) => {
-          const medResponse = await fetch(`${API_BASE_URL}/medicamento/read-id`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: med.id_medicamento }),
-          });
-          const medData = await medResponse.json();
-          
-          return {
-            ...med,
-            nome_medicamento: medData.medicamento?.nome || 'Medicamento não encontrado',
-            dosagem: medData.medicamento?.dosagem || 'Dosagem não disponível'
-          };
-        }));
-        
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Erro ao buscar detalhes da prescrição');
+      }
+      
+      const data = await response.json();
+      console.log('Prescription medications data:', data);
+      
+      const medicamentos = data.prescricoes_medicamento || [];
+      
+      if (medicamentos.length === 0) {
         setSelectedPrescricao(prescricaoId);
         setSelectedPatientName(patientName);
-        setSelectedMedications(medicamentosDetalhados);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Para cada medicamento, buscar detalhes complementares em paralelo
+      const medicationPromises = medicamentos.map(async (med: PrescricaoMedicamento) => {
+        // Tentar buscar do cache primeiro
+        let medData = medicationsCache[med.id_medicamento];
         
-        // Definir o primeiro medicamento disponível para adição
-        if (availableMedications.length > 0) {
-          const usedMedicationIds = medicamentosDetalhados.map(med => med.id_medicamento);
-          const availableMed = availableMedications.find(med => !usedMedicationIds.includes(med.id));
-          setMedicationToAdd(availableMed?.id || null);
+        // Se não estiver no cache, buscar da API
+        if (!medData) {
+          try {
+            const medResponse = await fetch(`${API_BASE_URL}/medicamento/read-id`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: med.id_medicamento }),
+            });
+            
+            if (medResponse.ok) {
+              const responseData = await medResponse.json();
+              medData = responseData.medicamento;
+              
+              // Atualizar o cache
+              if (medData) {
+                setMedicationsCache(prev => ({
+                  ...prev,
+                  [med.id_medicamento]: medData
+                }));
+              }
+            } else {
+              console.error(`Erro ao buscar medicamento ${med.id_medicamento}`);
+            }
+          } catch (error) {
+            console.error(`Erro ao buscar medicamento ${med.id_medicamento}:`, error);
+          }
         }
-      } else {
-        setError(data.error || 'Erro ao buscar detalhes da prescrição');
+        
+        return {
+          ...med,
+          nome_medicamento: medData?.nome || `Medicamento ${med.id_medicamento}`,
+          dosagem: medData?.dosagem || 'Dosagem não disponível'
+        };
+      });
+      
+      const medicamentosDetalhados = await Promise.all(medicationPromises);
+      console.log('Detailed medications:', medicamentosDetalhados);
+      
+      setSelectedPrescricao(prescricaoId);
+      setSelectedPatientName(patientName);
+      setSelectedMedications(medicamentosDetalhados);
+      
+      // Definir o primeiro medicamento disponível para adição
+      if (availableMedications.length > 0) {
+        const usedMedicationIds = medicamentosDetalhados.map(med => med.id_medicamento);
+        const availableMed = availableMedications.find(med => !usedMedicationIds.includes(med.id));
+        setMedicationToAdd(availableMed?.id || null);
       }
     } catch (error) {
-      setError('Erro ao conectar ao backend');
-      console.error('Erro ao conectar ao backend:', error);
+      console.error('Error fetching prescription details:', error);
+      setError(error instanceof Error ? error.message : 'Erro ao conectar ao backend');
     } finally {
       setIsLoading(false);
     }
@@ -181,14 +401,24 @@ const Prescricoes = () => {
           });
           
           if (response.ok) {
-            // Adicionar à lista local
+            const responseData = await response.json();
+            
+            // Adicionar à lista local com o ID correto do backend
             const novoMedicamento: PrescricaoMedicamento = {
-              id: Date.now(), // Temporário até obter o ID real
+              id: responseData.id || Date.now(), // Usar o ID real ou um temporário
               id_medicamento: medToAdd.id,
               quantidade: 1,
               nome_medicamento: medToAdd.nome,
               dosagem: medToAdd.dosagem
             };
+            
+            // Atualizar o cache de medicamentos
+            if (!medicationsCache[medToAdd.id]) {
+              setMedicationsCache(prev => ({
+                ...prev,
+                [medToAdd.id]: medToAdd
+              }));
+            }
             
             setSelectedMedications([...selectedMedications, novoMedicamento]);
             
@@ -270,10 +500,10 @@ const Prescricoes = () => {
     setError(null);
     try {
       // As alterações já foram salvas individualmente durante as operações
-      // Esta função apenas fecha o modal
+      // Esta função apenas fecha o modal e atualiza a lista
+      await fetchPrescricoesOnHold(); // Atualizar a lista
       setSelectedPrescricao(null);
       setSelectedPatientName(null);
-      fetchPrescricoesOnHold(); // Atualizar a lista
     } catch (error) {
       setError('Erro ao conectar ao backend');
       console.error('Erro ao conectar ao backend:', error);
@@ -299,8 +529,13 @@ const Prescricoes = () => {
       });
       
       if (response.ok) {
-        // Atualizar a lista após aprovação
-        fetchPrescricoesOnHold();
+        // Remove from local state immediately
+        setPrescricoesOnHold(prev => prev.filter(p => p.id !== prescricaoId));
+        setPrescriptionMedications(prev => {
+          const newState = {...prev};
+          delete newState[prescricaoId];
+          return newState;
+        });
       } else {
         const data = await response.json();
         setError(data.error || 'Erro ao aprovar prescrição');
@@ -325,21 +560,32 @@ const Prescricoes = () => {
         {error && <ErrorMessage>{error}</ErrorMessage>}
         
         <section className="prescricoes">
-          {(prescricoesOnHold.length === 0 || !prescricoesOnHold.some(p => p.nome_paciente)) && !isLoading && 
+          {prescricoesOnHold.length === 0 && !isLoading && 
             <NoPrescritionMessage>Não há prescrições para serem triadas no momento</NoPrescritionMessage>
           }
           
-          {prescricoesOnHold.length > 0 && prescricoesOnHold.filter(p => p.nome_paciente).map((prescricao) => (
-            <CardComponent 
-              key={prescricao.id}
-              paciente={prescricao.nome_paciente || `Paciente ${prescricao.id_paciente}`}
-              id={prescricao.hc_paciente || `HC${prescricao.id}`}
-              medico={prescricao.nome_medico || `Médico ${prescricao.id_medico}`}
-              data={new Date(prescricao.data_prescricao).toLocaleDateString()}
-              horario={new Date(prescricao.data_prescricao).toLocaleTimeString()}
-              onEdit={() => handleEditClick(prescricao.id, prescricao.nome_paciente || `Paciente ${prescricao.id_paciente}`)}
-              onApprove={() => handleApprove(prescricao.id)}
-            />
+          {prescricoesOnHold.length > 0 && prescricoesOnHold.map((prescricao) => (
+            <FitaBox key={prescricao.id}>
+              <FitaComponent 
+                paciente={prescricao.nome_paciente || `Paciente ${prescricao.id_paciente}`}
+                id={prescricao.hc_paciente || `HC${prescricao.id}`}
+                medico={prescricao.nome_medico || `Médico ${prescricao.id_medico}`}
+                data={new Date(prescricao.data_prescricao).toLocaleDateString()}
+                horario={new Date(prescricao.data_prescricao).toLocaleTimeString()}
+                onEdit={() => handleEditClick(prescricao.id, prescricao.nome_paciente || `Paciente ${prescricao.id_paciente}`)}
+                onApprove={() => handleApprove(prescricao.id)}
+              />
+              
+              {prescriptionMedications[prescricao.id]?.map(med => (
+                <StatusComponent 
+                  key={med.id}
+                  medicamento={med.nome_medicamento || `Medicamento ${med.id_medicamento}`}
+                  dosagem={med.dosagem || 'Dosagem não disponível'}
+                  quantidade={med.quantidade}
+                  status="pendente"
+                />
+              ))}
+            </FitaBox>
           ))}
         </section>
         
@@ -457,6 +703,161 @@ const Prescricoes = () => {
     </PageContainer>
   );
 }
+
+// New component styles based on FilaSeparacao styling
+const FitaBox = styled.div`
+  width: 100%;
+  background-color: #2C3E50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 1rem;
+  border-radius: 15px;
+  margin-bottom: 20px;
+
+  .topo-fita {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    color: white;
+    
+    @media (min-width: 576px) {
+      width: 100%;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .topo-fita h3 {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 550;
+    margin: 0;
+  }
+
+  .topo-fita p {
+    margin: 0;
+    font-size: clamp(14px, 3vw, 16px);
+  }
+
+  .botoes-controle {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    
+    @media (min-width: 576px) {
+      flex-direction: row;
+      justify-content: flex-end;
+      width: auto;
+    }
+  }
+`;
+
+interface StatusBoxProps {
+  status: "pendente" | "separado" | "em separação" | "esperando separação" | string;
+}
+
+const StatusBox = styled.div<StatusBoxProps>`
+  background-color: ${(props) =>
+    props.status === "separado" ? "#71E9667D" :
+    props.status === "em separação" ? "#ECBB59" :
+    props.status === "esperando separação" ? "#E9B78A" :
+    props.status === "pendente" ? "#7B68EE" : "gray"};
+  padding: 15px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-transform: capitalize;
+  color: white;
+  margin: 5px 0;
+  
+  @media (min-width: 576px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+  }
+
+  .informacoes span {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 550;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .informacoes p {
+    font-size: clamp(14px, 3vw, 16px);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .status {
+    font-size: clamp(16px, 3.5vw, 20px);
+    font-weight: 550;
+    margin-top: 10px;
+    
+    @media (min-width: 576px) {
+      margin-top: 0;
+    }
+  }
+`;
+
+interface StatusComponentProps {
+  medicamento: string;
+  dosagem: string;
+  quantidade: number;
+  status: string;
+}
+
+const StatusComponent = ({ medicamento, dosagem, quantidade, status }: StatusComponentProps) => {
+  return (
+    <StatusBox status={status}>
+      <div className="informacoes">
+        <span>{medicamento} {dosagem}</span>
+        <p>Quantidade: {quantidade} </p>
+      </div>
+      <div className="status">{status}</div>
+    </StatusBox>
+  );
+};
+
+interface FitaComponentProps {
+  paciente: string;
+  id: string;
+  medico: string;
+  data: string;
+  horario: string;
+  onEdit: () => void;
+  onApprove: () => void;
+}
+
+const FitaComponent = ({ paciente, id, medico, data, horario, onEdit, onApprove }: FitaComponentProps) => {
+  return (
+    <>
+      <div className='topo-fita'>
+        <div className="dados">
+          <h3>{paciente}</h3>
+          <p>ID: {id} | Médico: {medico}</p>
+          <p>Data: {data}, {horario} </p>
+        </div>
+      </div>
+      <div className="botoes-controle">
+        <ApproveButton onClick={onApprove}>
+          Aprovar
+        </ApproveButton>
+        <EditButton onClick={onEdit}>
+          Alterar
+        </EditButton>
+      </div>
+    </>
+  );
+};
 
 const PageContainer = styled.div`
   display: flex;
