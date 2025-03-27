@@ -16,7 +16,7 @@ const Fita: React.FC = () => {
 
   const handleClearAlarms = async (): Promise<void> => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/limpar-todos-alarmes');
+      const response = await fetch('http://127.0.0.1:5000/dobot/limpar-todos-alarmes');
       if (!response.ok) {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
@@ -28,19 +28,90 @@ const Fita: React.FC = () => {
     }
   };
 
-  const handlePickMedication = async (med: string, qty: string): Promise<void> => {
+  const handlePegarMedicamento = async (med: string, qty: string): Promise<void> => {
     try {
-      const response = await fetch(`http://localhost:5000/dobot/medicamento/${med}`);
-      if (!response.ok) {
-        throw new Error(`Erro HTTP: ${response.status}`);
-      }
-      const data: { message: string } = await response.json();
-      alert(data.message);
+        const response = await fetch(`http://localhost:5000/dobot/medicamento/${med}`, {
+            method: 'POST', // Certifique-se de que o método está correto (GET ou POST)
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ quantidade: qty }), // Envia a quantidade no corpo da requisição
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text(); // Captura a mensagem de erro do backend
+            throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+        }
+
+        const data: { message: string } = await response.json();
+        alert(data.message); // Exibe a mensagem de sucesso do backend
     } catch (error) {
-      alert('Erro ao pegar medicamento');
-      console.error('Erro:', error);
+        alert('Erro ao pegar medicamento. Verifique o console para mais detalhes.');
+        console.error('Erro:', error);
     }
-  };
+};
+
+const handleAdicionarMedicamento = async (): Promise<void> => {
+  try {
+      if (!medicamento || !quantidade) {
+          alert("Selecione um medicamento e insira uma quantidade válida.");
+          return;
+      }
+
+      const response = await fetch(`http://127.0.0.1:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
+          method: 'POST',
+      });
+
+      if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+      }
+
+      const data: { message: string } = await response.json();
+      alert(data.message); // Exibe a mensagem de sucesso do backend
+  } catch (error) {
+      alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
+      console.error('Erro:', error);
+  }
+};
+
+const handleCancelarMontagem = async (): Promise<void> => {
+  try {
+      const response = await fetch('http://127.0.0.1:5000/dobot/fita/cancelar', {
+          method: 'POST',
+      });
+
+      if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+      }
+
+      const data: { message: string } = await response.json();
+      alert(data.message); // Exibe a mensagem de sucesso do backend
+  } catch (error) {
+      alert('Erro ao cancelar montagem. Verifique o console para mais detalhes.');
+      console.error('Erro:', error);
+  }
+};
+
+const handleFinalizarMontagem = async (): Promise<void> => {
+  try {
+      const response = await fetch('http://127.0.0.1:5000/dobot/fita/finalizar', {
+          method: 'POST',
+      });
+
+      if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+      }
+
+      const data: { message: string } = await response.json();
+      alert(data.message); // Exibe a mensagem de sucesso do backend
+  } catch (error) {
+      alert('Erro ao finalizar montagem. Verifique o console para mais detalhes.');
+      console.error('Erro:', error);
+  }
+};
 
   return (
     <PageContainer>
@@ -70,9 +141,9 @@ const Fita: React.FC = () => {
             />
           </DropdownContainer>
           <ButtonContainer>
-            <button>Adicionar mais</button>
-            <button>Cancelar</button>
-            <button>Enviar</button>
+              <button onClick={handleAdicionarMedicamento}>Adicionar mais</button>
+              <button onClick={handleCancelarMontagem}>Cancelar</button>
+              <button onClick={handleFinalizarMontagem}>Enviar</button>
           </ButtonContainer>
         </MontarFitaContainer>
 
@@ -82,7 +153,7 @@ const Fita: React.FC = () => {
           {medicamentos.map((med) => (
             <MedicamentoItem key={med}>
               <span>{med}</span>
-              <button onClick={() => handlePickMedication(med, '1')}>Pegar</button>
+              <button onClick={() => handlePegarMedicamento(med, '1')}>Pegar</button>
             </MedicamentoItem>
           ))}
         </BuscarMedicamentoContainer>

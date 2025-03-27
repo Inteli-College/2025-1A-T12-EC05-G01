@@ -32,24 +32,27 @@ function Header() {
     }
 
     const backHome = async () => {
-        // Colocar aqui a lógica para o robô voltar para a posição de home
         try {
             const response = await fetch('http://127.0.0.1:5000/dobot/home', {
                 method: 'GET',
             });
     
             if (!response.ok) {
-                throw new Error(`Erro ao chamar API: ${response.status}`);
+                const errorMessage = await response.text(); // Aqui pode ocorrer o problema
+                throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
             }
     
             const data = await response.json();
-            window.alert(data.message);  // Exibe a resposta de sucesso do backend
-    
+            if (data && data.message) {
+                window.alert(data.message);
+            } else {
+                window.alert('Robô movido para a posição home com sucesso!');
+            }
         } catch (error) {
             console.error('Erro na requisição:', error);
             window.alert('Erro ao mover o robô para a posição home');
         }
-    }
+    };
     
 
     const handleUserClick = () => {
