@@ -25,7 +25,13 @@ backend_app = Flask(__name__)
 backend_app.config.from_object(Config)
 
 backend_app.secret_key = os.getenv('SECRET_KEY')
-CORS(backend_app, supports_credentials=True, origins=["http://127.0.0.1:5173"])
+# Allow both localhost and 127.0.0.1 variations for both frontend and backend
+CORS(backend_app, supports_credentials=True, origins=[
+    "http://127.0.0.1:5173", 
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000"
+])
 
 backend_app.register_blueprint(logs_routes)
 backend_app.register_blueprint(estoque_routes)
