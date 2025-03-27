@@ -153,12 +153,11 @@ async function LerFitas(){
     if (res.ok) {
       return data.fitas || [];
     } else {
-      alert("Erro ao ler: " + (data.error || res.statusText));
+      console.error("Erro ao ler: " + (data.error || res.statusText));
       return [];  // Retorna array vazio em caso de erro
     }
   } catch (error) {
     console.error("Erro ao ler:", error);
-    alert("Erro ao ler: " + error.message);
     return [];  // Retorna array vazio em caso de erro
   }
 }

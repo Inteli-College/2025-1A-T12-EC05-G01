@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mqtt import Mqtt
 from .routes.dobot import dobot_bp
 from .routes.fita import fita_bp
+from .routes.bin import bin_bp
 from .functions.device_initializer import inicializar_dispositivos
 import json
 from datetime import datetime
@@ -23,14 +24,18 @@ def check_dobot_connection():
         # Primeiro verifica se a porta serial ainda existe
         dobot_port = app.config.get('DOBOT_PORT')
         if not dobot_port or not os.path.exists(dobot_port):
+            app.config['DOBOT'] = None
             return "desconectado"
             
         # Depois verifica a comunicação com o robô
         dobot = app.config.get('DOBOT')
         if dobot and dobot.pose():
+            app.config['DOBOT'] = dobot
             return "conectado"
+        app.config['DOBOT'] = None
         return "desconectado"
     except Exception:
+        app.config['DOBOT'] = None
         return "desconectado"
 
 def publish_dobot_status():
@@ -39,6 +44,7 @@ def publish_dobot_status():
         port = app.config.get('DOBOT_PORT')
         if not port or not os.path.exists(port):
             status = "desconectado"
+            app.config['DOBOT'] = None
         else:
             dobot = app.config.get('DOBOT')
             status = "conectado" if dobot and dobot.pose() else "desconectado"
@@ -57,6 +63,7 @@ def publish_dobot_status():
 # Registrar Blueprints
 app.register_blueprint(dobot_bp, url_prefix='/dobot')
 app.register_blueprint(fita_bp, url_prefix='/dobot/fita')
+app.register_blueprint(bin_bp, url_prefix='/dobot/bin')
 
 # Configuração do Scheduler
 with app.app_context(): 

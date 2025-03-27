@@ -7,7 +7,6 @@ from datetime import datetime
 
 DATABASE_URL = "http://127.0.0.1:3000"
 
-
 def inicializar_dispositivos(app):
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
         print("\n=== INICIALIZAÇÃO DE DISPOSITIVOS ===")
@@ -15,11 +14,12 @@ def inicializar_dispositivos(app):
         try:
             old_dobot = app.config.get('DOBOT')
 
-            # Se for um novo processo, evitar usar a conexão antiga
-            if old_dobot and current_process().pid != old_dobot.pid:
+            # Sempre desconectar qualquer instância anterior antes de criar nova conexão
+            if old_dobot:
                 safe_disconnect(old_dobot)
-                app.config['DOBOT'] = None  
+                app.config['DOBOT'] = None
 
+            # Detecção e inicialização do Dobot
             ports = SerialPortFinder.find_available_ports()
             port = DobotAutoDetector.detect(ports)
             app.config['DOBOT_PORT'] = port
@@ -28,8 +28,7 @@ def inicializar_dispositivos(app):
             handler.connect(port)
             handler.initialize_robot()
 
-            # Guardar o PID do processo atual para evitar reuso incorreto
-            handler.robot.pid = current_process().pid
+            # Armazenar nova instância do robô
             app.config['DOBOT'] = handler.robot
 
             app.logger.info("Dobot inicializado com sucesso")
@@ -43,10 +42,9 @@ def inicializar_dispositivos(app):
     return None
 
 def safe_disconnect(robot):
-    """Desconexão segura, evitando erros em threads."""
+    """Desconexão segura do Dobot"""
     try:
         if robot:
             robot.close()
-            del robot  # Forçar remoção do objeto da memória
     except Exception as e:
         pass
