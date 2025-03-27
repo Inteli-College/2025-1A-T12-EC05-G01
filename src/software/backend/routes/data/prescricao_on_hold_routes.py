@@ -144,7 +144,8 @@ def read_all_prescricao_on_hold():
                 "data_prescricao": row.data_prescricao,
             } for row in prescricao_on_hold]
             
-            return {"PrescricaoOnHold": f"{prescricao_on_hold}"}, 200
+            # Fix: Return actual JSON objects instead of string representation
+            return {"PrescricaoOnHold": prescricao_on_hold}, 200
 
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
@@ -163,19 +164,22 @@ def read_prescricao_on_hold_id():
             raise HTTPException(status_code=400, detail="ID is required")
         
         row = db.query(PrescricaoOnHold).filter(PrescricaoOnHold.id == row_id).first()
+        if not row:
+            raise HTTPException(status_code=404, detail=f"PrescricaoOnHold com ID {row_id} não encontrado")
+            
         prescricao_on_hold = {
             "id": row.id,
-            "id_medico": row.id_medico,                "id_paciente": row.id_paciente,
+            "id_medico": row.id_medico,
+            "id_paciente": row.id_paciente,
             "data_prescricao": row.data_prescricao,
         }
-
         
-        if not prescricao_on_hold:
-            raise HTTPException(status_code=404, detail=f"PrescricaoOnHold com ID {prescricao_on_hold} não encontrado")
-        return {"message": "PrescricaoOnHold Lido", "PrescricaoOnHold": f"{prescricao_on_hold}"}, 200
+        # Fix: Return actual JSON object instead of string representation
+        return {"message": "PrescricaoOnHold Lido", "PrescricaoOnHold": prescricao_on_hold}, 200
+    except HTTPException as e:
+        return {"error": e.detail}, e.status_code
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
-    
