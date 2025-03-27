@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/sidebar/Navbar';
-import { HiOutlineClock } from "react-icons/hi2";
-import { FaPills } from "react-icons/fa";
 import Popup from 'reactjs-popup';
 import API_BASE_URL from '../config/api';
 
@@ -246,42 +244,6 @@ const Prescricoes = () => {
     }
   };
 
-  // Função para buscar detalhes de um medicamento específico por ID
-  const fetchMedicationDetails = async (medicationId: number) => {
-    try {
-      // Verificar primeiro no cache
-      if (medicationsCache[medicationId]) {
-        return medicationsCache[medicationId];
-      }
-      
-      // Se não estiver no cache, buscar da API
-      const response = await fetch(`${API_BASE_URL}/medicamento/read-id`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: medicationId }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Medicamento não encontrado');
-      }
-      
-      const data = await response.json();
-      const medicamento = data.medicamento || null;
-      
-      // Atualizar o cache
-      if (medicamento) {
-        setMedicationsCache(prev => ({
-          ...prev,
-          [medicationId]: medicamento
-        }));
-      }
-      
-      return medicamento;
-    } catch (error) {
-      console.error(`Erro ao buscar detalhes do medicamento ${medicationId}:`, error);
-      return null;
-    }
-  };
 
   const handleEditClick = async (prescricaoId: number, patientName: string) => {
     setIsLoading(true);
@@ -896,99 +858,6 @@ const PageHeader = styled.div`
     font-weight: 900;
   }
 `;
-
-const CardBox = styled.div`
-  background-color: #34495E;
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 15px;
-  width: 100%;
-  color: #FFF;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .infos-card-prescricao {
-    margin-bottom: 10px;
-  }
-
-  .infos-card-prescricao span {
-    font-size: clamp(24px, 6vw, 40px);
-    font-weight: 900;
-    display: block; /* Makes the name appear above the info */
-    margin-bottom: 0.5rem;
-  }
-
-  .infos-card-prescricao p {
-    font-size: clamp(14px, 3vw, 16px);
-    font-weight: 400;
-    margin: .25rem 0;
-  }
-  
-  .time-display {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .botoes-prescricao {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    
-    @media (min-width: 480px) {
-      flex-direction: row;
-      justify-content: space-around;
-    }
-    
-    @media (min-width: 768px) {
-      width: 40%;
-    }
-  }
-`;
-
-interface CardComponentProps {
-  paciente: string;
-  id: string;
-  medico: string;
-  data: string;
-  horario: string;
-  onEdit: () => void;
-  onApprove: () => void;
-}
-
-const CardComponent: React.FC<CardComponentProps> = ({ 
-  paciente, id, medico, data, horario, onEdit, onApprove 
-}) => {
-  return (
-    <CardBox>
-      <div className="infos-card-prescricao">
-        <span>{paciente}</span>
-        <p>ID: {id}</p>
-        <p>Médico: {medico}</p>
-        <p className="time-display">
-          <HiOutlineClock /> {data}, {horario}
-        </p>
-      </div>
-      <div className="botoes-prescricao">
-        <ApproveButton onClick={onApprove}>
-          Aprovar
-        </ApproveButton>
-        <EditButton onClick={onEdit}>
-          Alterar
-        </EditButton>
-      </div>
-    </CardBox>
-  )
-}
 
 const ApproveButton = styled.button`
   background-color: #2ECC71;
