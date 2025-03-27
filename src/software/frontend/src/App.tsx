@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Verificacao from './pages/Selagem';
 import Prescricoes from './pages/Triagem';
 import Estoque from './pages/Estoque';
-import Montagens from './pages/Montagens';
+import FilaSeparacao from './pages/FilaSeparacao';
 import Fita from './pages/Fita';
 import Adicionar_prescricao from './pages/Adicionar_prescricao';
 import AdicionarBin from './pages/AdicionarBin';
@@ -24,8 +24,10 @@ function App() {
           <Route path="/verificacao" element={<Verificacao />} />
           <Route path="/prescricoes" element={<Prescricoes />} />
           <Route path="/estoque" element={<Estoque />} />
-          <Route path="/montagens" element={<Montagens />} />
+          <Route path="/fila-separacao" element={<FilaSeparacao />} />
+          <Route path="/adicionar-prescricao" element={<Adicionar_prescricao />} />
           <Route path="/" element={<Login />} />
+          <Route path="/adicionar-bin" element={<AdicionarBin />} />
           <Route path="/fita" element={<Fita />} />
         </Routes>
       </Router>

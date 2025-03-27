@@ -265,14 +265,14 @@ const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade 
 
 function Dashboard() {
   // lógica para puxar os logs do banco de dados
-  const [listOfLogs, setListOfLogs] = useState([]);
+  const [listOfLogs, setListOfLogs] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:3000/logs/read-all")
       .then(res => res.json())
       .then(data => {
         if (data.logs) {
-          const descriptions = data.logs.map(log => log.description);
+            const descriptions: string[] = data.logs.map((log: { description: string }) => log.description);
           setListOfLogs(descriptions);
         }
       })

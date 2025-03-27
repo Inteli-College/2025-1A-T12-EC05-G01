@@ -6,9 +6,16 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 const Verificacao = () => {
-  const [Fitas, setFitas] = useState([]);
+  interface Fita {
+    id: string;
+    nome: string;
+    dateTime: string;
+    medicamentos: { medicamento: string; quantidade: number }[];
+  }
+
+  const [Fitas, setFitas] = useState<Fita[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Removed unused error state
 
   useEffect(() => {
     async function fetchFitas() {
@@ -17,7 +24,11 @@ const Verificacao = () => {
         const data = await LerFitas();
         setFitas(data || []);  // Garante que sempre seja array
       } catch (err) {
-        setError(err.message);
+        if (err instanceof Error) {
+          console.error(err.message); // Log the error instead
+        } else {
+          console.error("An unknown error occurred:", err);
+        }
       } finally {
         setLoading(false);
       }
@@ -58,7 +69,14 @@ const Verificacao = () => {
   );
 };
 
-function CardSelagem({id, nome, dateTime, medicamentos}) {
+interface CardSelagemProps {
+  id: string;
+  nome: string;
+  dateTime: string;
+  medicamentos: { medicamento: string; quantidade: number }[];
+}
+
+function CardSelagem({ id, nome, dateTime, medicamentos }: CardSelagemProps) {
   return (
     <Card>
       <div className="infos-card-fita">
@@ -86,7 +104,7 @@ function CardSelagem({id, nome, dateTime, medicamentos}) {
   );
 }
 
-function CardMedicamento ({medicamento, quantidade}){
+function CardMedicamento ({medicamento, quantidade}: { medicamento: string; quantidade: number }){
   return(
       <li>
         <span>{medicamento}</span>
@@ -95,7 +113,7 @@ function CardMedicamento ({medicamento, quantidade}){
   );
 }
 
-async function ButtonSelagemRealizada ({id}){
+async function ButtonSelagemRealizada ({id}: { id: string }){
   const payload = {
     id: id,
     status_prescricao: "selada"
@@ -119,7 +137,7 @@ async function ButtonSelagemRealizada ({id}){
   }
 }
 
-async function ButtonErroSeparacao ({id}){
+async function ButtonErroSeparacao ({id}: { id: string }){
   const payload = {
     id: id,
     status_prescricao: "erro_separacao"
