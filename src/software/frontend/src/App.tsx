@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import RecuperarSenha from './pages/RecuperarSenha';
 import Dashboard from './pages/Dashboard';
 import Verificacao from './pages/Selagem';
-import Prescricoes from './pages/Triagem';
+import Triagem from './pages/Triagem';
 import Estoque from './pages/Estoque';
 import FilaSeparacao from './pages/FilaSeparacao';
 import Fita from './pages/Fita';
@@ -22,7 +22,7 @@ function App() {
           <Route path="/recuperar-senha" element={<RecuperarSenha />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/verificacao" element={<Verificacao />} />
-          <Route path="/prescricoes" element={<Prescricoes />} />
+          <Route path="/triagem" element={<Triagem />} />
           <Route path="/estoque" element={<Estoque />} />
           <Route path="/fila-separacao" element={<FilaSeparacao />} />
           <Route path="/adicionar-prescricao" element={<Adicionar_prescricao />} />
