@@ -4,11 +4,13 @@ import Cadastro from './pages/Cadastro';
 import Login from './pages/Login';
 import RecuperarSenha from './pages/RecuperarSenha';
 import Dashboard from './pages/Dashboard';
-import Verificacao from './pages/Verificacao';
-import Prescricoes from './pages/Prescricoes';
+import Verificacao from './pages/Selagem';
+import Prescricoes from './pages/Triagem';
 import Estoque from './pages/Estoque';
 import Montagens from './pages/Montagens';
 import Fita from './pages/Fita';
+import Adicionar_prescricao from './pages/Adicionar_prescricao';
+import AdicionarBin from './pages/AdicionarBin';
 
 function App() {
   return (

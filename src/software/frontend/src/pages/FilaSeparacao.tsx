@@ -8,7 +8,7 @@ function Montagens() {
       <nav><Header /></nav>
       <PageContent>
         <PageHeader>
-          <h1>Montagens</h1>
+          <h1>Fila de Separação</h1>
         </PageHeader>
         
         <div className='button'>

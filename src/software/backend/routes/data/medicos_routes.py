@@ -1,28 +1,35 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.medico import Medico
+from flask_cors import CORS, cross_origin
 
-medicos_routes = Blueprint('medicos', __name__, url_prefix="/medicos")
+medicos_routes = Blueprint('medico', __name__, url_prefix="/medico")
+CORS(medicos_routes, resources={r"/*": {"origins": "*"}})
 
 @medicos_routes.route("/create", methods=["POST"])
+@cross_origin()
 def create_medico():
     data = request.json
     db = SessionLocal()
     try:
         medico = Medico(
-            nome = data.get("nome"),
+            nome=data.get("nome"),
+            email=data.get("email"),
+            crm=data.get("crm")
         )
         db.add(medico)
         db.commit()
-        return {"message": "Novo medico salvo"}, 200
+        db.refresh(medico)  # Atualiza o objeto com o id gerado
+        return jsonify({"id": medico.id, "message": "Médico criado com sucesso"}), 200
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
 
-@medicos_routes.route("/delete", methods=["DELETE"])
+@medicos_routes.route("/delete", methods=["DELETE", "OPTIONS"])
+@cross_origin()
 def delete_medico():
     db = SessionLocal()
     try:
@@ -46,7 +53,8 @@ def delete_medico():
     finally:
         db.close()
 
-@medicos_routes.route("/update", methods=["PUT"])
+@medicos_routes.route("/update", methods=["PUT", "OPTIONS"])
+@cross_origin()
 def update_medico():
     db = SessionLocal()
     try:
@@ -60,6 +68,8 @@ def update_medico():
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
 
         medico_to_update.nome = data.get("nome", medico_to_update.nome)
+        medico_to_update.email = data.get("email", medico_to_update.email)
+        medico_to_update.crm = data.get("crm", medico_to_update.crm)
 
         db.commit()
         return {"message": f"Medico de ID {medico_id} atualizado"}, 200
@@ -72,7 +82,8 @@ def update_medico():
     finally:
         db.close()
 
-@medicos_routes.route("/read-all", methods=["GET", "POST"])
+@medicos_routes.route("/read-all", methods=["GET", "POST", "OPTIONS"])
+@cross_origin()
 def read_all_medicos():
     db = SessionLocal()
     try:
@@ -82,18 +93,18 @@ def read_all_medicos():
             if not medicos:
                 return {"message": "No rows found"}, 200
 
-            medicos = [{
+            medicos_data = [{
                 "id": medico.id,
-                "nome": medico.nome
+                "nome": medico.nome,
+                "email": medico.email,
+                "crm": medico.crm
             } for medico in medicos]
             
-            return {"message": "Lista de medicos retornada", "Medicos": medicos}, 200
+            return {"message": "Lista de medicos retornada", "Medicos": medicos_data}, 200
 
         elif request.method == "POST":
             data = request.json
-
             nome = data.get("nome")
-
             query = db.query(Medico)
             
             if nome:
@@ -104,12 +115,14 @@ def read_all_medicos():
             if not medicos:
                 return {"message": "No rows found with the provided filters"}, 200
             
-            medicos = [{
+            medicos_data = [{
                 "id": medico.id,
                 "nome": medico.nome,
+                "email": medico.email,
+                "crm": medico.crm
             } for medico in medicos]
             
-            return {"message": "Lista de Medicos Retornada", "Medicos": f"{medicos}"}, 200
+            return {"message": "Lista de medicos retornada", "Medicos": medicos_data}, 200
 
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
@@ -118,7 +131,8 @@ def read_all_medicos():
     finally:
         db.close()
 
-@medicos_routes.route("/read-id", methods=["POST"])
+@medicos_routes.route("/read-id", methods=["POST", "OPTIONS"])
+@cross_origin()
 def read_medicos_id():
     db = SessionLocal()
     try:
@@ -128,17 +142,19 @@ def read_medicos_id():
             raise HTTPException(status_code=400, detail="ID is required")
         
         medico = db.query(Medico).filter(Medico.id == medico_id).first()
-        medico = {
-            "id": medico.id,
-            "nome": medico.nome
-        }
-        
         if not medico:
             raise HTTPException(status_code=404, detail=f"Medico com ID {medico_id} não encontrado")
-        return {"message": "Medico Retornado", "Medico": f"{medico}"}, 200
+        
+        medico_data = {
+            "id": medico.id,
+            "nome": medico.nome,
+            "email": medico.email,
+            "crm": medico.crm
+        }
+        
+        return {"message": "Medico retornado", "Medico": medico_data}, 200
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
-    

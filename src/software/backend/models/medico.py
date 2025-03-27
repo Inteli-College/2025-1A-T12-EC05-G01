@@ -6,6 +6,7 @@ class Medico(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
     crm = Column(String, unique=True, nullable=False)
 
     def __repr__(self):

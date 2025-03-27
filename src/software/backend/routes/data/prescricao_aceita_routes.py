@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.prescricao_aceita import PrescricaoAceita
@@ -28,6 +28,7 @@ def create_prescricao_aceita():
 
 @prescricao_aceita_routes.route("/update", methods=["PUT"])
 def update_prescricao_aceita():
+
     db = SessionLocal()
     try:
         data = request.json
@@ -106,12 +107,15 @@ def read_all_prescricao_aceita():
 
             id_prescricao_on_hold = data.get("id_prescricao_on_hold")
             id_farmaceutico = data.get("id_farmaceutico")
+            status_prescricao = data.get("status_prescricao")
             
             query = db.query(PrescricaoAceita)
             if id_prescricao_on_hold:
                 query = query.filter(PrescricaoAceita.id_prescricao_on_hold == id_prescricao_on_hold)
             if id_farmaceutico:
                 query = query.filter(PrescricaoAceita.id_farmaceutico == id_farmaceutico)
+            if status_prescricao:
+                query = query.filter(PrescricaoAceita.status_prescricao == status_prescricao)
             
             prescricoes = query.all()
             
