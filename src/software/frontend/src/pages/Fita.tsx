@@ -55,30 +55,43 @@ const Fita: React.FC = () => {
 
 const handleAdicionarMedicamento = async (): Promise<void> => {
   try {
-      if (!medicamento || !quantidade) {
-          alert("Selecione um medicamento e insira uma quantidade válida.");
-          return;
-      }
+    if (!medicamento || !quantidade) {
+      alert("Selecione um medicamento e insira uma quantidade válida.");
+      return;
+    }
 
-      const response = await fetch(`http://127.0.0.1:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
-          method: 'POST',
-      });
+    const medicamentoExistente = fita.find((item) => item.medicamento === medicamento);
 
-      if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
-      }
+    if (medicamentoExistente) {
+      // Atualiza a quantidade do medicamento existente
+      setFita((prevFita) =>
+        prevFita.map((item) =>
+          item.medicamento === medicamento
+            ? { ...item, quantidade: (parseInt(item.quantidade as string) + parseInt(quantidade)).toString() }
+            : item
+        )
+      );
+    } else {
+      // Adiciona um novo medicamento à fita
+      setFita((prevFita) => [...prevFita, { medicamento, quantidade }]);
+    }
 
-      const data: { message: string } = await response.json();
-      alert(data.message); // Exibe a mensagem de sucesso do backend
-      setFita((prevFita) => [...prevFita, { medicamento, quantidade }]); // Atualiza o estado da fita
+    const response = await fetch(`http://127.0.0.1:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+    }
+
+    const data: { message: string } = await response.json();
+    alert(data.message); // Exibe a mensagem de sucesso do backend
   } catch (error) {
-      alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
-      console.error('Erro:', error);
+    alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
+    console.error('Erro:', error);
   }
 };
-
-
 
 const handleCancelarMontagem = async (): Promise<void> => {
   try {
