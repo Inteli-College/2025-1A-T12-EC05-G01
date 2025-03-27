@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.medico import Medico
@@ -17,7 +17,8 @@ def create_medico():
         )
         db.add(medico)
         db.commit()
-        return {"message": "Novo medico salvo"}, 200
+        db.refresh(medico)  # Atualiza o objeto com o id gerado
+        return jsonify({"id": medico.id, "message": "Médico criado com sucesso"}), 200
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500

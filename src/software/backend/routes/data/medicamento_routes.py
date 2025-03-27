@@ -87,7 +87,8 @@ def read_all_medicamento():
 
             medicamentos = [{
                 "id": medicamento.id,
-                "nome": medicamento.nome
+                "nome": medicamento.nome,
+                "dosagem": medicamento.dosagem,
             } for medicamento in medicamentos]
             
             return {"medicamentos": medicamentos}, 200
