@@ -3,6 +3,11 @@ import os
 from ....backend.authentication.authentication import get_auth, login_required
 from functools import wraps
 
+# Importando o SessionLocal e os modelos para consulta no banco
+from ....database.db_conexao import SessionLocal
+from ...models.medico import Medico
+from ...models.farmaceuticos import Farmaceutico
+
 authentication_routes = Blueprint('authentication', __name__)
 
 # API route definitions
@@ -22,7 +27,24 @@ def login():
         user = auth.sign_in_with_email_and_password(email, password)
         session['user'] = user['idToken']  
         session['email'] = email
-        return jsonify({"success": True, "message": "Login successful", "token": user['idToken']})
+
+        # Criar sessão do SQLAlchemy para consultar o banco
+        db = SessionLocal()
+        # Verifica se o usuário é médico ou farmacêutico
+        if db.query(Medico).filter(Medico.email == email).first():
+            role = 'medico'
+        elif db.query(Farmaceutico).filter(Farmaceutico.email == email).first():
+            role = 'farmaceutico'
+        else:
+            role = 'unknown'
+        db.close()
+
+        return jsonify({
+            "success": True,
+            "message": "Login successful",
+            "token": user['idToken'],
+            "role": role
+        })
     except Exception as e:
         error_message = str(e)
         return jsonify({"success": False, "error": error_message}), 401
@@ -68,4 +90,3 @@ def check_auth():
     if 'user' in session:
         return jsonify({"authenticated": True, "email": session['user']})
     return jsonify({"authenticated": False})
-

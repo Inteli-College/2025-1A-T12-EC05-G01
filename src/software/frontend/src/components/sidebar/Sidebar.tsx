@@ -22,14 +22,11 @@ const Sidebar: React.FC<SidebarProps> = ({ active }) => {
         <SidebarItem to="/dashboard" onClick={closeSidebar}>
           Dashboard
         </SidebarItem>
-        <SidebarItem to="/adicionar-prescricao" onClick={closeSidebar}>
-          Adicionar Prescrição
-        </SidebarItem>
         <SidebarItem to="/prescricoes" onClick={closeSidebar}>
-          Triagem
+          Prescrições
         </SidebarItem>
         <SidebarItem to="/montagens" onClick={closeSidebar}>
-          Fila de Separação
+          Montagens
         </SidebarItem>
         <SidebarItem to="/verificacao" onClick={closeSidebar}>
           Selagem
