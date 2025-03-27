@@ -38,7 +38,7 @@ def FitasAguardandoSelagem():
                 ]
             })
 
-            return {"fitas": fitas}, 200
+        return {"fitas": fitas}, 200
        
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
