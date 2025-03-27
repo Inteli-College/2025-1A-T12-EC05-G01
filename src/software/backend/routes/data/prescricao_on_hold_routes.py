@@ -14,19 +14,36 @@ prescricao_on_hold_routes = Blueprint('prescricao_on_hold', __name__, url_prefix
 def create_prescricao_on_hold():
     db = SessionLocal()
     try:
+        id_medico = request.json.get("id_medico")
+        id_paciente = request.json.get("id_paciente")
+        data_prescricao_str = request.json.get("data_prescricao")
+        
+        # Converte a string para datetime (caso seja fornecida)
+        from datetime import datetime
+        if data_prescricao_str:
+            try:
+                # Substitui "Z" por "+00:00" para compatibilidade com ISO format
+                data_prescricao = datetime.fromisoformat(data_prescricao_str.replace("Z", "+00:00"))
+            except Exception as e:
+                data_prescricao = datetime.now()
+        else:
+            data_prescricao = datetime.now()
+        
         prescricao_on_hold = PrescricaoOnHold(
-            id_medico=request.json.get("id_medico"),
-            id_paciente=request.json.get("id_paciente"),
-            data_prescricao=request.json.get("data_prescricao"),
+            id_medico=id_medico,
+            id_paciente=id_paciente,
+            data_prescricao=data_prescricao,
         )
         db.add(prescricao_on_hold)
         db.commit()
-        return {"message": "Nova prescricao em espera adicionada"}, 200
+        return {"message": "Nova prescricao em espera adicionada", "id": prescricao_on_hold.id}, 200
     except Exception as e:
         db.rollback()
+        print("Erro ao criar prescricao_on_hold:", e)
         return {"error": str(e)}, 500
     finally:
         db.close()
+
 
 @prescricao_on_hold_routes.route("/delete", methods=["DELETE"])
 def delete_prescricao_on_hold():

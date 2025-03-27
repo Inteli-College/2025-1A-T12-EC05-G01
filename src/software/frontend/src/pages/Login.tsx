@@ -13,8 +13,17 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE_URL}/login`, { email, password });
-      navigate('/dashboard');
+      // Realiza o login via backend/Firebase
+      const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
+      console.log(response.data.role);
+      // Salva o email no localStorage para uso futuro
+      localStorage.setItem("email", email);
+      const userRole = response.data.role;
+      if (userRole === 'medico') {
+        navigate('/adicionar-prescricao');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(err.response.data.error);
@@ -23,6 +32,7 @@ const Login = () => {
       }
     }
   };
+  
 
   return (
     <StyledWrapper>
@@ -67,7 +77,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color:rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   padding: 0 15px;
 
   .form-box {
@@ -104,7 +114,7 @@ const StyledWrapper = styled.div`
     overflow: hidden;
     border-radius: 8px;
     background-color: #fffbfb;
-    margin: 1rem 0 .5rem;
+    margin: 1rem 0 0.5rem;
     width: 100%;
   }
 
@@ -115,7 +125,7 @@ const StyledWrapper = styled.div`
     height: 40px;
     width: 100%;
     border-bottom: 1px solid #eee;
-    font-size: .9rem;
+    font-size: 0.9rem;
     padding: 8px 15px;
   }
 
@@ -134,7 +144,7 @@ const StyledWrapper = styled.div`
   .form-section a {
     font-weight: bold;
     color: #34495E;
-    transition: color .3s ease;
+    transition: color 0.3s ease;
     text-decoration: underline;
   }
 
@@ -152,7 +162,7 @@ const StyledWrapper = styled.div`
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color .3s ease;
+    transition: background-color 0.3s ease;
     width: 100%;
   }
 

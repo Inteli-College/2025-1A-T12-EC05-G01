@@ -47,7 +47,8 @@ def test_medico():
         print("\n⚡ Criando novo médico...")
         novo_medico = Medico(
             nome="Dr. Carlos Silva",
-            crm="CRM/SP-123456"
+            crm="CRM/SP-123456",
+            email="carlos.silva@exemplo.com"
         )
         db.add(novo_medico)
         db.commit()
@@ -58,7 +59,7 @@ def test_medico():
         
         assert medico_db is not None, "Médico não encontrado no banco"
         print(f"📄 Registro encontrado: {medico_db}")
-        print(f"👨⚕ Detalhes: {medico_db.nome} (CRM: {medico_db.crm})")
+        print(f"👨⚕ Detalhes: {medico_db.nome} (CRM: {medico_db.crm}, Email: {medico_db.email})")
 
     except IntegrityError as e:
         log_erro("Cadastro de Médico - Unique Constraint", e)
@@ -192,7 +193,7 @@ def test_farmaceutico():
     db = SessionLocal()
     try:
         print("\n⚡ Registrando novo farmacêutico...")
-        novo_farmaceutico = Farmaceutico(nome="Dra. Julia Mendes", email="julia@gmail.com"  )
+        novo_farmaceutico = Farmaceutico(nome="Dra. Julia Mendes", email="julia@gmail.com")
         db.add(novo_farmaceutico)
         db.commit()
         print(f"✅ Farmacêutico cadastrado | ID: {novo_farmaceutico.id}")
@@ -219,7 +220,7 @@ def test_prescricao_completa():
     db = SessionLocal()
     try:
         print("\n⚡ Etapa 1/5 - Cadastrando profissionais e paciente...")
-        medico = Medico(nome="Dr. Roberto Almeida", crm="CRM/RJ-654321")
+        medico = Medico(nome="Dr. Roberto Almeida", crm="CRM/RJ-654321", email="roberto.almeida@exemplo.com")
         paciente = Paciente(nome="Pedro Costa", leito="UTI-03", hc="HC-112233")
         farmaceutico = Farmaceutico(nome="Farmac. Luiza Gomes", email="luiza@gmail.com")
         

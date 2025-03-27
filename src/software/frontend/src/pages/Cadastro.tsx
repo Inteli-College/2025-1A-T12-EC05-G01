@@ -9,6 +9,8 @@ const Cadastro = () => {
   const [nome, setNome] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isDoctor, setIsDoctor] = useState(false);
+  const [crm, setCrm] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -19,11 +21,15 @@ const Cadastro = () => {
       return;
     }
     try {
-      // Cria o usuário
+      // Cria o usuário via Firebase
       await axios.post(`${API_BASE_URL}/cadastro`, { email, password, confirm_password: confirmPassword });
       
-      // Cria o registro na tabela de farmaceuticos
-      await axios.post(`${API_BASE_URL}/farmaceutico/create`, { email, nome });
+      // Se for médico, cria registro na tabela de medicos com CRM, senão, cria registro em farmaceutico
+      if (isDoctor) {
+        await axios.post(`${API_BASE_URL}/medicos/create`, { email, nome, crm });
+      } else {
+        await axios.post(`${API_BASE_URL}/farmaceutico/create`, { email, nome });
+      }
 
       navigate('/login');
     } catch (err) {
@@ -78,6 +84,26 @@ const Cadastro = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            <div className="checkbox-container">
+              <input
+                type="checkbox"
+                id="isDoctor"
+                checked={isDoctor}
+                onChange={(e) => setIsDoctor(e.target.checked)}
+              />
+              <label htmlFor="isDoctor">Sou Médico</label>
+            </div>
+            {isDoctor && (
+              <input
+                type="text"
+                className="input"
+                name="crm"
+                placeholder="CRM"
+                value={crm}
+                onChange={(e) => setCrm(e.target.value)}
+                required
+              />
+            )}
           </div>
           {error && <p className="error">{error}</p>}
           <button type="submit">Cadastrar</button>
@@ -95,11 +121,11 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color:rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
 
   .form-box {
     max-width: 300px;
-    background: #34495E;
+    background: #34495e;
     overflow: hidden;
     border-radius: 16px;
     color: #010101;
@@ -129,7 +155,7 @@ const StyledWrapper = styled.div`
     overflow: hidden;
     border-radius: 8px;
     background-color: #fffbfb;
-    margin: 1rem 0 .5rem;
+    margin: 1rem 0 0.5rem;
     width: 100%;
   }
 
@@ -140,21 +166,33 @@ const StyledWrapper = styled.div`
     height: 40px;
     width: 100%;
     border-bottom: 1px solid #eee;
-    font-size: .9rem;
+    font-size: 0.9rem;
     padding: 8px 15px;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+  }
+
+  .checkbox-container label {
+    margin-left: 8px;
+    font-size: 0.9rem;
+    color: #333;
   }
 
   .form-section {
     padding: 16px;
-    font-size: .85rem;
+    font-size: 0.85rem;
     background-color: #8098b0;
     box-shadow: rgb(0 0 0 / 8%) 0 -1px;
   }
 
   .form-section a {
     font-weight: bold;
-    color: #34495E;
-    transition: color .3s ease;
+    color: #34495e;
+    transition: color 0.3s ease;
     text-decoration: underline;
   }
 
@@ -164,7 +202,7 @@ const StyledWrapper = styled.div`
   }
 
   .form button {
-    background-color: #2ECC71;
+    background-color: #2ecc71;
     color: #fff;
     border: 0;
     border-radius: 24px;
@@ -172,7 +210,7 @@ const StyledWrapper = styled.div`
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color .3s ease;
+    transition: background-color 0.3s ease;
   }
 
   .form button:hover {

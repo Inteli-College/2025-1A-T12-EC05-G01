@@ -1,6 +1,7 @@
 from .db_conexao import engine, Base
 
 from ..backend.models.saida import Saidas
+from ..backend.models.logs import Logs
 from ..backend.models.prescricao_medicamento import PrescricaoMedicamento
 from ..backend.models.prescricao_aceita import PrescricaoAceita
 from ..backend.models.prescricao_on_hold import PrescricaoOnHold

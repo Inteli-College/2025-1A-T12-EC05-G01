@@ -8,6 +8,8 @@ from .routes.data.medicamento_routes import medicamento_routes
 from .routes.data.medicos_routes import medicos_routes
 from .routes.data.paciente_routes import paciente_routes
 from .routes.data.prescricao_on_hold_routes import prescricao_on_hold_routes
+from .routes.data.prescricao_medicamento_routes import prescricao_medicamento_routes
+from .routes.data.prescricao_aceita_routes import prescricao_aceita_routes
 from .routes.data.saidas_routes import saida_routes
 from .routes.authentication.authentication_routes import authentication_routes
 from software.backend.config import Config 
@@ -31,6 +33,8 @@ backend_app.register_blueprint(medicos_routes)
 backend_app.register_blueprint(paciente_routes)
 backend_app.register_blueprint(authentication_routes)
 backend_app.register_blueprint(prescricao_on_hold_routes)
+backend_app.register_blueprint(prescricao_medicamento_routes)
+backend_app.register_blueprint(prescricao_aceita_routes)
 backend_app.register_blueprint(saida_routes)
 
 if __name__ == "__main__":
