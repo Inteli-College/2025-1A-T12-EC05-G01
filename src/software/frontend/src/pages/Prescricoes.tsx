@@ -62,7 +62,7 @@ const Prescricoes = () => {
           });
           const pacienteData = await pacienteResponse.json();
           
-          // Buscar dados do médico
+          // Buscar dados do médico.
           const medicoResponse = await fetch(`${API_BASE_URL}/medico/read-id`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
