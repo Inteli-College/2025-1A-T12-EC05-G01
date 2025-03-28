@@ -20,18 +20,22 @@ const Cadastro = () => {
       setError('As senhas não coincidem');
       return;
     }
-    try {
-      // Cria o usuário via Firebase
-      await axios.post(`${API_BASE_URL}/cadastro`, { email, password, confirm_password: confirmPassword });
-      
+    try {      
       // Se for médico, cria registro na tabela de medicos com CRM, senão, cria registro em farmaceutico
       if (isDoctor) {
-        await axios.post(`${API_BASE_URL}/medicos/create`, { email, nome, crm });
+        await axios.post(`${API_BASE_URL}/medico/create`, { email, nome, crm });
       } else {
         await axios.post(`${API_BASE_URL}/farmaceutico/create`, { email, nome });
       }
 
-      navigate('/login');
+      // Cria o usuário via Firebase
+      await axios.post(`${API_BASE_URL}/cadastro`, { email, password, confirm_password: confirmPassword });
+      if (isDoctor){
+        navigate('/adicionar-prescricao');
+      } else {
+        navigate('/dashboard');
+      }
+      
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(err.response.data.error);

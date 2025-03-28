@@ -94,6 +94,8 @@ def rotina_medicamento(medicamento):
     if not dobot:
         return jsonify({"error": "Dobot não inicializado"}), 500
     
+    medicamentos = carregar_medicamentos()
+    
     if executar_rotina_medicamento(dobot, medicamento, medicamentos) == False:
 
        # Enviar logs para o banco

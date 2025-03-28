@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../components/sidebar/Navbar";
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const PageContainer = styled.div`
     display: flex;
@@ -133,6 +133,45 @@ const PageContainer = styled.div`
       }
     }
   }
+
+  .existing-bins {
+    margin: 2rem 0;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+
+    h3 {
+      margin-bottom: 1rem;
+      color: #34495E;
+    }
+
+    .bin-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      button {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #c0392b;
+        }
+      }
+    }
+  }
 `;
 
 let DOBOT_URL = "http://127.0.0.1:5000";
@@ -147,11 +186,28 @@ interface Ponto {
   suctionCup: string;
 }
 
+interface Medicamento {
+  medicamento: number;
+  pontos: Ponto[];
+}
+
 function AdicionarBin() {
   const [moveL, setMoveL] = useState(false);
   const [suction, setSuction] = useState(false);
   const [medicamentoId, setMedicamentoId] = useState('');
   const [pontos, setPontos] = useState<Ponto[]>([]);
+  const [existingBins, setExistingBins] = useState<Medicamento[]>([]);
+
+  const fetchExistingBins = () => {
+    fetch(`${DOBOT_URL}/dobot/bin/visualizar`)
+      .then(response => response.json())
+      .then(data => setExistingBins(data.bins))
+      .catch(error => console.error("Erro ao carregar bins:", error));
+  };
+
+  useEffect(() => {
+    fetchExistingBins();
+  }, []);
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newId = e.target.value;
@@ -182,15 +238,15 @@ function AdicionarBin() {
             data.pontos.z !== undefined && 
             data.pontos.r !== undefined) {
           
-          const novoPonto: Ponto = {
+            const novoPonto: Ponto = {
             ponto: pontos.length + 1,
-            x: data.pontos.x.toFixed(2),
-            y: data.pontos.y.toFixed(2),
-            z: data.pontos.z.toFixed(2),
-            r: data.pontos.r.toFixed(2),
+            x: parseFloat(data.pontos.x.toFixed(2)),
+            y: parseFloat(data.pontos.y.toFixed(2)),
+            z: parseFloat(data.pontos.z.toFixed(2)),
+            r: data.pontos.r,
             movimento: moveL ? "movl" : "movj",
             suctionCup: suction ? "on" : "off"
-          };
+            };
           
           setPontos(prev => [...prev, novoPonto]);
           return novoPonto;
@@ -266,6 +322,7 @@ function AdicionarBin() {
           window.alert("Bin cadastrado com sucesso!");
           setPontos([]);
           setMedicamentoId('');
+          fetchExistingBins();
         } else {
           response.json().then(err => {
             window.alert(`Erro: ${err.erro}`);
@@ -277,6 +334,28 @@ function AdicionarBin() {
         window.alert("Erro ao cadastrar bin");
       });
   }
+
+  const deleteMedicamento = (id: number) => {
+    if (id <= 5) {
+      alert("IDs 1-5 são reservados e não podem ser removidos.");
+      return;
+    }
+    
+    if (window.confirm(`Tem certeza que deseja remover o medicamento ${id}?`)) {
+      fetch(`${DOBOT_URL}/dobot/bin/remover/${id}`, {
+        method: 'POST',
+      })
+      .then(response => {
+        if (response.ok) {
+          fetchExistingBins();
+          alert("Medicamento removido com sucesso!");
+        } else {
+          response.json().then(err => alert(err.erro));
+        }
+      })
+      .catch(error => alert("Erro ao remover medicamento"));
+    }
+  };
 
   const selectMove = () => setMoveL(!moveL);
   
@@ -359,7 +438,8 @@ function AdicionarBin() {
               Ponto {ponto.ponto}: 
               X: {ponto.x.toFixed(2)}, 
               Y: {ponto.y.toFixed(2)}, 
-              Z: {ponto.z.toFixed(2)}, 
+              Z: {ponto.z.toFixed(2)},
+              R: {ponto.r.toFixed(2)}, 
               Movimento: {ponto.movimento}, 
               Sucção: {ponto.suctionCup}
             </div>
@@ -367,7 +447,21 @@ function AdicionarBin() {
         </div>
       )}
 
-      <button className="btn-send" onClick={sendBin}>
+      <section className="existing-bins">
+        <h3>Bins Cadastrados</h3>
+        {existingBins.map(bin => (
+          <div key={bin.medicamento} className="bin-item">
+            <span>Medicamento {bin.medicamento}</span>
+            {bin.medicamento > 5 && (
+              <button onClick={() => deleteMedicamento(bin.medicamento)}>
+                Excluir
+              </button>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <button className="btn-send" style={{ marginBottom: "1rem", marginTop: "-0.5remw" }} onClick={sendBin}>
         Cadastrar bin
       </button>
     </PageContainer>

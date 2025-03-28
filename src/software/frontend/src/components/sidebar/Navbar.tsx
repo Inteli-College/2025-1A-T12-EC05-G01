@@ -1,34 +1,76 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaBars, FaUserAlt, FaHome, FaBell } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import mqtt, { MqttClient } from 'mqtt';
+
+let DOBOT_URL = "http://127.0.0.1:5000";
 
 function Header() {
     const [sidebar, setSidebar] = useState(false);
+    const [dobotStatus, setDobotStatus] = useState<'conectado' | 'desconectado'>('desconectado');
+    const [mqttClient, setMqttClient] = useState<MqttClient | null>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const client = mqtt.connect('ws://broker.emqx.io:8083/mqtt', {
+            clientId: `webClient_${Math.random().toString(16).substr(2, 8)}`,
+            clean: true,
+            reconnectPeriod: 1000,
+            connectTimeout: 30000,
+        });
+
+        client.on('connect', () => {
+            console.log('Conectado ao broker MQTT');
+            client.subscribe('dobot/status', (err) => {
+                if (!err) console.log('Inscrito no tópico dobot/status');
+            });
+        });
+
+        client.on('message', (topic, message) => {
+            if (topic === 'dobot/status') {
+                try {
+                    const payload = JSON.parse(message.toString());
+                    setDobotStatus(payload.status.toLowerCase());
+                } catch (error) {
+                    console.error('Erro ao processar mensagem:', error);
+                }
+            }
+        });
+
+        client.on('error', (err) => {
+            console.error('Erro MQTT:', err);
+        });
+
+        setMqttClient(client);
+
+        return () => {
+            client.end();
+        };
+    }, []);
 
     const showSidebar = () => setSidebar(!sidebar);
 
-    const reconnect = async() => {
-        try {
-            const response = await fetch('http://127.0.0.1:5000/dobot/reconectar', {
-                method: 'GET',
+    const reconnect = () => {
+        fetch(`${DOBOT_URL}/dobot/reconectar`)
+            .then(response => {
+                if (!response.ok) throw new Error('Falha na rede');
+                return response.json();
+            })
+            .then(data => {
+                const message = data.message || data.status;
+                window.alert(message.includes('conectado') ? 'Dobot conectado' : 'Falha na conexão');
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                window.alert('Erro ao reconectar');
             });
+    };
 
-            if (!response.ok) {
-                throw new Error(`Erro ao chamar API: ${response.status}`);
-            }
-
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            window.alert('Erro ao mover o robô para a posição home');
-        }
-    }
 
     const addBin = () => {
-        // substituir pelo caminho da tela de adição de bin, que até o momento ainda não foi criada
-        window.location.href='/addBin';
+        navigate('/adicionar-bin');
     }
 
     const backHome = async () => {
@@ -65,34 +107,35 @@ function Header() {
                 <MenuIconWrapper onClick={showSidebar}>
                     <StyledFaBars />
                 </MenuIconWrapper>
-                
+
                 <RoboStatus>
                     <div className='home-icon' onClick={backHome}>
                         <FaHome />
                     </div>
                     <Connection>
-                        <Status />
+                        <Status $isConnected={dobotStatus === 'conectado'} />
                         <p>Dobot</p>
                     </Connection>
-                    <ActionButton onClick={reconnect}>Reconnect</ActionButton>
-                    <ActionButton onClick={addBin}>+ Add bin</ActionButton>
-                    <BellIcon>
+                    <ActionButton onClick={reconnect}>Reconectar</ActionButton>
+                    <ActionButton onClick={addBin}>+ Adicionar Bin</ActionButton>
+                    <BellIcon onClick={() => navigate('/fita')}>
                         <StyledFaBell />
                     </BellIcon>
                 </RoboStatus>
-                
+
                 <UserIconWrapper onClick={handleUserClick}>
                     <StyledFaUserAlt />
                 </UserIconWrapper>
             </Content>
-            
+
             <SidebarOverlay $isOpen={sidebar} onClick={() => setSidebar(false)} />
             <SidebarContainer $isOpen={sidebar}>
                 {sidebar && <Sidebar active={setSidebar} />}
             </SidebarContainer>
         </Container>
     );
-};
+}
+
 
 const Container = styled.div`
     height: 70px;
@@ -167,10 +210,10 @@ const RoboStatus = styled.div`
     white-space: nowrap;
     max-width: 80%;
     overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    
+    scrollbar-width: none;
+
     &::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Edge */
+        display: none;
     }
     
     .home-icon {
@@ -218,12 +261,13 @@ const Connection = styled.div`
     }
 `;
 
-const Status = styled.div`
-    background-color: #4D925B;
+const Status = styled.div<{ $isConnected: boolean }>`
+    background-color: ${({ $isConnected }) => $isConnected ? '#4D925B' : '#ff4d4d'};
     width: 10px;
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    transition: background-color 0.3s ease;
 `;
 
 const ActionButton = styled.button`
@@ -272,7 +316,6 @@ const StyledFaBell = styled(FaBell)`
     }
 `;
 
-// Use $ prefix for transient props to prevent them from being passed to the DOM
 const SidebarContainer = styled.div<{ $isOpen: boolean }>`
     position: fixed;
     top: 0;
@@ -283,17 +326,15 @@ const SidebarContainer = styled.div<{ $isOpen: boolean }>`
     z-index: 1006;
     width: 280px;
     box-shadow: ${({ $isOpen }) => $isOpen ? '2px 0 8px rgba(0, 0, 0, 0.2)' : 'none'};
-    overflow-y: auto; /* Enable scrolling if needed */
-    overscroll-behavior: contain; /* Prevent scroll chaining */
+    overflow-y: auto;
+    overscroll-behavior: contain;
     
-    /* Hide scrollbar for Chrome, Safari and Opera */
     &::-webkit-scrollbar {
         display: none;
     }
     
-    /* Hide scrollbar for IE, Edge and Firefox */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 `;
 
 const SidebarOverlay = styled.div<{ $isOpen: boolean }>`

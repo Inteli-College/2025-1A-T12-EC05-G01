@@ -11,6 +11,7 @@ class PrescricaoOnHold(Base):
     data_prescricao = Column(DateTime, server_default=func.now())
 
     paciente = relationship("Paciente")
+    medico = relationship("Medico")
     prescricoes_aceitas = relationship("PrescricaoAceita", back_populates="prescricao_on_hold")
     prescricoes_medicamentos = relationship("PrescricaoMedicamento", back_populates="prescricao_on_hold")
 

@@ -96,23 +96,39 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
     // Obtém os dados dos médicos
-    const doctorRes = await fetch(`${API_BASE_URL}/medicos/read-all`, {
+    const doctorRes = await fetch(`${API_BASE_URL}/medico/read-all`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
-    const doctorData = await doctorRes.json();
+    
     if (!doctorRes.ok) {
-      setError(doctorData.error || "Erro ao obter dados do médico");
+      console.error('Erro na resposta do servidor:', await doctorRes.text());
+      setError("Erro ao obter dados do médico. Verifique o console para mais detalhes.");
       return;
     }
+    
+    const doctorData = await doctorRes.json();
+    console.log("Dados de médicos recebidos:", doctorData);
+    
     // Obtém o email do médico armazenado na sessão/localStorage
     const loggedEmail = localStorage.getItem("email");
     if (!loggedEmail) {
-      setError("Email não encontrado na sessão");
+      setError("Email não encontrado na sessão. Faça login novamente.");
       return;
     }
-    // A rota retorna um objeto com a propriedade "Medicos"
+    
+    console.log("Email atual:", loggedEmail);
+    
+    // A rota retorna um objeto com a propriedade "Medicos" (com M maiúsculo)
     const medicosArray = doctorData.Medicos || [];
+    console.log("Array de médicos:", medicosArray);
+    
+    if (medicosArray.length === 0) {
+      console.error("Array de médicos vazio");
+      setError("Nenhum médico encontrado no sistema");
+      return; // Importante: retornar aqui para evitar criar a prescrição sem médico
+    }
+    
     // Procura o médico cujo email corresponde ao email logado
     interface Medico {
       id: number;
@@ -120,13 +136,19 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
       // Add other properties of the Medico object if needed
     }
 
-    const doctor = medicosArray.find((d: Medico) => d.email === loggedEmail);
+    // Para fins de depuração, mostra todos os emails de médicos disponíveis
+    console.log("Emails de médicos disponíveis:", medicosArray.map((m: Medico) => m.email));
+
+    const doctor = medicosArray.find((d: Medico) => d.email.toLowerCase() === loggedEmail.toLowerCase());
+    
     if (!doctor) {
-      setError("Médico não encontrado");
-      return;
+      console.error(`Médico com email ${loggedEmail} não encontrado na lista`);
+      setError(`Médico com email ${loggedEmail} não encontrado. Você precisa estar registrado como médico para criar prescrições.`);
+      return; // Importante: retornar aqui para evitar criar a prescrição com médico incorreto
     }
+    
     const doctorId = doctor.id;
-    console.log("Doctor ID:", doctorId);
+    console.log("Doctor ID encontrado:", doctorId);
 
     // Cria a prescrição em espera (prescricao_on_hold)
     const resHold = await fetch(`${API_BASE_URL}/prescricao_on_hold/create`, {
@@ -182,13 +204,8 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
     setMedications([{ id: Date.now(), id_medicamento: "", quantity: "" }]);
     setStep(1);
     
-    // Opcional: se desejar forçar um remount, você pode usar:
-    // window.location.reload();
-    // ou, se o componente estiver sendo renderizado por uma rota, navegar com replace:
-    // navigate("/adicionar-prescricao", { replace: true });
-    
   } catch (err) {
-    console.error(err);
+    console.error("Erro completo:", err);
     setError("Erro de conexão com o servidor");
   }
 };
@@ -257,6 +274,7 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
                     type="number"
                     placeholder="Quantidade"
                     value={med.quantity}
+                    min="1" 
                     onChange={(e) =>
                       handleMedicationChange(index, "quantity", e.target.value)
                     }
