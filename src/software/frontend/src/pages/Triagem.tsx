@@ -68,7 +68,6 @@ const Prescricoes = () => {
     const newMedicationId = newMedications[fitaId];
     const newMedicationQuantity = newMedicationQuantities[fitaId] || 1;
   
-    // Find the selected medication
     const selectedMedication = availableMeds.find(
       med => med.id.toString() === newMedicationId
     );
@@ -79,21 +78,18 @@ const Prescricoes = () => {
     }
   
     try {
-      // Prepare medication data for backend
       const medicationData = {
         id_prescricao_on_hold: fitaId,
         id_medicamento: selectedMedication.id,
         quantidade: newMedicationQuantity,
-        status_medicamento: "pendente" // Keep this as "pendente"
+        status_medicamento: "pendente"
       };
   
-      // Send to backend
       const response = await axios.post(
         `${API_BASE_URL}/prescricao_medicamento/create`, 
         medicationData
       );
   
-      // Update local state
       setFitas(prevFitas => 
         prevFitas.map(fita => {
           if (fita.id_prescricao === fitaId) {
@@ -111,7 +107,6 @@ const Prescricoes = () => {
         })
       );
   
-      // Reset inputs
       setNewMedications(prev => ({...prev, [fitaId]: ''}));
       setNewMedicationQuantities(prev => ({...prev, [fitaId]: 1}));
       setError(null);
@@ -152,8 +147,7 @@ const Prescricoes = () => {
         }),
       });
   
-      const data = res.json;
-
+      const data = await res.json();
       const id_prescricao_aceita = data.id;
 
       if (!res.ok) {
@@ -191,13 +185,11 @@ const Prescricoes = () => {
         return response;
       });
   
-      // Wait for all medication updates to complete
       await Promise.all(medicationUpdatePromises);
   
-      // window.location.reload();
+      window.location.reload();
   
     } catch (err) {
-      // Handle any errors during the process
       setError(err instanceof Error ? err.message : 'Erro ao conectar ao backend');
     } finally {
       setLoading(false);
@@ -216,10 +208,8 @@ const Prescricoes = () => {
   
         setFitas(fitasData || []);
         
-        // Extract medications from the axios response
         const medications = medicationsResponse.data.medicamentos || [];
         
-        // Validate and set medications
         if (Array.isArray(medications)) {
           setAvailableMeds(medications);
         } else {
@@ -384,28 +374,6 @@ async function LerFitas(){
   }
 }
 
-const PrescricoesContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-`;
-
-const MedicationSection = styled.div`
-  margin: 20px 0;
-`;
-
-const NewMedicationInput = styled.input`
-  padding: 8px 12px;
-  margin-right: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  width: 200px;
-  
-  &[type="number"] {
-    width: 100px;
-  }
-`;
-
 const MedicationSelect = styled.select`
   flex: 1;
   padding: 10px;
@@ -542,25 +510,6 @@ const StatusBox = styled.div<StatusBoxProps>`
   }
 `;
 
-interface StatusComponentProps {
-  medicamento: string;
-  dosagem: string;
-  quantidade: number;
-  status: string;
-}
-
-const StatusComponent = ({ medicamento, dosagem, quantidade, status }: StatusComponentProps) => {
-  return (
-    <StatusBox status={status}>
-      <div className="informacoes">
-        <span>{medicamento} {dosagem}</span>
-        <p>Quantidade: {quantidade} </p>
-      </div>
-      <div className="status">{status}</div>
-    </StatusBox>
-  );
-};
-
 interface FitaComponentProps {
   paciente: string;
   id: string;
@@ -621,92 +570,6 @@ const PageHeader = styled.div`
     font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
   }
-`;
-
-const ApproveButton = styled.button`
-  background-color: #2ECC71;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s;
-  width: 100%;
-  
-  &:hover {
-    background-color: #27ae60;
-  }
-  
-  @media (min-width: 480px) {
-    width: 48%;
-  }
-  
-  @media (min-width: 768px) {
-    width: 45%;
-  }
-`;
-
-const EditButton = styled.button`
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s;
-  width: 100%;
-  
-  &:hover {
-    background-color: #c0392b;
-  }
-  
-  @media (min-width: 480px) {
-    width: 48%;
-  }
-  
-  @media (min-width: 768px) {
-    width: 45%;
-  }
-`;
-
-const PopupContainer = styled.div`
-  background-color: #34495E;
-  border-radius: 12px;
-  overflow: hidden;
-  width: 100%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-`;
-
-const PopupHeader = styled.h2`
-  background-color: #2C3E50;
-  color: white;
-  margin: 0;
-  padding: 16px 20px;
-  font-size: clamp(18px, 4vw, 22px);
-`;
-
-interface LoadingContainerProps {
-  isVisible: boolean;
-}
-
-const LoadingContainer = styled.div<LoadingContainerProps>`
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-  visibility: ${props => props.isVisible ? 'visible' : 'hidden'};
-  opacity: ${props => props.isVisible ? 1 : 0};
-  transition: opacity 0.2s ease;
-`;
-
-const PopupContent = styled.div`
-  padding: 24px;
-  max-height: 60vh;
-  overflow-y: auto;
-  background-color: #f5f7fa;
 `;
 
 const MedicationItem = styled.div`
@@ -844,43 +707,6 @@ const AddMedicationButton = styled.button`
   }
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 28px;
-  background-color: #2C3E50;
-  gap: 20px;
-  
-  @media (max-width: 480px) {
-    flex-direction: column;
-  }
-`;
-
-const ReproveButton = styled.button`
-  background-color: #95a5a6;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 14px 24px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s;
-  flex: 1;
-  
-  &:hover {
-    background-color: #7f8c8d;
-  }
-  
-  &:active {
-    transform: translateY(1px);
-  }
-  
-  &:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-  }
-`;
-
 const SaveButton = styled.button`
   background-color: #2ECC71;
   color: white;
@@ -915,13 +741,6 @@ const FooterWrapper = styled.div`
   right: 0;
 `;
 
-const DosageInfo = styled.span`
-  font-size: 14px;
-  font-weight: normal;
-  margin-left: 5px;
-  color: #7f8c8d;
-`;
-
 const LoadingMessage = styled.div`
   text-align: center;
   padding: 15px;
@@ -946,7 +765,5 @@ const NoPrescritionMessage = styled.div`
   border-radius: 10px;
   font-weight: 500;
 `;
-
-
 
 export default Prescricoes;
