@@ -70,8 +70,7 @@ function Header() {
 
 
     const addBin = () => {
-        // substituir pelo caminho da tela de adição de bin, que até o momento ainda não foi criada
-        window.location.href='/addBin';
+        navigate('/adicionar-bin');
     }
 
     const backHome = async () => {
@@ -119,7 +118,7 @@ function Header() {
                     </Connection>
                     <ActionButton onClick={reconnect}>Reconectar</ActionButton>
                     <ActionButton onClick={addBin}>+ Adicionar Bin</ActionButton>
-                    <BellIcon>
+                    <BellIcon onClick={() => navigate('/fita')}>
                         <StyledFaBell />
                     </BellIcon>
                 </RoboStatus>
@@ -136,6 +135,7 @@ function Header() {
         </Container>
     );
 }
+
 
 const Container = styled.div`
     height: 70px;
