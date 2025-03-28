@@ -16,7 +16,7 @@ const Verificacao = () => {
 
   const [Fitas, setFitas] = useState<Fita[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Removed unused error state
 
   useEffect(() => {
     async function fetchFitas() {
@@ -45,7 +45,7 @@ const Verificacao = () => {
           <h1>Selagem</h1>
         </PageHeader>
 
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+        {/* Removed unused error message */}
 
         <CardContainer>
           {Fitas.length > 0 ? (
@@ -183,14 +183,6 @@ async function LerFitas(){
   }
 }
 
-const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 15px;
-  color: #e74c3c;
-  background-color: rgba(231, 76, 60, 0.1);
-  border-radius: 5px;
-  margin: 10px 0;
-`;
 
 const NoPrescritionMessage = styled.div`
   text-align: center;
