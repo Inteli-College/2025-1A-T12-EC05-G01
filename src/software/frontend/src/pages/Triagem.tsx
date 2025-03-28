@@ -488,11 +488,15 @@ const PageHeader = styled.div`
   max-width: 1200px;
   padding: 0 15px;
   margin: 2rem 0 1rem;
+
   
   h1 {
     color: #34495E;
     font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
