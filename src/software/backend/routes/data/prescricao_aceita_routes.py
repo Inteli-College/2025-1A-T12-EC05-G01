@@ -11,7 +11,6 @@ def create_prescricao_aceita():
     db = SessionLocal()
     try: 
         prescricao = PrescricaoAceita(
-            id=request.json.get("id"),
             id_prescricao_on_hold=request.json.get("id_prescricao_on_hold"),
             id_farmaceutico=request.json.get("id_farmaceutico"),
             data_validacao=request.json.get("data_validacao"),
@@ -19,7 +18,9 @@ def create_prescricao_aceita():
         )
         db.add(prescricao)
         db.commit()
-        return {"message": "Prescricao aceita criada com sucesso"}, 200
+        db.refresh(prescricao)
+
+        return {"message": "Prescricao aceita criada com sucesso", "id": prescricao.id}, 200
     except Exception as e:
         db.rollback()
         return {"error": str(e)}, 500

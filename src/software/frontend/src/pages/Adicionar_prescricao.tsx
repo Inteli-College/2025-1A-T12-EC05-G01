@@ -257,6 +257,7 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
                     type="number"
                     placeholder="Quantidade"
                     value={med.quantity}
+                    min="1" 
                     onChange={(e) =>
                       handleMedicationChange(index, "quantity", e.target.value)
                     }
