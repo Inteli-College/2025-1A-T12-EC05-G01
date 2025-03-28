@@ -313,7 +313,8 @@ const Prescricoes = () => {
                     </option>
                   ))}
                 </MedicationSelect>
-                  <QuantityControl>
+                <AddMed>
+                <QuantityControl>
                     <QuantityLabel>Quantidade:</QuantityLabel>
                     <QuantityInput 
                       type="number" 
@@ -332,6 +333,8 @@ const Prescricoes = () => {
                   >
                     Adicionar Medicamento
                   </AddMedicationButton>
+                </AddMed>
+                  
                 </MedicationSelector>
               </AddMedicationSection>
               
@@ -374,6 +377,13 @@ async function LerFitas(){
   }
 }
 
+const AddMed = styled.div `
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 50px;
+`;
+
 const MedicationSelect = styled.select`
   flex: 1;
   padding: 10px;
@@ -404,20 +414,22 @@ const MedicationList = styled.div`
 const BotoesFita = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 12px;
   align-items: center;
   gap: 10px;
 `;
 
 const FitaBox = styled.div`
-  width: 100%;
+  width: 900px;
   background-color: #2C3E50;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 1rem;
+  padding-top: 20px;
+  padding-bottom: 40px;
   border-radius: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 
   .topo-fita {
     width: 100%;
@@ -438,11 +450,11 @@ const FitaBox = styled.div`
   .topo-fita h3 {
     font-size: clamp(18px, 4vw, 24px);
     font-weight: 550;
-    margin: 0;
+    margin: 10px;
   }
 
   .topo-fita p {
-    margin: 0;
+    margin: 8px;
     font-size: clamp(14px, 3vw, 16px);
   }
 
@@ -460,56 +472,6 @@ const FitaBox = styled.div`
   }
 `;
 
-const StatusBox = styled.div<StatusBoxProps>`
-  background-color: white;
-  padding: 15px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  text-transform: capitalize;
-  color: #333;
-  margin: 5px 0;
-  
-  @media (min-width: 576px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-  }
-
-  .informacoes span {
-    font-size: clamp(18px, 4vw, 24px);
-    font-weight: 550;
-    margin: 0;
-    word-break: break-word;
-    color: #333;
-  }
-
-  .informacoes p {
-    font-size: clamp(14px, 3vw, 16px);
-    font-weight: 500;
-    margin: 0;
-    color: #333;
-  }
-
-  .status {
-    font-size: clamp(16px, 3.5vw, 20px);
-    font-weight: 550;
-    margin-top: 10px;
-    color: ${(props) =>
-      props.status === "separado" ? "#27ae60" :
-      props.status === "em separação" ? "#f39c12" :
-      props.status === "esperando separação" ? "#d35400" :
-      props.status === "pendente" ? "#7B68EE" : "#333"};
-    
-    @media (min-width: 576px) {
-      margin-top: 0;
-    }
-  }
-`;
-
 interface FitaComponentProps {
   paciente: string;
   id: string;
@@ -523,20 +485,30 @@ interface FitaComponentProps {
 const FitaComponent = ({ paciente, hc, medico, data }: FitaComponentProps) => {
   return (
     <>
-      <div className='topo-fita'>
-        <div className="dados">
-          <h3>{paciente}</h3>
-          <p>HC: {hc} | Médico: {medico}</p>
-          <p>Data: {data} </p>
+      <EscritasTopo>
+        <div className='topo-fita'>
+          <div className="dados">
+            <h3>{paciente}</h3>
+            <p>HC: {hc} | Médico: {medico}</p>
+            <p>Data: {data} </p>
+          </div>
         </div>
-      </div>
+      </EscritasTopo>
     </>
   );
+
 };
+
+const EscritasTopo = styled.div`
+  justify-content: left;
+  width: 700px;
+  margin: 8px;
+`;
 
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 100%;
   min-height: 100vh; /* Ensure full viewport height */
   position: relative; /* For footer positioning */
@@ -545,11 +517,12 @@ const PageContainer = styled.div`
 const PageContent = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: 100%;
   padding: 0 15px;
-  margin-top: 70px; /* Added to account for fixed navbar */
-  padding-bottom: 80px; /* Add space for footer */
+  margin-top: 70px;
+  padding-bottom: 80px;
   
   .prescricoes {
     width: 90%;
@@ -578,6 +551,8 @@ const MedicationItem = styled.div`
   padding: 18px;
   margin-bottom: 16px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  width: 700px;
+  height: 120px;
   
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -650,12 +625,14 @@ const RemoveButton = styled.button`
 `;
 
 const AddMedicationSection = styled.div`
-  margin-top: 30px;
-  margin-bottom: 15px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
   border: 1px dashed #bdc3c7;
+  width: 700px;
+  height: 150px;
 `;
 
 const MedicationSelector = styled.div`
@@ -690,7 +667,7 @@ const AddMedicationButton = styled.button`
   cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 15px;
+  margin-top: 3px;
   transition: background-color 0.2s;
   
   &:hover {
