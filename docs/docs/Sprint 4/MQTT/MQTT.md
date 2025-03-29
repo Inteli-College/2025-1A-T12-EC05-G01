@@ -18,8 +18,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 * dobot/status: Aqui, o Dobot publica constantemente o seu estado de conexão. Assim, é possível avisar ao usuário caso a conexão com o robô seja perdida.
 * dobot/acoes: Neste tópico, o Dobot publica suas ações enquanto realiza a montagem de uma fita de medicamentos. Ele publica, por exemplo, qual medicamento está pegando, em qual ponto está, etc. Isso é usado para que o usuário consiga acompanhar em tempo real o que o robô está fazendo.
 
-&emsp;Para a sprint 4 do projeto, apenas o primeiro tópico foi implementado em sua completude, podendo, de fato, ser utilizado para visualizar se o robô está conectado através das telas no frontend. No tópico de status, o robô publica a mensagem "conectado" ou "desconectado". A partir disso, temos um "listener" no frontend que atualiza o ícone de conexão do Dobot em tempo real de acordo com essa estado. Caso o robô esteja desconectado, o usuário pode apertar o botão de reconectar. 
-
+&emsp;Para a sprint 4 do projeto, apenas o primeiro tópico foi implementado em sua completude, podendo, de fato, ser utilizado para visualizar se o robô está conectado através das telas no frontend. No tópico de status, o robô publica a mensagem "conectado" ou "desconectado". A partir disso, temos um "listener" no frontend que atualiza o ícone de conexão do Dobot em tempo real de acordo com esse estado. Caso o robô esteja desconectado, o usuário pode apertar o botão de reconectar.
 <div style={{ textAlign: 'center' }}>
   <p><strong>Figura 1 - NavBar com status do robô</strong></p>
   <img 
