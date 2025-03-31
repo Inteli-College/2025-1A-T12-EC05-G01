@@ -111,7 +111,7 @@ cd src/software/frontend
 Instale as dependências com:
 
 ```bash
-cd npm install
+npm install
 ```
 
 Execute: 
