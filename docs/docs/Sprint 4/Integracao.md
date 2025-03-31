@@ -25,4 +25,4 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 &emsp; Esta página conta também com uma seção de busca de medicamentos, na qual o usuário pode visualizar todos os medicamentos disponíveis no estoque e retirar o medicamento que necessita. 
 
-&emsp; Em resumo, esta interface centraliza algumas operações essenciais para, caso haja algum erro na triagem das fitas, o fluxo de trabalho não seja interrompido. Dessa forma, o usuário pode rapidamente selecionar medicamentos e eenviá-los diretamente para o processo de separação, reduzindo o tempo de execução e possíveis falhas operacionais. 
+&emsp; Em resumo, esta interface centraliza algumas operações essenciais para que, caso haja algum erro na triagem das fitas, o fluxo de trabalho não seja interrompido. Dessa forma, o usuário pode rapidamente selecionar medicamentos e enviá-los diretamente para o processo de separação, reduzindo o tempo de execução e possíveis falhas operacionais. 
