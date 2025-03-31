@@ -5,13 +5,14 @@ import Footer from '../components/Footer';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
+interface Fita {
+  id: string;
+  nome: string;
+  dateTime: string;
+  medicamentos: { medicamento: string; quantidade: number }[];
+}
+
 const Verificacao = () => {
-  interface Fita {
-    id: string;
-    nome: string;
-    dateTime: string;
-    medicamentos: { medicamento: string; quantidade: number }[];
-  }
 
   const [Fitas, setFitas] = useState<Fita[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,12 +23,12 @@ const Verificacao = () => {
       try {
         setLoading(true);
         const data = await LerFitas();
-        setFitas(data || []);  // Garante que sempre seja array
+        setFitas(data || []);
       } catch (err) {
         if (err instanceof Error) {
-          console.error(err.message); // Log the error instead
+          console.error(err.message);
         } else {
-          console.error("An unknown error occurred:", err);
+          console.error("Erro:", err);
         }
       } finally {
         setLoading(false);
@@ -44,6 +45,8 @@ const Verificacao = () => {
           <h1>Selagem</h1>
         </PageHeader>
 
+        {/* Removed unused error message */}
+
         <CardContainer>
           {Fitas.length > 0 ? (
             Fitas.map((fita, index) => 
@@ -56,7 +59,7 @@ const Verificacao = () => {
               />
             )
           ) : (
-            !loading && <p>Nenhuma fita encontrada</p>
+            !loading && <NoPrescritionMessage>Nenhuma fita encontrada</NoPrescritionMessage>
           )}
         </CardContainer>
       </PageContent>
@@ -179,6 +182,16 @@ async function LerFitas(){
     return [];  // Retorna array vazio em caso de erro
   }
 }
+
+
+const NoPrescritionMessage = styled.div`
+  text-align: center;
+  padding: 30px 15px;
+  color: #7f8c8d;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  font-weight: 500;
+`;
 
 const BotoesSeparacao = styled.div`
   display:flex;

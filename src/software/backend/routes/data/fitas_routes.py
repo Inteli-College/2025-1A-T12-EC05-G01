@@ -30,11 +30,13 @@ def FitasAguardandoSelagem():
                 'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
                 'medicamentos': [
                     {
+                        'id': pm.id,
                         'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
-                        'quantidade': pm.quantidade
+                        'quantidade': pm.quantidade,
+                        'status': pm.status_medicamento
                     }
                     for pm in prescricao.prescricoes_medicamentos
-                    if pm.status_medicamento in ['aprovado']
+                    if pm.status_medicamento in ['aprovado', 'em_separacao', 'separado']
                 ]
             })
 
@@ -43,6 +45,81 @@ def FitasAguardandoSelagem():
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
     except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
+
+@fitas_routes.route("/aguardando-triagem", methods=["GET"])
+def FitasAguardandoTriagem():
+    db = SessionLocal()
+    try:
+        prescricoes_on_hold = db.query(PrescricaoOnHold).options(
+            joinedload(PrescricaoOnHold.paciente),
+            joinedload(PrescricaoOnHold.medico),
+            joinedload(PrescricaoOnHold.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
+        ).outerjoin(
+            PrescricaoAceita, PrescricaoAceita.id_prescricao_on_hold == PrescricaoOnHold.id
+        ).filter(
+            PrescricaoAceita.id.is_(None)
+            
+        ).all()
+
+        fitas = []
+        
+        for prescricao in prescricoes_on_hold:
+            fitas.append({
+                'id_prescricao': prescricao.id,
+                'nome_paciente': prescricao.paciente.nome,
+                'hc_paciente': prescricao.paciente.hc,
+                'nome_medico': prescricao.medico.nome,
+                'dateTime': prescricao.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                'medicamentos': [
+                    {
+                        'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                        'quantidade': pm.quantidade,
+                        'status_medicamento': pm.status_medicamento,
+                        'id_medicamento': pm.id,
+                    }
+                    for pm in prescricao.prescricoes_medicamentos
+                    if pm.status_medicamento == "pendente"
+                ]
+            })
+
+        return {"fitas": fitas}, 200
+       
+    except HTTPException as e:
+        return {"error": e.detail}, e.status_code
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
+
+@fitas_routes.route("/atualizar-status-medicamento", methods=["PUT"])
+def AtualizarStatusMedicamento():
+    db = SessionLocal()
+    try:
+        data = request.json
+        medicamento_id = data.get("id")
+        novo_status = data.get("status")
+        
+        if not medicamento_id or not novo_status:
+            raise HTTPException(status_code=400, detail="ID e status são obrigatórios")
+            
+        medicamento = db.query(PrescricaoMedicamento).filter(PrescricaoMedicamento.id == medicamento_id).first()
+        
+        if not medicamento:
+            raise HTTPException(status_code=404, detail=f"Medicamento com ID {medicamento_id} não encontrado")
+            
+        medicamento.status_medicamento = novo_status
+        db.commit()
+        
+        return {"message": f"Status do medicamento {medicamento_id} atualizado para {novo_status}"}, 200
+        
+    except HTTPException as e:
+        db.rollback()
+        return {"error": e.detail}, e.status_code
+    except Exception as e:
+        db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
