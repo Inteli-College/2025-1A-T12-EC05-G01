@@ -114,7 +114,7 @@ slug: /telas-desenvolvidas
 <sup>Fonte: Material produzido pelos autores (2025)</sup>
 </div>
 
-&nbsp;&nbsp;&nbsp;&nbsp;A tela Adicionar Bin (Figura 13) permite ao usuário cadastrar novos pontos para a coleta de medicamentos pelo robô. Para o cadastro desses pontos, o usuário deverá preencher qual o medicamento que estará no bin, mover o robô para os pontos necessário e, em cada ponto, selecionar a opção "move J" ou a "move L" e ativar ou não a sucção. Após o mapeamento dos pontos, será possível finalizar o cadastro do novo bin. Além disso, essa tela oferece a visualização dos bins já cadastrados, permitindo a remoção deles conforme necessário.
+&nbsp;&nbsp;&nbsp;&nbsp;A tela Adicionar Bin (Figura 13) permite ao usuário cadastrar novos pontos para a coleta de medicamentos pelo robô. Para o cadastro desses pontos, o usuário deverá preencher qual o medicamento que estará no bin, mover o robô para os pontos necessários e, em cada ponto, selecionar a opção "move J" ou "move L" e ativar ou não a sucção. Após o mapeamento dos pontos, será possível finalizar o cadastro do novo bin. Além disso, essa tela oferece a visualização dos bins já cadastrados, permitindo a remoção deles conforme necessário.
 
 <div align="center">
 <sub>Figura 13 - Adicionar Bin</sub>

@@ -128,6 +128,7 @@ const sidebars = {
             'Sprint 4/Interface do Usuário/Telas Desenvolvidas',
           ],
         },
+        'Sprint 4/MQTT/MQTT'
       ]
     }
   ],
