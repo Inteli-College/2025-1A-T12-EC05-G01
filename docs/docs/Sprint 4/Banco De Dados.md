@@ -24,6 +24,7 @@ Esta seção detalha as tabelas, atributos e relações do banco de dados utiliz
 |-------|--------------|-----------|
 | `id`  | Inteiro      | Identificador único do médico, gerado automaticamente. |
 | `nome`| Texto        | Nome completo do médico. |
+| `email`| Texto        | Email utilizado para cadastro no sistema |
 | `crm` | Texto        | Número do Conselho Regional de Medicina, único para cada médico. |
 
 **Propósito:** Armazenar informações sobre os médicos que realizam as prescrições, facilitando identificação e rastreabilidade.
@@ -53,6 +54,8 @@ Esta seção detalha as tabelas, atributos e relações do banco de dados utiliz
 |-------|--------------|-----------|
 | `id`  | Inteiro      | Identificador único do farmacêutico. |
 | `nome`| Texto        | Nome do farmacêutico responsável pela validação das prescrições. |
+| `email`| Texto        | Email utilizado para cadastro no sistema |
+
 
 **Propósito:** Identificar o farmacêutico que validou cada prescrição, garantindo a responsabilidade e rastreabilidade.
 
@@ -125,11 +128,79 @@ Esta seção detalha as tabelas, atributos e relações do banco de dados utiliz
 
 ### 8. Tabela: `prescricao_medicamento`
 
-| Campo                  | Tipo de Dado | Descrição |
-|------------------------|--------------|-----------|
-| `id`                   | Inteiro      | Identificador único. |
-| `id_prescricao_on_hold`| Inteiro      |
- 
+| Campo                   | Tipo de Dado | Descrição                                                                 |
+|-------------------------|--------------|-----------------------------------------------------------------------------|
+| `id`                    | Inteiro      | Identificador único da prescrição-medicamento.                              |
+| `id_prescricao_on_hold` | Inteiro      | Prescrição original feita pelo médico.                                      |
+| `id_prescricao_aceita`  | Inteiro      | Referência opcional (caso a prescrição seja validada ou modificada).        |
+| `id_medicamento`        | Inteiro      | Medicamento prescrito.                                                      |
+| `quantidade`            | Inteiro      | Quantidade prescrita do medicamento.                                        |
+| `status_medicamento`    | Texto        | Indica o estado do medicamento (ex.: aceito, modificado, removido).         |
+
+**Propósito:**  
+Gerenciar o relacionamento muitos-para-muitos entre prescrições e medicamentos, registrando se foram alterados, mantidos ou removidos.
+
+**Relações:**  
+Relaciona-se com `prescricao_on_hold` e `prescricao_aceita`, pois uma prescrição pode conter múltiplos medicamentos, e esses podem ser aceitos ou modificados. Também se relaciona com `medicamento`, garantindo que o medicamento está corretamente vinculado à prescrição.
+
+--- 
+
+### 9. Tabela: `saidas`
+
+| Campo        | Tipo de Dado | Descrição                                                                    |
+|--------------|--------------|-------------------------------------------------------------------------------|
+| `id`         | Inteiro      | Identificador único da saída de medicamento.                                  |
+| `id_estoque` | Inteiro      | Referência ao registro no estoque para indicar de onde saiu o medicamento.    |
+| `id_paciente`| Inteiro      | Paciente que recebeu o medicamento.                                          |
+| `quantidade` | Inteiro      | Quantidade de medicamento que foi dispensada.                                |
+| `data_saida` | DataHora     | Data e hora da saída do medicamento.                                         |
+
+**Propósito:**  
+Registrar a dispensação de medicamentos para pacientes, após a prescrição ter sido validada e os medicamentos separados.
+
+**Relações:**  
+- Relaciona-se com `estoque`, pois a saída reduz a quantidade disponível em estoque.  
+- Relaciona-se com `paciente`, para identificar quem recebeu o medicamento.
+
+---
+
+### 10. Tabela: `perdas`
+
+| Campo        | Tipo de Dado | Descrição                                                             |
+|--------------|--------------|-----------------------------------------------------------------------|
+| `id`         | Inteiro      | Identificador único do registro de perda ou descarte.                 |
+| `id_estoque` | Inteiro      | Referência ao registro no estoque do medicamento descartado.          |
+| `motivo`     | Texto        | Razão da perda (vencimento, dano, contaminação etc.).                 |
+| `data_perda` | DataHora     | Data e hora em que o medicamento foi considerado perdido/descartado.  |
+
+**Propósito:**  
+Registrar medicamentos perdidos ou descartados (por dano, vencimento ou outras razões), garantindo melhor controle e auditoria sobre o estoque.
+
+**Relações:**  
+Relaciona-se com `estoque`, pois o medicamento descartado deve ser removido do estoque e devidamente registrado.
+
+---
+
+### 11. Tabela: `logs`
+
+| Campo      | Tipo de Dado | Descrição                                                                                                    |
+|------------|--------------|--------------------------------------------------------------------------------------------------------------|
+| `id`       | Inteiro      | Identificador único para cada log.                                                                           |
+| `timestamp`| DataHora     | Momento em que o log foi registrado.                                                                         |
+| `level`    | Texto        | Nível do log, como `'INFO'`, `'WARNING'`, `'ERROR'` ou `'DEBUG'`.                                            |
+| `origin`   | Texto        | Origem do evento (ex.: nome do módulo, serviço ou rotina).                                                   |
+| `action`   | Texto        | Ação executada (ex.: `'CREATE'`, `'UPDATE'`, `'DELETE'`).                                                    |
+| `description`| Texto      | Descrição detalhada do evento ou erro ocorrido.                                                              |
+| `status`   | Texto        | Status final do log (ex.: `'SUCCESS'`, `'FAILED'`, `'PENDING'`).                                             |
+| `log_data` | DataHora     | Campo opcional para armazenar outra data/hora relevante ao log (ex.: agendamento, data de referência etc.).  |
+
+**Propósito:**  
+Armazenar eventos de log do sistema, possibilitando auditorias, rastreabilidade de erros e acompanhamento de ações executadas pelos usuários ou processos automatizados.
+
+**Relações:**  
+Esta tabela geralmente **não** referencia diretamente outras tabelas, mas cada log pode conter informações (via `origin`, `action` ou `description`) que indicam qual processo ou tabela foi afetado. O controle de valores (como `'INFO'`, `'WARNING'`, `'ERROR'`, `'DEBUG'`) pode ser realizado por **CheckConstraint** ou no código da aplicação.
+
+---
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;O banco de dados contempla situações em que medicamentos podem ser descartados devido a danos ou vencimento. Esse controle é realizado pela tabela de perdas, que mantém um registro detalhado de cada descarte, vinculando a informação ao medicamento e ao estoque original. Esse processo permite auditorias e evita desperdícios indevidos.
