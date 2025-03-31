@@ -8,7 +8,13 @@ slug: /sistema-de-monitoramento
     
 &nbsp;&nbsp;&nbsp;&nbsp;Este é o esquema do nosso banco de dados:
 
+
+<div align="center">
+<sub>Figura 1 - Banco de Dados</sub>
+
 ![Imagem do banco de dados](../../../docs/static/img/bancodedados.jpg)
+<sup>Fonte: Material produzido pelos autores (2025)</sup>
+</div>
 
 &nbsp;&nbsp;&nbsp;&nbsp;O banco de dados é mais aprofundando em outra seção da documentação.
 
