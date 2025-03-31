@@ -121,6 +121,7 @@ const sidebars = {
       items: [
         'Sprint 4/Banco De Dados',
         'Sprint 4/Integracao',
+        'Sprint 4/MQTT/MQTT'
       ]
     }
   ],
