@@ -61,14 +61,17 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color:rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
+  padding: 0 15px;
 
   .form-box {
+    width: 100%;
     max-width: 300px;
     background: #34495E;
     overflow: hidden;
     border-radius: 16px;
     color: #010101;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .form {
@@ -82,12 +85,12 @@ const StyledWrapper = styled.div`
 
   .title {
     font-weight: bold;
-    font-size: 1.6rem;
+    font-size: clamp(1.3rem, 4vw, 1.6rem);
     color: #ffffff;
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 3vw, 1rem);
     color: #dddbdb;
   }
 
@@ -112,9 +115,14 @@ const StyledWrapper = styled.div`
 
   .form-section {
     padding: 16px;
-    font-size: .85rem;
+    font-size: clamp(0.8rem, 2.5vw, 0.85rem);
     background-color: #8098b0;
     box-shadow: rgb(0 0 0 / 8%) 0 -1px;
+  }
+
+  .form-section p {
+    color: rgb(244, 243, 243);
+    margin: 8px 0;
   }
 
   .form-section a {
@@ -139,6 +147,7 @@ const StyledWrapper = styled.div`
     font-weight: 600;
     cursor: pointer;
     transition: background-color .3s ease;
+    width: 100%;
   }
 
   .form button:hover {

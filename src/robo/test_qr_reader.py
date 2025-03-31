@@ -58,8 +58,8 @@ def main():
         qr_reader = SerialDevice(port=selected_port, baudrate=SERIAL_BAUDRATE)
         print(f"Conectado na porta {qr_reader.port} com baudrate {qr_reader.baudrate}")
         
-        qr_reader.configure_device()
-        print("Leitor QR code configurado")
+        #qr_reader.configure_device()
+        #print("Leitor QR code configurado")
         
         qr_reader.start_scanning()
         print("Escaneamento iniciado. Aponte um QR code para o leitor...")

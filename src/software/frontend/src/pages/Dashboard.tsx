@@ -1,81 +1,88 @@
 import styled from 'styled-components';
 import Footer from '../components/Footer';
 import Header from '../components/sidebar/Navbar';
-import { HiCheckCircle, HiOutlineClock, HiClock } from "react-icons/hi2";
 import Chart from '../components/Chart';
-//import axios from 'axios';
+import Section from '../components/common/Section';
+import Card from '../components/common/Card';
+import { useState, useEffect } from 'react';
 
 const BodyDashboard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 
+  .content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 70px; /* Added to account for fixed navbar */
+  }
+
   .topo-dash {
     display: flex;
-    align-itens: flex-start;
-    width: 80%;
-
+    align-items: flex-start;
+    width: 90%;
+    max-width: 1200px;
+    padding: 0 15px;
     color: #34495E;
-    font-size: 28px;
+    font-size: clamp(20px, 5vw, 28px);
     font-weight: 900;
   }
 
   > nav {width: 100%;}
   
-  > footer {width: 100%;}
+  > footer {width: 100%; margin-top: 1.5rem;}
 
-  .fitas-section {
-    width: 80%;
-  }
-  
-  .fitas-section h3 {
-    margin: 0;
-    color: #34495E;
-    font-size: 36px;
-    font-weight: 900;
-  }
-
-  .fitas {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .secao-atividades {
-    width: 80%;
-    
-  }
-
-  .secao-atividades h3 {
+  h3 {
     margin: 3rem 0 0 0;
     color: #34495E;
-    font-size: 36px;
+    font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
+   }
+
+  .secao-atividades {
+    width: 90%;
+    max-width: 1200px;
   }
 
   .atividades {
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    margin: 1rem;
+    margin: 1rem 0;
     margin-bottom: 2.5rem;
+    gap: 20px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
   .chart {
-    width: 40%;
+    width: 100%;
     background-color: #34495E;
     border-radius: 15px;
     padding: 2rem;
+    
+    @media (min-width: 769px) {
+      width: 48%;
+    }
   }
 
   .tabela {
-    width: 40%;
+    width: 100%;
     background-color: #34495E;
     border-radius: 15px;
     padding: 2rem;
     overflow: auto;
     max-height: 420px;
+    
+    @media (min-width: 769px) {
+      width: 48%;
+    }
   }
 
   .labels {
@@ -83,61 +90,56 @@ const BodyDashboard = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
+    
+    @media (max-width: 480px) {
+      font-size: 18px;
+    }
   }
 
   .labels span {
     color: #FFF;
-    font-size: 24px;
+    font-size: clamp(16px, 4vw, 24px);
     font-weight: 900;
   }
-`;
 
-const CardBox = styled.div`
-  background-color: #34495E;
-  width: 20%;
-  border-radius: 15px;
-  padding: 1rem;
-  gap: 2.5rem;
-  color: white;
-  margin: 1rem;
-
-  display: flex;
-  flex-direction: row;
-
-  > svg {
-    width: 20%;
-    height: 20%; 
-    color: #4D925B;
-    margin-left: 1rem;
-  }
-  
-  .infos span {
-    font-size: 32px;
-    font-weight: 900;
-    margin: 0;
+  .card-logs {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: #34495E;
+    border-radius: 15px;
+    padding: 1.5rem;
+    overflow: auto;
+    max-height: 420px;
   }
 
-  .infos p {
-    font-size: 16px;
-    font-weight: 400;
-    margin: .2rem;
+  .logs {
+    width: 90%;
+    max-width: 1200px;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1rem 0;
+    margin-bottom: 2.5rem;
+  }
+
+  .volume-fitas {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cards {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
   }
 `;
-
-const CardComponent = ({ paciente, id, data, horario, icon }) => {
-  return (
-    <CardBox>
-      {icon}
-      <section className="infos">
-        <span>{paciente}</span>
-        <p>ID: {id}</p>
-        <p><HiOutlineClock /> {data}, {horario} </p>
-      </section>
-    </CardBox>
-  )
-};
 
 const TableBox = styled.div`
   width: 100%;
@@ -146,14 +148,29 @@ const TableBox = styled.div`
   justify-content: space-between;
   border-radius: 10px;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 
   p {
     margin: 1rem;
+    flex: 1;
+    min-width: 80px;
+    color: #34495E; /* Added text color for visibility */
+    font-weight: 500;
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+      margin: 0.5rem;
+    }
   }
-  
 `
 
-const TableComponent = ({ paciente, status, tratamento }) => {
+interface TableComponentProps {
+  paciente: string;
+  status: string;
+  tratamento: string;
+}
+
+const TableComponent: React.FC<TableComponentProps> = ({ paciente, status, tratamento }) => {
   return (
     <TableBox>
       <p>{paciente}</p>
@@ -163,69 +180,154 @@ const TableComponent = ({ paciente, status, tratamento }) => {
   )
 }
 
+const LogBox = styled.div`
+  width: 100%;
+  background-color: #FFF;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+  margin-bottom: 1rem;
 
-const Dashboard = () => {
+  p {
+    margin: 1rem;
+    color: #34495E; /* Added text color for visibility */
+    font-weight: 500;
+    
+    @media (max-width: 480px) {
+      font-size: 14px;
+      margin: 0.5rem;
+    }
+  }
+`;
+
+interface LogComponentProps {
+  log: string;
+}
+
+const LogComponent: React.FC<LogComponentProps> = ({ log }) => {
+  return (
+    <LogBox>
+      <p>{log}</p>
+    </LogBox>
+  )
+}
+
+const CardBox = styled.div`
+  width: 30%;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #34495E;
+  border-radius: 15px;
+  padding: 1rem .5rem;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
+
+  span {
+    color: ${(props) => props.color};
+    text-align: center;
+    font-family: Montserrat;
+    font-size: clamp(20px, 5vw, 32px);
+    font-weight: 900;
+  }
+
+  .card-interno {
+    width: 90%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ECF0F1;
+    border-radius: 15px;
+  }
+`;
+
+interface CardComponentProps {
+  color: string;
+  title: string;
+  quantidade: string | number;
+}
+
+const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade }) => {
+  return (
+    <CardBox color={color} >
+      <span>{title}</span>
+      <div className="card-interno">
+        <span>{quantidade}</span>
+      </div>
+    </CardBox>
+  )
+}
+
+function Dashboard() {
+  // lógica para puxar os logs do banco de dados
+  const [listOfLogs, setListOfLogs] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:3000/logs/read-all")
+      .then(res => res.json())
+      .then(data => {
+        if (data.logs) {
+            const descriptions: string[] = data.logs.map((log: { description: string }) => log.description);
+          setListOfLogs(descriptions);
+        }
+      })
+      .catch(error => console.error("Error fetching logs:", error));
+  }, [])
+
   return (
     <BodyDashboard>
       <nav><Header /></nav>
-      <div className="topo-dash">
-        <h1>Dashboard</h1>
-      </div>
-      <div className="fitas-section">
-        <h3>Fitas Montadas</h3>
-        <div className="fitas">
-          <CardComponent paciente="Luísa de Bastos" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Henrique Ribeiro" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Bruna Caldas" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Matheus Pacheco" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Amanda Prado" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Igor Magalhães" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Letícia Nogueira" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
-          <CardComponent paciente="Lucas Dornelles" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiCheckCircle />} />
+      <div className="content-wrapper">
+        <div className="topo-dash">
+          <h1>Dashboard</h1>
         </div>
-      </div>
 
-      <div className="fitas-section">
-        <h3>Em andamento</h3>
-        <div className="fitas">
-          <CardComponent paciente="Marina Albuquerque" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Felipe Ventura" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Júlia Sampaio" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Caio Figueiredo" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Larissa Fontes" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Gabriel Mendonça" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Rafaela Andrade" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-          <CardComponent paciente="Diego Valença" id="HC123456" data="24/02/2025" horario="16:30:45" icon={<HiClock />} />
-        </div>
-      </div>
+        <Section title="Acompanhamento de atividades">
+          <div className="atividades">
+            <Card className="chart">
+              <Chart />
+            </Card>
 
-      <section className="secao-atividades">
-        <h3>Acompanhamento de atividades</h3>
-        <div className="atividades">
-          <div className="chart">
-            <Chart />
+            <Card className="tabela">
+              <div className="labels">
+                <span>Paciente</span>
+                <span>Status</span>
+                <span>Tratamento</span>
+              </div>
+              <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
+              <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
+            </Card>
           </div>
+        </Section>
 
-          <div className="tabela">
-            <div className="labels">
-              <span>Paciente</span>
-              <span>Status</span>
-              <span>Tratamento</span>
-            </div>
-            <TableComponent paciente="Joana Maria" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Ronald Alves" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Helena Maria Santana" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Alberto Gomes" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Sophia Marques" status="Separado" tratamento="Lorem Ipsum" />
-            <TableComponent paciente="Renata Oliveira" status="Separado" tratamento="Lorem Ipsum" />
+        <Section title="Logs do robô">
+          <Card className="card-logs">
+            {listOfLogs.map((value, key) => {
+              return <LogComponent log={value} key={key} />
+            })}
+          </Card>
+        </Section>
+
+        <Section title="Acompanhamento de volume das fitas">
+          <div className="cards">
+            <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={192} />
+            <CardComponent color='#E67E22' title='Fitas em espera' quantidade={25} />
+            <CardComponent color='#E9B78A' title='Tempo estimado' quantidade='2h45min' />
           </div>
-        </div>
-      </section>
-
+        </Section>
+      </div>
       <footer><Footer /></footer>
     </BodyDashboard>
   );
-};
-
+}
 
 export default Dashboard;

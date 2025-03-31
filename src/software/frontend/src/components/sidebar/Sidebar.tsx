@@ -1,79 +1,83 @@
+import React from 'react';
 import styled from 'styled-components';
-import SidebarItem from './SidebarItem';
-import { FaBars } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa';
 
-const Sidebar = ({ active }) => {
+interface SidebarProps {
+  active: (isActive: boolean) => void;
+}
 
+const Sidebar: React.FC<SidebarProps> = ({ active }) => {
   const closeSidebar = () => {
-    active(false)
-  }
+    active(false);
+  };
 
   return (
-    <div>
-      <Container sidebar={active}>
-        <FaBars onClick={closeSidebar} />
-        <Content>
-          <SidebarItem Text='Dashboard' Path='/dashboard' />
-          <SidebarItem Text='Checagem de estoque' Path='/estoque'/>
-          <SidebarItem Text='Prescrições' Path='/prescricoes' />
-          <SidebarItem Text='Montagens realizadas' Path='/montagens' />
-          <SidebarItem Text='Verificação dos medicamentos' Path='/verificacao' />
-        </Content>
-      </Container>
-    </div>
-  )
-}
+    <Container>
+      <CloseIconWrapper onClick={closeSidebar}>
+        <FaTimes />
+      </CloseIconWrapper>
+      
+      <SidebarItems>
+        <SidebarItem to="/dashboard" onClick={closeSidebar}>
+          Dashboard
+        </SidebarItem>
+        <SidebarItem to="/triagem" onClick={closeSidebar}>
+          Triagem de Prescrições
+        </SidebarItem>
+        <SidebarItem to="/fila-separacao" onClick={closeSidebar}>
+          Fila de Separação
+        </SidebarItem>
+        <SidebarItem to="/verificacao" onClick={closeSidebar}>
+          Selagem
+        </SidebarItem>
+        <SidebarItem to="/estoque" onClick={closeSidebar}>
+          Estoque
+        </SidebarItem>
+      </SidebarItems>
+    </Container>
+  );
+};
 
 const Container = styled.div`
-  background-color:#323848;
-  position: fixed;
+  background-color: #323848;
+  width: 280px;
   height: 100%;
-  top: 0px;
-  left: 0px;
-  width: 300px;
-  left: ${props => props.sidebar ? '0' : '-100%'};
-  animation: showSidebar .4s;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0;
+  position: relative;
+`;
 
-  > svg {
-        position: fixed;
-        color: #2ECC71;
-        width: 30px;
-        height: 40px;
-        margin-top: 13px;
-        margin-left: 22px;
-        cursor: pointer;
-    }
+const CloseIconWrapper = styled.div`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  color: #2ECC71;
+  font-size: 1.5rem;
+  z-index: 10;
+`;
 
-  @keyframes showSidebar {
-    from {
-      opacity: 0;
-      width: 0;
-    }
-    to {
-      opacity: 1;
-      width: 300px;
-    }
-  }
+const SidebarItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  flex: 1;
+`;
 
-button {
-    width: 100%;
-    background-color: #323848;
-    transition: 0.3s;
-    text-align: left;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: .8rem
-}
-
-button:hover {
+const SidebarItem = styled(Link)`
+  color: white;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  
+  &:hover {
     background-color: #2ECC71;
-    border: none;
-} 
+    color: #323848;
+  }
 `;
 
-const Content = styled.div`
-  margin-top: 100px;
-`;
-
-export default Sidebar
+export default Sidebar;
