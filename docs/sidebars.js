@@ -120,6 +120,7 @@ const sidebars = {
       label: 'Sprint 4',
       items: [
         'Sprint 4/Banco De Dados',
+        'Sprint 4/Integracao',
         {
           type: 'category',
           label: 'Interface do Usuário',
