@@ -14,8 +14,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Requisitos funcionais
 
-&emsp;A partir disso, na quinta e última sprint de desenvolvimento do projeto, foi feita uma atualização dos requisitos funcionais e não-funcionais do projeto, de modo a entender tudo aqui que foi atingido no decorrer da execução do projeto, o que ficou para trás, e o que mudou conforme o projeto foi sento iterado em conjunto com o parceiro. Por exemplo, na sprint 1, foram definidos os seguintes requisitos funcionais:
-
+&emsp;A partir disso, na quinta e última sprint de desenvolvimento do projeto, foi feita uma atualização dos requisitos funcionais e não-funcionais do projeto, de modo a entender tudo aqui que foi atingido no decorrer da execução do projeto, o que ficou para trás, e o que mudou conforme o projeto foi sendo iterado em conjunto com o parceiro. Por exemplo, na sprint 1, foram definidos os seguintes requisitos funcionais:
 <div align="center">
 <sup>Quadro 1 - Requisitos Funcionais Sprint 1</sup>
 
