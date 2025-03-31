@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 ## Conexão com o robô
 
-Para estabelecer a conexão com o robô e garantir que seja possível executar todo o sistema de forma completa, com o script ```executar_projeto.sh```, é necessário estabelecer uma conexão SSH com o Raspberry Pi. Para isso, utilizando o VS Code, é preciso selecionar o botão a opção "Abrir uma Janela Remota" (ou "Open a Remote Window") no canto inferior esquerdo da tela. Em seguida, selecione em "Connect to Host..." e insira o comando a seguir:
+Para estabelecer a conexão com o robô e garantir que seja possível executar o sistema de forma completa é necessário estabelecer uma conexão SSH com o Raspberry Pi. Para isso, utilizando o VS Code, é preciso selecionar a opção "Abrir uma Janela Remota" (ou "Open a Remote Window") no canto inferior esquerdo da tela. Em seguida, selecione em "Connect to Host..." e insira o comando a seguir:
 
 ```bash
 ssh grupo-01@10.128.0.32    # Substitua o que vem após o "@" pelo endereço de IP
