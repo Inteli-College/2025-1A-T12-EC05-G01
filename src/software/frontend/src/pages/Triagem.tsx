@@ -525,6 +525,9 @@ const PageContent = styled.div`
   padding-bottom: 80px;
   
   .prescricoes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 90%;
     max-width: 1200px;
     margin: 1rem 0;
