@@ -138,6 +138,7 @@ const sidebars = {
       label: 'Sprint 5',
       items: [
         'Sprint 5/Requisitos/Requisitos',
+        'Sprint 5/Arquitetura Atualizada/Arquitetura Atualizada',
       ]
     }
   ],
