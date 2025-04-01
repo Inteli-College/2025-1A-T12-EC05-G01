@@ -49,8 +49,8 @@ def FitasAguardandoSelagem():
     finally:
         db.close()
 
-@fitas_routes.route("/aguardando-triagem", methods=["GET"])
-def FitasAguardandoTriagem():
+@fitas_routes.route("/aguardando-triagem/<status_med>", methods=["GET"])
+def FitasAguardandoTriagem(status_med):
     db = SessionLocal()
     try:
         prescricoes_on_hold = db.query(PrescricaoOnHold).options(
@@ -59,10 +59,19 @@ def FitasAguardandoTriagem():
             joinedload(PrescricaoOnHold.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
         ).outerjoin(
             PrescricaoAceita, PrescricaoAceita.id_prescricao_on_hold == PrescricaoOnHold.id
-        ).filter(
-            PrescricaoAceita.id.is_(None)
-            
-        ).all()
+        )
+
+        if status_med == "pendente":
+            prescricoes_on_hold = prescricoes_on_hold.join(PrescricaoMedicamento).filter(
+                PrescricaoAceita.id.is_(None),
+                PrescricaoMedicamento.status_medicamento == "pendente"
+            )
+        elif status_med == "dispensado":
+            prescricoes_on_hold = prescricoes_on_hold.join(PrescricaoMedicamento).filter(
+                PrescricaoMedicamento.status_medicamento == "dispensado"
+            )
+
+        prescricoes_on_hold = prescricoes_on_hold.all()
 
         fitas = []
         
@@ -81,7 +90,7 @@ def FitasAguardandoTriagem():
                         'id_medicamento': pm.id,
                     }
                     for pm in prescricao.prescricoes_medicamentos
-                    if pm.status_medicamento == "pendente"
+                    if pm.status_medicamento == status_med
                 ]
             })
 
