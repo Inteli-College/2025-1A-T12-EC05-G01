@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import API_BASE_URL from '../config/api';
 
 interface Medicamento {
@@ -20,40 +20,58 @@ interface Fita {
 
 function FilaSeparacao() {
   const [fitas, setFitas] = useState<Fita[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshInterval = 3; // 3 segundos
 
+  // Função de busca de dados encapsulada em useCallback para evitar recriação desnecessária
+  const fetchFitas = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-selagem`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Transformar os dados para adicionar o status
+        const fitasComStatus = (data.fitas || []).map((fita: Fita) => ({
+          ...fita,
+          medicamentos: fita.medicamentos.map((med: Medicamento) => ({
+            ...med,
+            id: med.id || Math.random(), // Fallback para ID caso não venha do backend
+            status: med.status || 'aprovado' // Assume 'aprovado' como status padrão
+          }))
+        }));
+        setFitas(fitasComStatus);
+        setError(null); // Limpa erros anteriores se a requisição for bem sucedida
+      } else {
+        setError(data.error || 'Erro ao buscar dados');
+      }
+    } catch (err) {
+      setError('Erro ao conectar ao servidor');
+      console.error('Erro ao buscar fitas:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Configuração do polling automático
   useEffect(() => {
-    const fetchFitas = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/fitas/aguardando-selagem`);
-        const data = await response.json();
-        
-        if (response.ok) {
-          // Transformar os dados para adicionar o status
-          const fitasComStatus = (data.fitas || []).map((fita: Fita) => ({
-            ...fita,
-            medicamentos: fita.medicamentos.map((med: Medicamento) => ({
-              ...med,
-              id: med.id || Math.random(), // Fallback para ID caso não venha do backend
-              status: med.status || 'aprovado' // Assume 'aprovado' como status padrão
-            }))
-          }));
-          setFitas(fitasComStatus);
-        } else {
-          setError(data.error || 'Erro ao buscar dados');
-        }
-      } catch (err) {
-        setError('Erro ao conectar ao servidor');
-        console.error('Erro ao buscar fitas:', err);
-      } finally {
-        setLoading(false);
+    // Chamada inicial
+    fetchFitas();
+    
+    // Configurar polling a cada 3 segundos
+    pollingRef.current = setInterval(() => {
+      fetchFitas();
+    }, refreshInterval * 1000);
+    
+    // Cleanup quando o componente for desmontado
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
       }
     };
-
-    fetchFitas();
-  }, []);
+  }, [fetchFitas]);
 
   const atualizarStatusMedicamento = async (medicamentoId: number, novoStatus: string) => {
     try {
@@ -88,6 +106,50 @@ function FilaSeparacao() {
     }
   };
 
+  // Nova função para iniciar a separação de todos os medicamentos de uma fita
+  const iniciarSeparacaoFitaCompleta = async (fita: Fita) => {
+    try {
+      // Filtra apenas medicamentos que estão em status aprovado
+      const medicamentosAprovados = fita.medicamentos.filter(
+        med => med.status === 'aprovado'
+      );
+      
+      if (medicamentosAprovados.length === 0) {
+        setError('Não há medicamentos disponíveis para separar nesta fita');
+        return;
+      }
+      
+      // Atualiza o status no frontend imediatamente para feedback visual
+      setFitas(prevFitas => 
+        prevFitas.map(f => {
+          if (f.id === fita.id) {
+            return {
+              ...f,
+              medicamentos: f.medicamentos.map(med => 
+                med.status === 'aprovado' ? { ...med, status: 'em_separacao' } : med
+              )
+            };
+          }
+          return f;
+        })
+      );
+      
+      // Atualiza cada medicamento no backend
+      const atualizacoes = medicamentosAprovados.map(medicamento => 
+        atualizarStatusMedicamento(medicamento.id, 'em_separacao')
+      );
+      
+      await Promise.all(atualizacoes);
+      
+      // Aqui seria o ponto para ativar o Dobot (implementação futura)
+      console.log('Iniciando separação da fita completa:', fita.id);
+      
+    } catch (err) {
+      setError('Erro ao iniciar separação da fita');
+      console.error('Erro ao iniciar separação da fita:', err);
+    }
+  };
+
   // Determina o status de andamento da fita com base nos status dos medicamentos
   const getStatusAndamento = (medicamentos: Medicamento[]) => {
     if (medicamentos.length === 0) return "aguardando";
@@ -99,6 +161,11 @@ function FilaSeparacao() {
     return "aguardando";
   };
 
+  // Verifica se a fita pode iniciar separação (tem pelo menos um medicamento em status aprovado)
+  const fitaPodeIniciarSeparacao = (medicamentos: Medicamento[]) => {
+    return medicamentos.some(med => med.status === 'aprovado');
+  };
+
   return (
     <PageContainer>
       <nav><Header /></nav>
@@ -107,63 +174,75 @@ function FilaSeparacao() {
           <h1>Fila de Separação</h1>
         </PageHeader>
         
-        <div className='button'>
-          <button> ⏸️ Pausar Montagem</button>
-        </div>
+        <ControlsContainer>
+          <PauseButton>
+            ⏸️ Pausar Montagem
+          </PauseButton>
+        </ControlsContainer>
         
-        {loading && <LoadingMessage>Carregando fitas...</LoadingMessage>}
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <LoadingArea>
+          <MessageContainer visible={loading}>
+            <LoadingMessage>Carregando fitas...</LoadingMessage>
+          </MessageContainer>
+          <MessageContainer visible={!!error}>
+            <ErrorMessage>{error}</ErrorMessage>
+          </MessageContainer>
+        </LoadingArea>
         
-        {fitas.length === 0 && !loading && (
-          <NoItemsMessage>Não há fitas aguardando separação no momento</NoItemsMessage>
-        )}
-        
-        {fitas.map((fita) => (
-          <FitaBox key={fita.id}>
-            <div className='topo-fita'>
-              <div className="dados">
-                <h3>{fita.nome}</h3>
-                <p>Início: {fita.dateTime}</p>
-              </div>
-
-              <div className="andamento">
-                {getStatusAndamento(fita.medicamentos)}
-              </div>
-            </div>
-            
-            {fita.medicamentos.map((medicamento) => (
-              <StatusBox key={medicamento.id} status={medicamento.status || 'aprovado'}>
-                <div className="informacoes">
-                  <span>{medicamento.medicamento}</span>
-                  <p>Quantidade: {medicamento.quantidade}</p>
+        <ContentSection>
+          {fitas.length === 0 && !loading && (
+            <NoItemsMessage>Não há fitas aguardando separação no momento</NoItemsMessage>
+          )}
+          
+          {fitas.map((fita) => (
+            <FitaBox key={fita.id}>
+              <div className='topo-fita'>
+                <div className="dados">
+                  <h3>{fita.nome}</h3>
+                  <p>Início: {fita.dateTime}</p>
                 </div>
-                <div className="status-controls">
-                  <div className="status">{medicamento.status || 'aprovado'}</div>
-                  {(medicamento.status !== 'separado') && (
-                    <div className="action-buttons">
-                      {(!medicamento.status || medicamento.status === 'aprovado') && (
-                        <StatusButton 
-                          status="em_separacao" 
-                          onClick={() => atualizarStatusMedicamento(medicamento.id, 'em_separacao')}
-                        >
-                          Iniciar separação
-                        </StatusButton>
-                      )}
-                      {medicamento.status === 'em_separacao' && (
-                        <StatusButton 
-                          status="separado" 
-                          onClick={() => atualizarStatusMedicamento(medicamento.id, 'separado')}
-                        >
-                          Finalizar separação
-                        </StatusButton>
-                      )}
-                    </div>
+
+                <div className="controles-fita">
+                  <div className="andamento">
+                    {getStatusAndamento(fita.medicamentos)}
+                  </div>
+                  
+                  {fitaPodeIniciarSeparacao(fita.medicamentos) && (
+                    <FitaButton 
+                      onClick={() => iniciarSeparacaoFitaCompleta(fita)}
+                    >
+                      Iniciar Separação da Fita
+                    </FitaButton>
                   )}
                 </div>
-              </StatusBox>
-            ))}
-          </FitaBox>
-        ))}
+              </div>
+              
+              {fita.medicamentos.map((medicamento) => (
+                <StatusBox key={medicamento.id} status={medicamento.status || 'aprovado'}>
+                  <div className="informacoes">
+                    <span>{medicamento.medicamento}</span>
+                    <p>Quantidade: {medicamento.quantidade}</p>
+                  </div>
+                  <div className="status-controls">
+                    <div className="status">{medicamento.status || 'aprovado'}</div>
+                    {(medicamento.status !== 'separado') && (
+                      <div className="action-buttons">
+                        {medicamento.status === 'em_separacao' && (
+                          <StatusButton 
+                            status="separado" 
+                            onClick={() => atualizarStatusMedicamento(medicamento.id, 'separado')}
+                          >
+                            Finalizar separação
+                          </StatusButton>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </StatusBox>
+              ))}
+            </FitaBox>
+          ))}
+        </ContentSection>
       </PageContent>
       
       <FooterWrapper>
@@ -177,54 +256,33 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh; /* Ensure full viewport height */
-  position: relative; /* For footer positioning */
+  min-height: 100vh;
+  position: relative;
 `;
 
 const PageContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 100%;
   padding: 0 15px;
+  margin-top: 70px;
+  padding-bottom: 80px;
+`;
+
+const ContentSection = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-  margin-top: 70px; /* Added to account for fixed navbar */
-  padding-bottom: 80px; /* Add space for footer */
-  
-  .button {
-    width: 90%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 1rem;
-    
-    @media (min-width: 768px) {
-      justify-content: flex-end;
-    }
-  }
-  
-  .button > button {
-    background-color: #E87722; 
-    color: white; 
-    border: none; 
-    padding: 15px 20px; 
-    border-radius: 5px; 
-    font-weight: bold; 
-    cursor: pointer;
-    font-size: clamp(14px, 3vw, 16px);
-    
-    @media (min-width: 576px) {
-      padding: 20px 25px;
-    }
-  }
 `;
 
 const PageHeader = styled.div`
   width: 90%;
   max-width: 1200px;
   padding: 0 15px;
-  margin: 2rem 0 1rem;
+  margin: 2rem auto 1rem;
   
   h1 {
     color: #34495E;
@@ -233,9 +291,57 @@ const PageHeader = styled.div`
   }
 `;
 
+const ControlsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+`;
+
+// Área de altura fixa para mensagens de carregamento e erro
+const LoadingArea = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 50px; /* Altura fixa em vez de min-height */
+  position: relative; /* Para posicionamento absoluto dos filhos */
+  margin-bottom: 1rem;
+`;
+
+// Novo componente para envolver as mensagens
+interface MessageContainerProps {
+  visible: boolean;
+}
+
+const MessageContainer = styled.div<MessageContainerProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: ${props => props.visible ? 1 : 0};
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: ${props => props.visible ? 'auto' : 'none'};
+`;
+
+const PauseButton = styled.button`
+  background-color: #E87722; 
+  color: white; 
+  border: none; 
+  padding: 12px 20px; 
+  border-radius: 5px; 
+  font-weight: bold; 
+  cursor: pointer;
+  font-size: clamp(14px, 3vw, 16px);
+`;
+
 const FitaBox = styled.div`
-    width: 90%;
-    max-width: 1200px;
+    width: 100%;
     Background-Color: #2C3E50;
     display: flex;
     flex-direction: column;
@@ -272,6 +378,19 @@ const FitaBox = styled.div`
       font-size: clamp(14px, 3vw, 16px);
     }
 
+    .controles-fita {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      
+      @media (min-width: 576px) {
+        flex-direction: row;
+        width: auto;
+        align-items: center;
+      }
+    }
+
     .andamento {
       background-color: gray;
       padding: 10px;
@@ -284,6 +403,27 @@ const FitaBox = styled.div`
         padding: 15px;
       }
     }
+`;
+
+// Botão para separação de fita inteira
+const FitaButton = styled.button`
+  background-color: #3498DB;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  
+  &:hover {
+    background-color: #2980B9;
+  }
+  
+  @media (min-width: 576px) {
+    width: auto;
+    white-space: nowrap;
+  }
 `;
 
 interface StatusBoxProps {
@@ -383,9 +523,7 @@ const ErrorMessage = styled.div`
   color: #e74c3c;
   background-color: rgba(231, 76, 60, 0.1);
   border-radius: 5px;
-  margin: 10px 0;
-  width: 90%;
-  max-width: 1200px;
+  width: 100%;
 `;
 
 const NoItemsMessage = styled.div`
@@ -395,13 +533,12 @@ const NoItemsMessage = styled.div`
   background-color: #f8f9fa;
   border-radius: 10px;
   font-weight: 500;
-  width: 90%;
-  max-width: 1200px;
+  width: 100%;
 `;
 
 const FooterWrapper = styled.div`
   width: 100%;
-  margin-top: auto; /* Push to bottom if content is short */
+  margin-top: auto;
   position: absolute;
   bottom: 0;
   left: 0;
