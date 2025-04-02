@@ -277,6 +277,8 @@ function Dashboard() {
   const [listOfLogs, setListOfLogs] = useState<string[]>([]);
   const [fitasMontadas, setFitasMontadas] = useState<Prescricao[]>([]);
   const [fitasEspera, setFitasEspera] = useState<Prescricao[]>([]);
+  const [tempoTotalEstimado, setTempoTotalEstimado] = useState<number>(0);
+
 
   useEffect(() => {
     fetch("http://127.0.0.1:3000/logs/read-all")
@@ -291,6 +293,8 @@ function Dashboard() {
   }, [])
 
   useEffect(() => {
+    let prescricoesEmEspera: Prescricao[] = [];
+
     fetch("http://127.0.0.1:3000/prescricao_aceita/read-all")
       .then(res => res.json())
       .then(data => {
@@ -305,11 +309,36 @@ function Dashboard() {
 
           setFitasMontadas(montadas);
           setFitasEspera(espera);
-        } else {
-          console.warn("Resposta inesperada:", data);
+          prescricoesEmEspera = espera;
+
+          return fetch("http://127.0.0.1:3000/prescricao_medicamento/read-all") //buscando os medicamentos das prescrições
+        } 
+      })
+
+      .then(res => res?.json())
+      .then(data => {
+        if (data?.prescricoes_medicamento) {
+          const medicamentos = data.prescricoes_medicamento;
+  
+          const tempoTotal = prescricoesEmEspera.reduce((total, prescricao) => {
+            const medicamentosDessaPrescricao = medicamentos.filter(
+              (m: any) => m.id_prescricao_aceita === prescricao.id
+            );
+  
+            const somaQuantidade = medicamentosDessaPrescricao.reduce(
+              (soma: number, med: any) => soma + med.quantidade,
+              0
+            );
+  
+            return total + (somaQuantidade * 0.0083);
+          }, 0);
+  
+          setTempoTotalEstimado(tempoTotal);
         }
       })
   }, []);
+
+
 
   return (
     <BodyDashboard>
@@ -353,7 +382,7 @@ function Dashboard() {
           <div className="cards">
             <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={fitasMontadas.length} />
             <CardComponent color='#E67E22' title='Fitas em espera' quantidade={fitasEspera.length} />
-            <CardComponent color='#E9B78A' title='Tempo estimado' quantidade='2h45min' />
+            <CardComponent color='#E9B78A' title='Tempo estimado' quantidade={`${Math.floor(tempoTotalEstimado)}h${Math.round((tempoTotalEstimado - Math.floor(tempoTotalEstimado)) * 60)}min`} />
           </div>
         </Section>
       </div>
