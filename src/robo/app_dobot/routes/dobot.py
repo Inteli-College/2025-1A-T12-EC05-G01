@@ -173,9 +173,37 @@ def reconectar_dobot():
             return jsonify({"message": "Falha ao reconectar Dobot"}), 422
             
         return jsonify({"message": "Dobot reconectado com sucesso"}), 200
-        
     except Exception as e:
         current_app.logger.error(f"Erro na reconexão: {str(e)}")
         return jsonify({"message": "Erro interno na reconexão"}), 500
+    
+    
+@dobot_bp.rpute("/pausa", methods=["POST"])
+def pausar_robo():
+    dobot = current_app.config.get('DOBOT')
+    if not dobot:
+        return jsonify({"error": "Dobot não inicializado"}), 500
+    try:
+        dobot.pausa()
+        data = {
+            'level": "INFO",
+            "origin":"sistema", 
+            "action":"PAUSA",
+            "description":"Robô pausado",
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"message": "Robô pausado"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Erro ao pausar o robô: {str(e)}")
+        data = {
+            "level":"ERROR",
+            "origin":"sistema",
+            "action":"PAUSA",
+            "description":"Falha ao pausar o robô",
+            "status": "FAILED"
+        }
+        request.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"message": "Erro ao pausar o robô"}), 500
+        
     
     

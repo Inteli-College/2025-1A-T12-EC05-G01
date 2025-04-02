@@ -95,7 +95,29 @@ function Header() {
             window.alert('Erro ao mover o robô para a posição home');
         }
     };
+
+    const pausaRobo = async () => {
+        try {
+            const response = await fetch(`${DOBOT_URL}/dobot/pause`, {
+                method: 'POST',
+            });
     
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
+            }
+    
+            const data = await response.json();
+            if (data && data.message) {
+                window.alert(data.message);
+            } else {
+                window.alert('Robô pausado com sucesso!');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            window.alert('Erro ao pausar o robô');
+        }
+    };
 
     const handleUserClick = () => {
         navigate('/login');
@@ -118,6 +140,7 @@ function Header() {
                     </Connection>
                     <ActionButton onClick={reconnect}>Reconectar</ActionButton>
                     <ActionButton onClick={addBin}>+ Adicionar Bin</ActionButton>
+                    <ActionButton onClick={pausaRobo}>Pausar Robô</ActionButton>
                     <BellIcon onClick={() => navigate('/fita')}>
                         <StyledFaBell />
                     </BellIcon>
