@@ -29,6 +29,11 @@ interface FitaOnHold {
   medicamentos: Medicamento[];
 }
 
+interface Farmaceutico {
+  id: number;
+  email: string;
+}
+
 const Prescricoes = () => {
   const [fitas, setFitas] = useState<Fita[]>([]);
   const [fitasOnHold, setFitasOnHold] = useState<FitaOnHold[]>([]);
@@ -72,17 +77,47 @@ const Prescricoes = () => {
     }
   };
 
+  async function getIdFarmaceuticoLogged (){
+    const farmaceuticoRes = await fetch(`${API_BASE_URL}/farmaceutico/read-all`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    
+    if (!farmaceuticoRes.ok) {
+      console.error('Erro na resposta do servidor:', await farmaceuticoRes.text());
+      setError("Erro ao obter dados do médico. Verifique o console para mais detalhes.");
+      return;
+    }
+    const farmaceuticoData = await farmaceuticoRes.json();
+
+    const loggedEmail = localStorage.getItem("email");
+    if (!loggedEmail) {
+      setError("Email não encontrado na sessão. Faça login novamente.");
+      return;
+    }
+    
+    const farmaceuticosArray = farmaceuticoData.farmaceuticos || [];
+    console.log("Array de farmaceuticos:", farmaceuticosArray);
+
+    const farmaceutico = farmaceuticosArray.find((d: Farmaceutico) => d.email.toLowerCase() === loggedEmail.toLowerCase());
+
+    const id_farmaceutico = farmaceutico.id;
+
+    return id_farmaceutico;
+  }
+
   const handleSave = async (fitaId: string) => {
     try {
       setLoading(true);
 
-      const idFarmaceutico = 1;
+      const id_farmaceutico = await getIdFarmaceuticoLogged();
+
       const res = await fetch(`${API_BASE_URL}/prescricao_aceita/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           id_prescricao_on_hold: fitaId,
-          id_farmaceutico: idFarmaceutico,
+          id_farmaceutico: id_farmaceutico,
           status_prescricao: 'aguardando_separacao'
         }),
       });
@@ -157,13 +192,15 @@ const Prescricoes = () => {
       const prescricaoAceitaData = await prescricaoAceitaResponse.json();
       let id_prescricao_aceita = prescricaoAceitaData.id;
 
+      const id_farmaceutico = await getIdFarmaceuticoLogged();
+
       if (prescricaoAceitaData.id == null) {
         const createResponse = await fetch(`${API_BASE_URL}/prescricao_aceita/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id_prescricao_on_hold: fitaId,
-            id_farmaceutico: 1,
+            id_farmaceutico: id_farmaceutico,
             status_prescricao: 'aguardando_separacao'
           }),
         });
