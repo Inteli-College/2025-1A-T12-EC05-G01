@@ -49,8 +49,8 @@ def FitasAguardandoSelagem():
     finally:
         db.close()
 
-@fitas_routes.route("/aguardando-triagem/<status_med>", methods=["GET"])
-def FitasAguardandoTriagem(status_med):
+@fitas_routes.route("/aguardando-triagem", methods=["GET"])
+def FitasAguardandoTriagem():
     db = SessionLocal()
     try:
         prescricoes_on_hold = db.query(PrescricaoOnHold).options(
@@ -59,40 +59,84 @@ def FitasAguardandoTriagem(status_med):
             joinedload(PrescricaoOnHold.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
         ).outerjoin(
             PrescricaoAceita, PrescricaoAceita.id_prescricao_on_hold == PrescricaoOnHold.id
-        )
-
-        if status_med == "pendente":
-            prescricoes_on_hold = prescricoes_on_hold.join(PrescricaoMedicamento).filter(
-                PrescricaoAceita.id.is_(None),
-                PrescricaoMedicamento.status_medicamento == "pendente"
-            )
-        elif status_med == "dispensado":
-            prescricoes_on_hold = prescricoes_on_hold.join(PrescricaoMedicamento).filter(
-                PrescricaoMedicamento.status_medicamento == "dispensado"
-            )
-
-        prescricoes_on_hold = prescricoes_on_hold.all()
+        ).filter(
+            PrescricaoAceita.id.is_(None),
+            PrescricaoMedicamento.status_medicamento == "pendente"
+            
+        ).all()
 
         fitas = []
         
         for prescricao in prescricoes_on_hold:
-            fitas.append({
-                'id_prescricao': prescricao.id,
-                'nome_paciente': prescricao.paciente.nome,
-                'hc_paciente': prescricao.paciente.hc,
-                'nome_medico': prescricao.medico.nome,
-                'dateTime': prescricao.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
-                'medicamentos': [
-                    {
-                        'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
-                        'quantidade': pm.quantidade,
-                        'status_medicamento': pm.status_medicamento,
-                        'id_medicamento': pm.id,
-                    }
-                    for pm in prescricao.prescricoes_medicamentos
-                    if pm.status_medicamento == status_med
-                ]
-            })
+            medicamentos = [
+                {
+                    'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                    'quantidade': pm.quantidade,
+                    'status_medicamento': pm.status_medicamento,
+                    'id_medicamento': pm.id,
+                }
+                for pm in prescricao.prescricoes_medicamentos 
+                if pm.status_medicamento == "pendente"
+            ]
+            
+            if medicamentos:
+                fitas.append({
+                    'id_prescricao': prescricao.id,
+                    'nome_paciente': prescricao.paciente.nome,
+                    'hc_paciente': prescricao.paciente.hc,
+                    'nome_medico': prescricao.medico.nome,
+                    'dateTime': prescricao.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                    'medicamentos': medicamentos
+                })
+
+        return {"fitas": fitas}, 200
+       
+    except HTTPException as e:
+        return {"error": e.detail}, e.status_code
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
+
+@fitas_routes.route("/on-hold", methods=["GET"])
+def FitasOnHold():
+    db = SessionLocal()
+    try:
+        prescricoes_on_hold = db.query(PrescricaoOnHold).options(
+            joinedload(PrescricaoOnHold.paciente),
+            joinedload(PrescricaoOnHold.medico),
+            joinedload(PrescricaoOnHold.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
+        ).outerjoin(
+            PrescricaoAceita, PrescricaoAceita.id_prescricao_on_hold == PrescricaoOnHold.id
+        ).filter(
+            PrescricaoOnHold.prescricoes_medicamentos.any(
+                PrescricaoMedicamento.status_medicamento == "dispensado"
+            )
+        ).all()
+
+        fitas = []
+        
+        for prescricao in prescricoes_on_hold:
+            medicamentos = [
+                {
+                    'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                    'quantidade': pm.quantidade,
+                    'status_medicamento': pm.status_medicamento,
+                    'id_medicamento': pm.id,
+                }
+                for pm in prescricao.prescricoes_medicamentos 
+                if pm.status_medicamento == "dispensado"
+            ]
+            
+            if medicamentos:
+                fitas.append({
+                    'id_prescricao': prescricao.id,
+                    'nome_paciente': prescricao.paciente.nome,
+                    'hc_paciente': prescricao.paciente.hc,
+                    'nome_medico': prescricao.medico.nome,
+                    'dateTime': prescricao.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                    'medicamentos': medicamentos
+                })
 
         return {"fitas": fitas}, 200
        

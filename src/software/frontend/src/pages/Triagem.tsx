@@ -150,18 +150,36 @@ const Prescricoes = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id_prescricao_aceita: fitaId
+            id_on_hold: fitaId
           }),
       });
 
-      if (!prescricaoAceitaResponse.ok) {
+      const prescricaoAceitaData = await prescricaoAceitaResponse.json();
+      let id_prescricao_aceita = prescricaoAceitaData.id;
+
+      if (prescricaoAceitaData.id == null) {
+        const createResponse = await fetch(`${API_BASE_URL}/prescricao_aceita/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id_prescricao_on_hold: fitaId,
+            id_farmaceutico: 1,
+            status_prescricao: 'aguardando_separacao'
+          }),
+        });
+  
+        if (!createResponse.ok) {
+          const errorData = await createResponse.json();
+          throw new Error(errorData.error || 'Erro ao criar prescrição aceita');
+        }
+  
+        const createdData = await createResponse.json();
+        id_prescricao_aceita = createdData.id;
+      } else {
         const errorData = await prescricaoAceitaResponse.json();
-        setError(errorData.error || 'Erro ao buscar prescrição aceita');
-        return;
+        throw new Error(errorData.error || 'Erro ao verificar prescrição aceita');
       }
       
-      const prescricaoAceitaData = await prescricaoAceitaResponse.json();
-      const id_prescricao_aceita = prescricaoAceitaData.id;
 
       const medicationUpdatePromises = fitaToUpdate.medicamentos.map(async (med) => {
         const quantidade = localQuantities[`${fitaId}-${med.id_medicamento}`] ?? med.quantidade;
@@ -285,7 +303,7 @@ const Prescricoes = () => {
                           />
                         </div>
                         <RemoveButton 
-                          onClick={() => handleRemoveMedication(fita.id_prescricao, med.id_medicamento!)}
+                          onClick={() => handleRemoveMedication(med.id_medicamento!)}
                           disabled={loading}
                         >
                           Liberar mais tarde
@@ -376,7 +394,7 @@ const Prescricoes = () => {
 
 async function LerFitas(){
   try {
-    const res = await fetch("http://127.0.0.1:3000/fitas/aguardando-triagem/pendente", {
+    const res = await fetch("http://127.0.0.1:3000/fitas/aguardando-triagem", {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     });
@@ -395,7 +413,7 @@ async function LerFitas(){
 
 async function LerFitasMedicamentosOnHold(){
   try {
-    const res = await fetch("http://127.0.0.1:3000/fitas/aguardando-triagem/dispensado", {
+    const res = await fetch("http://127.0.0.1:3000/fitas/on-hold", {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     });
