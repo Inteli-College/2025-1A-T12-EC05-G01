@@ -249,8 +249,17 @@ const CardBox = styled.div`
 interface CardComponentProps {
   color: string;
   title: string;
-  quantidade: string | number;
+  quantidade: string | number ;
 }
+
+interface Prescricao {
+  id: number;
+  data_validacao: string;
+  id_farmaceutico: number;
+  id_prescricao_on_hold: number;
+  status_prescricao: 'aguardando_separacao' | 'selada' | 'erro_separacao' | 'aguardando_selagem';
+}
+
 
 const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade }) => {
   return (
@@ -266,6 +275,8 @@ const CardComponent: React.FC<CardComponentProps> = ({ color, title, quantidade 
 function Dashboard() {
   // lógica para puxar os logs do banco de dados
   const [listOfLogs, setListOfLogs] = useState<string[]>([]);
+  const [fitasMontadas, setFitasMontadas] = useState<Prescricao[]>([]);
+  const [fitasEspera, setFitasEspera] = useState<Prescricao[]>([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:3000/logs/read-all")
@@ -278,6 +289,27 @@ function Dashboard() {
       })
       .catch(error => console.error("Error fetching logs:", error));
   }, [])
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:3000/prescricao_aceita/read-all")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data.prescricoes)) {
+          const montadas = data.prescricoes.filter((p: Prescricao) =>
+            p.status_prescricao === "selada" || p.status_prescricao === "aguardando_selagem"
+          );
+
+          const espera = data.prescricoes.filter((p: Prescricao) =>
+            p.status_prescricao === "aguardando_separacao" || p.status_prescricao === "erro_separacao"
+          );
+
+          setFitasMontadas(montadas);
+          setFitasEspera(espera);
+        } else {
+          console.warn("Resposta inesperada:", data);
+        }
+      })
+  }, []);
 
   return (
     <BodyDashboard>
@@ -319,8 +351,8 @@ function Dashboard() {
 
         <Section title="Acompanhamento de volume das fitas">
           <div className="cards">
-            <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={192} />
-            <CardComponent color='#E67E22' title='Fitas em espera' quantidade={25} />
+            <CardComponent color='#2ECC71' title='Fitas montadas' quantidade={fitasMontadas.length} />
+            <CardComponent color='#E67E22' title='Fitas em espera' quantidade={fitasEspera.length} />
             <CardComponent color='#E9B78A' title='Tempo estimado' quantidade='2h45min' />
           </div>
         </Section>
