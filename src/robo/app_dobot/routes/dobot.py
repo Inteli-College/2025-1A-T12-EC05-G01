@@ -190,6 +190,7 @@ def pausar_robo():
             "origin":"sistema", 
             "action":"PAUSA",
             "description":"Robô pausado",
+            "status": "SUCCESS"
         }
         requests.post(f"{DATABASE_URL}/logs/create", json=data)
         return jsonify({"message": "Robô pausado"}), 200
