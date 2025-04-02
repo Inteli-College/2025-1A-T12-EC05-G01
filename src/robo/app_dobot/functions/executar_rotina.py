@@ -1,4 +1,6 @@
 import smbus
+from flask import current_app
+from datetime import datetime
 import time
 import serial
 import logging
@@ -7,6 +9,7 @@ import sys
 import serial.tools.list_ports
 from base_scanner.configuracoes import SCAN_INTERVAL, SERIAL_PORT, SERIAL_BAUDRATE
 from sensores.sensor_qr.leitor import SerialDevice
+import json
 
 from .qr_code_ports import list_available_ports, select_port
 
@@ -20,6 +23,11 @@ logger = logging.getLogger(__name__)
 
 SLAVE_ADDRESS = 8       # Endereço do Arduino no barramento I2C
 bus = smbus.SMBus(1)    # Utiliza o barramento I2C 1 (padrão no Raspberry Pi)
+
+def publicar_acao_mqtt(topico='dobot/qr', qr_code=None):
+    """Publica uma ação do Dobot via MQTT com estrutura JSON"""
+
+    current_app.mqtt.publish(topico, qr_code, retain=True)
 
 def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tentativas=0, max_tentativas=3, callback=None):
     if isinstance(medicamento, str):
@@ -90,13 +98,42 @@ def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tent
                     
                     with LeitorQRCode() as leitor:
                         leitor.iniciar_leitura()
-                        if callback:
+                        if callback:    
                             callback("aguardando_qr", {})
                         
                         qr_detectado = False
                         while not qr_detectado:
+                            #print(f"MEDICAMENTOOOO::: {medicamento}")
                             dados = leitor.ler_codigo()
-                            if dados:
+                            
+                            if dados is not None:
+                             #   print(f"AQUIIIIIIIIIIIIIIIII {dados['conteudo']}")
+                                print(dados['conteudo'])
+                                #objeto = json.loads(dados['conteudo'])
+                                #outro_objeto = json.dumps(dados["conteudo"])
+                              #  print(f"OUTRO OBJETO31231231231231: {outro_objeto['medicamento']}")
+                               # print(f"ADWAD:::::::::::::: {objeto['medicamento']}")
+
+                                #print(f"OUTRO OBJETO: {outro_objeto}")
+                                #print(f"OBJETO: {objeto}")
+
+                                logger.info(f"QR Code detectado: {dados['conteudo']}")
+                                publicar_acao_mqtt(qr_code=dados['conteudo'])
+                                #print(dados['conteudo'])
+
+                                ## Se o medicamento fornecido não for igual ao medicamento lido
+                                ## tentamos pegar o medicamento novamente. Se não conseguir pegar, avisa
+                                ## o usuário e encerra rotina
+
+                                #if dados['conteudo']['medicamento'] != medicamento:
+                                #    logger.warning(f"Medicamento incorreto: {dados['conteudo']['medicamento']}")
+                                #    if callback:
+                                #        callback("medicamento_incorreto", {
+                                #            "esperado": medicamento,
+                                #            "detectado": dados['conteudo']['medicamento']
+                                #        })
+                                #    return False
+
                                 if callback:
                                     callback("qr_detectado", {
                                         "conteudo": dados['conteudo'],

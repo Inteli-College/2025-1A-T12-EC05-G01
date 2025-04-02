@@ -11,7 +11,7 @@ fita_bp = Blueprint('fita', __name__)
 DATABASE_URL = "http://127.0.0.1:3000"
 fita = {}
 
-def publicar_acao_mqtt(acao, detalhes=None):
+def publicar_acao_mqtt(acao, topico='dobot/acoes' ,detalhes=None):
     """Publica uma ação do Dobot via MQTT com estrutura JSON"""
     if detalhes is None:
         detalhes = {}
@@ -20,7 +20,7 @@ def publicar_acao_mqtt(acao, detalhes=None):
         "timestamp": datetime.now().isoformat(),
         "detalhes": detalhes
     }
-    current_app.mqtt.publish('dobot/acoes', json.dumps(payload), retain=True)
+    current_app.mqtt.publish(topico, json.dumps(payload), retain=True)
 
 @fita_bp.route("/adicionar/<medicamento>/<quantidade>", methods=["POST"])
 def adicionar_medicamento(medicamento, quantidade):
