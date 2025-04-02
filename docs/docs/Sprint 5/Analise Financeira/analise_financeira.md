@@ -18,12 +18,12 @@ A tabela a seguir apresenta os itens utilizados na montagem do protótipo, com s
 | Categoria                   | Quantidade | Nome                             | Valor Unitário |
 |----------------------------|------------|----------------------------------|----------------|
 | **Placas de Controle**     | 1          | Raspberry Pi 5 8GB               | R$ 1.090,00    |
-| **Placas de Controle**     | 1          | Dobot Magician Lite              | R$ 16.000,00   |
-| **Placas de Controle**     | 1          | Arduíno Nano                     | R$ 31,50       |
+| **Placas de Controle**     | 1          | Dobot Magician Lite              | ~R$ 16.000,00   |
+| **Placas de Controle**     | 1          | Arduino Nano                     | R$ 31,50       |
 | **Sensores**               | 1          | MH-ET Live Scanner V3.0          | R$ 243,82      |
 | **Sensores**               | 1          | Sensor Infravermelho TCRT5000    | R$ 6,50        |
-| **Acessórios e Cabos**     | 13         | Jumpers                          | R$ 5,00        |
-| **Acessórios e Cabos**     | 1          | Fita Dupla Face                  | R$ 3,00        |
+| **Acessórios e Cabos**     | 13         | Jumpers                          | R$ 2,63        |
+| **Acessórios e Cabos**     | 1          | Fita Dupla Face                  | R$ 2,00        |
 | **Componentes Eletrônicos**| 1          | Resistor de 330Ω                 | R$ 0,75        |
 | **Componentes Eletrônicos**| 1          | Resistor de 1kΩ                  | R$ 0,75        |
 | **Prototipagem**           | 1          | Protoboard Micro                 | R$ 3,90        |
@@ -44,7 +44,7 @@ A seguir, a estimativa para produção de **50 unidades**, já considerando a su
 | Sensor infravermelho                      | R$ 4,00             | 50         | R$ 200,00              |
 | Estrutura customizada (impressão/injeção) | R$ 300,00           | 50         | R$ 15.000,00           |
 | Braço robótico simplificado               | R$ 3.500,00         | 50         | R$ 175.000,00          |
-| Protoboards e resistores (produção)       | R$ 15,00            | 50         | R$ 750,00              |
+| Protoboards e resistores (produção)       | R$ 7,40             | 50         | R$ 370,00              |
 | Cabos, conectores, acabamentos            | R$ 50,00            | 50         | R$ 2.500,00            |
 | Suporte técnico (12 meses)                | R$ 300,00/mês       | —          | R$ 3.600,00            |
 
@@ -56,13 +56,14 @@ A seguir, a estimativa para produção de **50 unidades**, já considerando a su
 
 | Item                        | Protótipo          | Escala (por unidade)  |
 |-----------------------------|--------------------|------------------------|
-| Braço Robótico              | R$ 16.000,00       | R$ 3.500,00            |
-| Placa de Controle           | R$ 1.090,00        | R$ 150,00              |
-| Leitor QR Code              | R$ 243,82          | R$ 120,00              |
-| Total por Unidade           | R$ 17.415,22       | ~R$ 4.200,00           |
+| Braço Robótico              | R$ 16.000,00       | R$ 12.000, 00            |
+| Placa de Controle           | R$ 1.090,00        | R$ 789,00              |
+| Leitor QR Code              | R$ 243,82          | R$ 80,00              |
+| Arduino Nano                | R$ 31,50           | R$ 11,69              |
+| Total por Unidade           | R$ 17.415,22       | ~R$ 12.880,69          |
 
 :::tip
-Ao otimizar os componentes e processos, é possível reduzir o custo unitário em **mais de 75%** em relação ao protótipo original.
+Ao otimizar os componentes e processos, é possível reduzir o custo unitário em **mais de 25%** em relação ao protótipo original.
 :::
 
 ---
@@ -72,13 +73,13 @@ Ao otimizar os componentes e processos, é possível reduzir o custo unitário e
 Considera-se que a implementação do projeto em escala será feita ao longo de **12 meses**, o que é apropriado para:
 
 - Homologação em ambientes hospitalares.
-- Treinamento de equipes locais.
+- Treinamento da equipe de farmacêuticos.
 - Instalação física e ajustes operacionais.
 - Ciclo de suporte técnico e garantia.
 
 ---
 
 - O **protótipo** teve um custo de aproximadamente **R$ 17.415,22**.
-- A **implementação em escala** reduz o custo por unidade para cerca de **R$ 4.200,00**.
+- A **implementação em escala** reduz o custo por unidade para cerca de **R$ 12.880,69**.
 - O investimento total estimado para 50 unidades é de **R$ 210.550,00**, incluindo suporte anual.
 - O projeto demonstra **viabilidade econômica clara**, com retorno potencial a partir da otimização em escala e replicação da solução.
