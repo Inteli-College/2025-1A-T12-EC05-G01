@@ -178,33 +178,65 @@ def reconectar_dobot():
         return jsonify({"message": "Erro interno na reconexão"}), 500
     
     
-@dobot_bp.rpute("/pausa", methods=["POST"])
-def pausar_robo():
-    dobot = current_app.config.get('DOBOT')
+
+@dobot_bp.route("/pausarMontagem", methods=["POST"])
+def pausar_montagem():
+    dobot = current_app.config.get('DOBOT')  # Obter o objeto dobot do contexto
     if not dobot:
         return jsonify({"error": "Dobot não inicializado"}), 500
+
     try:
-        dobot.pausa()
+        dobot.pausar_montagem()  # Método para pausar a montagem
         data = {
-            'level": "INFO",
-            "origin":"sistema", 
-            "action":"PAUSA",
-            "description":"Robô pausado",
+            "level": "INFO",
+            "origin": "sistema",
+            "action": "PAUSAR_MONTAGEM",
+            "description": "Montagem pausada com sucesso.",
             "status": "SUCCESS"
         }
         requests.post(f"{DATABASE_URL}/logs/create", json=data)
-        return jsonify({"message": "Robô pausado"}), 200
+        return jsonify({"message": "Montagem pausada com sucesso"}), 200
     except Exception as e:
-        current_app.logger.error(f"Erro ao pausar o robô: {str(e)}")
+        current_app.logger.error(f"Erro ao pausar a montagem: {str(e)}")
         data = {
-            "level":"ERROR",
-            "origin":"sistema",
-            "action":"PAUSA",
-            "description":"Falha ao pausar o robô",
+            "level": "ERROR",
+            "origin": "sistema",
+            "action": "PAUSAR_MONTAGEM",
+            "description": "Falha ao pausar a montagem.",
             "status": "FAILED"
         }
-        request.post(f"{DATABASE_URL}/logs/create", json=data)
-        return jsonify({"message": "Erro ao pausar o robô"}), 500
-        
-    
-    
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"error": "Erro ao pausar a montagem"}), 500
+
+
+@dobot_bp.route("/continuarMontagem", methods=["POST"])
+def retomar_montagem():
+    dobot = current_app.config.get('DOBOT')  # Obter o objeto dobot do contexto
+    if not dobot:
+        return jsonify({"error": "Dobot não inicializado"}), 500
+
+    try:
+        dobot.continuar_montagem()  
+        data = {
+            "level": "INFO",
+            "origin": "sistema",
+            "action": "RETOMAR_MONTAGEM",
+            "description": "Montagem retomada com sucesso.",
+            "status": "SUCCESS"
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"message": "Montagem retomada com sucesso"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Erro ao retomar a montagem: {str(e)}")
+        data = {
+            "level": "ERROR",
+            "origin": "sistema",
+            "action": "RETOMAR_MONTAGEM",
+            "description": "Falha ao retomar a montagem.",
+            "status": "FAILED"
+        }
+        requests.post(f"{DATABASE_URL}/logs/create", json=data)
+        return jsonify({"error": "Erro ao retomar a montagem"}), 500
+
+
+

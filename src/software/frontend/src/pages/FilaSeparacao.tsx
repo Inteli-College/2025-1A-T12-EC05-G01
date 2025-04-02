@@ -24,6 +24,7 @@ function FilaSeparacao() {
   const [error, setError] = useState<string | null>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const refreshInterval = 3; // 3 segundos
+  const [montagemPausada, setMontagemPausada] = useState<boolean>(false);
 
   // Função de busca de dados encapsulada em useCallback para evitar recriação desnecessária
   const fetchFitas = useCallback(async () => {
@@ -106,29 +107,6 @@ function FilaSeparacao() {
     }
   };
 
-  const pausarRobo = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/dobot/pause`, {
-        method: 'POST',
-      });
-  
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
-      }
-  
-      const data = await response.json();
-      if (data && data.message) {
-        window.alert(data.message);
-      } else {
-        window.alert('Robô pausado com sucesso!');
-      }
-    } catch (error) {
-      console.error('Erro na requisição:', error);
-      window.alert('Erro ao pausar o robô');
-    }
-  };
-
   // Nova função para iniciar a separação de todos os medicamentos de uma fita
   const iniciarSeparacaoFitaCompleta = async (fita: Fita) => {
     try {
@@ -189,6 +167,32 @@ function FilaSeparacao() {
     return medicamentos.some(med => med.status === 'aprovado');
   };
 
+  const alternarMontagem = async () => {
+    try {
+      const endpoint = montagemPausada ? 'continuarMontagem' : 'pausarMontagem'; // Define a ação com base no estado atual
+      const response = await fetch(`${API_BASE_URL}/dobot/${endpoint}`, {
+        method: 'POST',
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
+      }
+  
+      const data = await response.json();
+      if (data && data.message) {
+        window.alert(data.message);
+        setMontagemPausada(!montagemPausada); // Alterna o estado local
+      } else {
+        window.alert(montagemPausada ? 'Montagem retomada com sucesso!' : 'Montagem pausada com sucesso!');
+        setMontagemPausada(!montagemPausada);
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      window.alert(montagemPausada ? 'Erro ao retomar a montagem' : 'Erro ao pausar a montagem');
+    }
+  };
+
   return (
     <PageContainer>
       <nav><Header /></nav>
@@ -198,8 +202,8 @@ function FilaSeparacao() {
         </PageHeader>
         
         <ControlsContainer>
-          <PauseButton onClick={pausarRobo}> 
-            ⏸️ Pausar Montagem
+          <PauseButton onClick={alternarMontagem}>
+            {montagemPausada ? '▶️ Retomar Montagem' : '⏸️ Pausar Montagem'}
           </PauseButton>
         </ControlsContainer>
         
