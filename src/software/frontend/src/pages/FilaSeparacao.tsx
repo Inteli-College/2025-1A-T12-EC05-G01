@@ -106,6 +106,29 @@ function FilaSeparacao() {
     }
   };
 
+  const pausarRobo = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/dobot/pause`, {
+        method: 'POST',
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Erro ao chamar API: ${response.status} - ${errorMessage}`);
+      }
+  
+      const data = await response.json();
+      if (data && data.message) {
+        window.alert(data.message);
+      } else {
+        window.alert('Robô pausado com sucesso!');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      window.alert('Erro ao pausar o robô');
+    }
+  };
+
   // Nova função para iniciar a separação de todos os medicamentos de uma fita
   const iniciarSeparacaoFitaCompleta = async (fita: Fita) => {
     try {
@@ -175,7 +198,7 @@ function FilaSeparacao() {
         </PageHeader>
         
         <ControlsContainer>
-          <PauseButton>
+          <PauseButton onClick={pausarRobo}> 
             ⏸️ Pausar Montagem
           </PauseButton>
         </ControlsContainer>
