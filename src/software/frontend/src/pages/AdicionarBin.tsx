@@ -174,7 +174,7 @@ const PageContainer = styled.div`
   }
 `;
 
-let DOBOT_URL = "http://127.0.0.1:5000";
+const DOBOT_URL = "http://127.0.0.1:5000";
 
 interface Ponto {
   ponto: number;
@@ -353,7 +353,7 @@ function AdicionarBin() {
           response.json().then(err => alert(err.erro));
         }
       })
-      .catch(error => alert("Erro ao remover medicamento"));
+      .catch(() => alert("Erro ao remover medicamento"));
     }
   };
 

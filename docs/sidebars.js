@@ -132,6 +132,14 @@ const sidebars = {
         },
         'Sprint 4/MQTT/MQTT'
       ]
+    },
+    {
+      type: 'category',
+      label: 'Sprint 5',
+      items: [
+        'Sprint 5/Requisitos/Requisitos',
+        'Sprint 5/Arquitetura Atualizada/Arquitetura Atualizada',
+      ]
     }
   ],
 };

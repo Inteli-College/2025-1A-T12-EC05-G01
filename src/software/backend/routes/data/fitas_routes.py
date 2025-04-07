@@ -6,6 +6,7 @@ from ...models.prescricao_aceita import PrescricaoAceita
 from ...models.prescricao_medicamento import PrescricaoMedicamento
 from ...models.paciente import Paciente
 from ...models.prescricao_on_hold import PrescricaoOnHold
+from ...models.medicamento import Medicamento
 from ....database.db_conexao import SessionLocal
 
 fitas_routes = Blueprint('fitas', __name__, url_prefix="/fitas")
@@ -18,33 +19,47 @@ def FitasAguardandoSelagem():
             joinedload(PrescricaoAceita.prescricao_on_hold).joinedload(PrescricaoOnHold.paciente),
             joinedload(PrescricaoAceita.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
         ).filter(
-            PrescricaoAceita.status_prescricao.in_(['aguardando_selagem'])
+            # Incluindo múltiplos status possíveis
+            PrescricaoAceita.status_prescricao.in_(['aguardando_selagem', 'aprovado', 'aguardando_separacao'])
         ).all()
 
         fitas = []
         
         for prescricao in prescricoes_aceitas:
-            fitas.append({
-                'id': prescricao.id,
-                'nome': prescricao.prescricao_on_hold.paciente.nome,
-                'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
-                'medicamentos': [
-                    {
-                        'id': pm.id,
-                        'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
-                        'quantidade': pm.quantidade,
-                        'status': pm.status_medicamento
-                    }
-                    for pm in prescricao.prescricoes_medicamentos
-                    if pm.status_medicamento in ['aprovado', 'em_separacao', 'separado']
-                ]
-            })
+            # Verificar se há medicamentos válidos para esta prescrição
+            medicamentos_validos = [
+                pm for pm in prescricao.prescricoes_medicamentos
+                if pm.status_medicamento in ['aprovado', 'em_separacao', 'separado', 'pendente']
+            ]
+            
+            # Só adiciona a fita se tiver medicamentos válidos
+            if medicamentos_validos:
+                fitas.append({
+                    'id': prescricao.id,
+                    'nome': prescricao.prescricao_on_hold.paciente.nome,
+                    'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                    'medicamentos': [
+                        {
+                            'id': pm.id,
+                            'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                            'quantidade': pm.quantidade,
+                            'status': pm.status_medicamento
+                        }
+                        for pm in medicamentos_validos
+                    ]
+                })
+
+        # Depuração: imprimir quantas fitas foram encontradas
+        print(f"Total de fitas encontradas: {len(fitas)}")
+        for i, fita in enumerate(fitas):
+            print(f"Fita {i+1}: ID={fita['id']}, paciente={fita['nome']}, medicamentos={len(fita['medicamentos'])}")
 
         return {"fitas": fitas}, 200
        
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
     except Exception as e:
+        print(f"Erro ao buscar fitas: {str(e)}")
         return {"error": str(e)}, 500
     finally:
         db.close()
@@ -173,6 +188,74 @@ def AtualizarStatusMedicamento():
         return {"error": e.detail}, e.status_code
     except Exception as e:
         db.rollback()
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
+
+@fitas_routes.route("/diagnostico", methods=["GET"])
+def DiagnosticoFitas():
+    db = SessionLocal()
+    try:
+        # 1. Verificar todas as prescrições aceitas
+        prescricoes_aceitas = db.query(PrescricaoAceita).all()
+        
+        # 2. Verificar os medicamentos associados às prescrições
+        prescricoes_medicamento = db.query(PrescricaoMedicamento).filter(
+            PrescricaoMedicamento.id_prescricao_aceita.isnot(None)
+        ).all()
+        
+        resultado = {
+            "total_prescricoes_aceitas": len(prescricoes_aceitas),
+            "total_medicamentos_em_prescricoes": len(prescricoes_medicamento),
+            "detalhes_prescricoes": [],
+            "problemas_encontrados": []
+        }
+        
+        # Verificar cada prescrição aceita
+        for pa in prescricoes_aceitas:
+            medicamentos = db.query(PrescricaoMedicamento).filter(
+                PrescricaoMedicamento.id_prescricao_aceita == pa.id
+            ).all()
+            
+            medicamentos_detalhes = []
+            for med in medicamentos:
+                med_info = db.query(Medicamento).filter(Medicamento.id == med.id_medicamento).first()
+                if med_info:
+                    medicamentos_detalhes.append({
+                        "id": med.id,
+                        "nome": f"{med_info.nome} {med_info.dosagem}",
+                        "status": med.status_medicamento,
+                        "quantidade": med.quantidade
+                    })
+                else:
+                    resultado["problemas_encontrados"].append(f"Medicamento ID {med.id_medicamento} não encontrado para prescrição {med.id}")
+                    
+            # Procurar por medicamentos que têm o id_prescricao_on_hold mas não id_prescricao_aceita
+            medicamentos_on_hold = db.query(PrescricaoMedicamento).filter(
+                PrescricaoMedicamento.id_prescricao_on_hold == pa.id_prescricao_on_hold,
+                PrescricaoMedicamento.id_prescricao_aceita.is_(None)
+            ).all()
+            
+            if medicamentos_on_hold:
+                resultado["problemas_encontrados"].append(
+                    f"Prescrição {pa.id} tem {len(medicamentos_on_hold)} medicamentos com id_prescricao_on_hold={pa.id_prescricao_on_hold} "
+                    f"mas sem id_prescricao_aceita definido"
+                )
+            
+            prescricao_detalhes = {
+                "id": pa.id,
+                "id_prescricao_on_hold": pa.id_prescricao_on_hold,
+                "status": pa.status_prescricao,
+                "total_medicamentos": len(medicamentos),
+                "medicamentos": medicamentos_detalhes
+            }
+            
+            resultado["detalhes_prescricoes"].append(prescricao_detalhes)
+            
+        return resultado, 200
+        
+    except Exception as e:
+        print(f"Erro no diagnóstico: {str(e)}")
         return {"error": str(e)}, 500
     finally:
         db.close()
