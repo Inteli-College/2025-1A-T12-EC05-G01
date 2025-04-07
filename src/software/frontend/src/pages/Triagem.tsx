@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/sidebar/Navbar';
 import API_BASE_URL from '../config/api';
@@ -13,7 +13,6 @@ interface Medicamento {
 
 interface Fita {
   id: string;
-  id_prescricao: string;
   nome_paciente: string;
   hc_paciente: string;
   nome_medico: string;
@@ -43,57 +42,6 @@ const Prescricoes = () => {
   const [localQuantities, setLocalQuantities] = useState<{[key: string]: number}>({});
   const [availableMeds, setAvailableMeds] = useState<MedicationData[]>([]);
 
-  // Função de busca de dados encapsulada em useCallback para evitar recriação desnecessária
-  const fetchData = useCallback(async () => {
-    try {
-      setLoading(true);
-      const [fitasData, medicationsResponse] = await Promise.all([
-        LerFitas(),
-        axios.get(`${API_BASE_URL}/medicamento/read-all`)
-      ]);
-
-      setFitas(fitasData || []);
-      
-      const medications = medicationsResponse.data.medicamentos || [];
-      
-      if (Array.isArray(medications)) {
-        setAvailableMeds(medications);
-      } else {
-        console.error('Invalid medications data:', medications);
-        setError('Erro ao carregar medicamentos');
-      }
-      
-      setError(null); // Limpa erros anteriores se a requisição for bem sucedida
-    } catch (err) {
-      const errorMessage = err instanceof Error 
-        ? err.message 
-        : "Erro ao carregar dados";
-      
-      console.error('Error fetching data:', err);
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // Configuração do polling automático
-  useEffect(() => {
-    // Chamada inicial
-    fetchData();
-    
-    // Configurar polling a cada 3 segundos
-    pollingRef.current = setInterval(() => {
-      fetchData();
-    }, refreshInterval * 1000);
-    
-    // Cleanup quando o componente for desmontado
-    return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
-    };
-  }, [fetchData]);
-
   const handleQuantityChange = (fitaId: string, medId: number, quantidade: number) => {
     setLocalQuantities(prev => ({
       ...prev,
@@ -103,8 +51,6 @@ const Prescricoes = () => {
   
   const handleRemoveMedication = async (medId: number) => {  
     try {
-      setLoading(true);
-      
       const response = await fetch(`${API_BASE_URL}/prescricao_medicamento/update`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -117,15 +63,17 @@ const Prescricoes = () => {
       if (!response.ok) {
         const data = await response.json();
         setError(data.error || 'Erro ao remover medicamento');
-      } else {
-        // Em vez de recarregar a página, atualiza os dados
-        await fetchData();
+        
+        const updatedFitas = await LerFitas();
+        setFitas(updatedFitas || []);
       }
-    } catch (err) {
+
+      window.location.reload();
+    } catch {
       setError('Erro ao conectar ao backend');
-      console.error('Erro ao remover medicamento:', err);
-    } finally {
-      setLoading(false);
+      
+      const updatedFitas = await LerFitas();
+      setFitas(updatedFitas || []);
     }
   };
 
@@ -213,12 +161,9 @@ const Prescricoes = () => {
       });
   
       await Promise.all(medicationUpdatePromises);
-      
-      // Atualizar dados em vez de recarregar a página
-      await fetchData();
-      
-      // Feedback visual para o usuário
-      setError(null);
+  
+      window.location.reload();
+  
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao conectar ao backend');
     } finally {
@@ -351,16 +296,10 @@ const Prescricoes = () => {
           <h1>Triagem de Prescrições</h1>
         </PageHeader>
         
-        <LoadingArea>
-          <MessageContainer visible={loading}>
-            <LoadingMessage>Carregando prescrições...</LoadingMessage>
-          </MessageContainer>
-          <MessageContainer visible={!!error}>
-            <ErrorMessage>{error}</ErrorMessage>
-          </MessageContainer>
-        </LoadingArea>
+        {loading && <LoadingMessage>Carregando prescrições...</LoadingMessage>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         
-        <ContentSection>
+        <section className="prescricoes">
           {fitas.length === 0 && !loading && 
             <NoPrescritionMessage>Não há prescrições para serem triadas no momento</NoPrescritionMessage>
           }
@@ -372,10 +311,6 @@ const Prescricoes = () => {
                 hc={fita.hc_paciente}
                 medico={fita.nome_medico}
                 data={fita.dateTime}
-                id={fita.id_prescricao}
-                horario={fita.dateTime}
-                onEdit={() => console.log(`Edit ${fita.id_prescricao}`)}
-                onApprove={() => console.log(`Approve ${fita.id_prescricao}`)}
               />
               
               {fita.medicamentos.length === 0 ? (
@@ -484,7 +419,7 @@ const Prescricoes = () => {
               </BotoesFita>
             </FitaBox>
           ))}
-        </ContentSection>
+        </section>
       </PageContent>
       
       <FooterWrapper>
@@ -496,7 +431,7 @@ const Prescricoes = () => {
 
 async function LerFitas(){
   try {
-    const res = await fetch(`${API_BASE_URL}/fitas/aguardando-triagem`, {
+    const res = await fetch("http://127.0.0.1:3000/fitas/aguardando-triagem", {
         method: "GET",
         headers: { "Content-Type": "application/json" }
     });
@@ -531,33 +466,16 @@ async function LerFitasMedicamentosOnHold(){
     return [];
   }
 }
-// Componentes estilizados
-const AddMed = styled.div `
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 50px;
-`;
 
-const MedicationSelect = styled.select`
-  flex: 1;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  background-color: white;
-  color: #333;
-`;
-
-const QuantityControl = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
 
 const MedicationList = styled.div`
-  width: 90%;
-  max-width: 700px;
+  width: '90%';
+  maxWidth: '600px';
+  maxHeight: '80vh';
+  padding: 0;
+  border: 'none';
+  background: 'transparent';
+  borderRadius: '12px';
 `;
 
 const BotoesFita = styled.div`
@@ -566,21 +484,19 @@ const BotoesFita = styled.div`
   margin-top: 12px;
   align-items: center;
   gap: 10px;
-  width: 90%;
-  max-width: 700px;
 `;
 
 const FitaBox = styled.div`
-  width: 100%;
+  width: 900px;
   background-color: #2C3E50;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 40px;
   border-radius: 15px;
   margin-bottom: 15px;
-  max-width: 900px;
 
   .topo-fita {
     width: 100%;
@@ -625,7 +541,6 @@ const FitaBox = styled.div`
 
 interface FitaComponentProps {
   paciente: string;
-  hc: string;
   id: string;
   medico: string;
   data: string;
@@ -636,93 +551,69 @@ interface FitaComponentProps {
 
 const FitaComponent = ({ paciente, hc, medico, data }: FitaComponentProps) => {
   return (
-    <EscritasTopo>
-      <div className='topo-fita'>
-        <div className="dados">
-          <h3>{paciente}</h3>
-          <p>HC: {hc} | Médico: {medico}</p>
-          <p>Data: {data} </p>
+    <>
+      <EscritasTopo>
+        <div className='topo-fita'>
+          <div className="dados">
+            <h3>{paciente}</h3>
+            <p>HC: {hc} | Médico: {medico}</p>
+            <p>Data: {data} </p>
+          </div>
         </div>
-      </div>
-    </EscritasTopo>
+      </EscritasTopo>
+    </>
   );
+
 };
 
 const EscritasTopo = styled.div`
-  justify-content: left;
-  width: 90%;
-  max-width: 700px;
+  justify-content: center;
+  width: 700px;
   margin: 8px;
 `;
 
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 100%;
-  min-height: 100vh;
-  position: relative;
+  min-height: 100vh; /* Ensure full viewport height */
+  position: relative; /* For footer positioning */
 `;
 
 const PageContent = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   padding: 0 15px;
   margin-top: 70px;
   padding-bottom: 80px;
-`;
-
-const ContentSection = styled.div`
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
+  
+  .prescricoes {
+    width: 90%;
+    max-width: 1200px;
+    margin: 1rem 0;
+    margin-bottom: 2.5rem;
+  }
 `;
 
 const PageHeader = styled.div`
   width: 90%;
   max-width: 1200px;
   padding: 0 15px;
-  margin: 2rem auto 1rem;
+  margin: 2rem 0 1rem;
+
   
   h1 {
     color: #34495E;
     font-size: clamp(24px, 5vw, 36px);
     font-weight: 900;
-    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-`;
-
-// Área de altura fixa para mensagens de carregamento e erro
-const LoadingArea = styled.div`
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  height: 50px; /* Altura fixa em vez de min-height */
-  position: relative; /* Para posicionamento absoluto dos filhos */
-  margin-bottom: 1rem;
-`;
-
-// Novo componente para envolver as mensagens
-interface MessageContainerProps {
-  visible: boolean;
-}
-
-const MessageContainer = styled.div<MessageContainerProps>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: ${props => props.visible ? 1 : 0};
-  transition: opacity 0.2s ease-in-out;
-  pointer-events: ${props => props.visible ? 'auto' : 'none'};
 `;
 
 const MedicationItem = styled.div`
@@ -731,8 +622,8 @@ const MedicationItem = styled.div`
   padding: 18px;
   margin-bottom: 16px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 700px;
+  width: 700px;
+  height: 120px;
   
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -804,50 +695,6 @@ const RemoveButton = styled.button`
   }
 `;
 
-const AddMedicationSection = styled.div`
-  margin-top: 8px;
-  margin-bottom: 8px;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px dashed #bdc3c7;
-  width: 90%;
-  max-width: 700px;
-`;
-
-const MedicationSelector = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-const AddMedicationButton = styled.button`
-  background-color: #2ECC71;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 14px;
-  width: 100%;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  margin-top: 3px;
-  transition: background-color 0.2s;
-  
-  &:hover {
-    background-color: #27ae60;
-  }
-  
-  &:active {
-    transform: translateY(1px);
-  }
-  
-  &:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-  }
-`;
-
 const SaveButton = styled.button`
   background-color: #2ECC71;
   color: white;
@@ -875,7 +722,7 @@ const SaveButton = styled.button`
 
 const FooterWrapper = styled.div`
   width: 100%;
-  margin-top: auto;
+  margin-top: auto; /* Push to bottom if content is short */
   position: absolute;
   bottom: 0;
   left: 0;
@@ -895,7 +742,7 @@ const ErrorMessage = styled.div`
   color: #e74c3c;
   background-color: rgba(231, 76, 60, 0.1);
   border-radius: 5px;
-  width: 100%;
+  margin: 10px 0;
 `;
 
 const NoPrescritionMessage = styled.div`
@@ -905,7 +752,6 @@ const NoPrescritionMessage = styled.div`
   background-color: #f8f9fa;
   border-radius: 10px;
   font-weight: 500;
-  width: 100%;
 `;
 
 export default Prescricoes;
