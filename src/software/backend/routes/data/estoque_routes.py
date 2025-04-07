@@ -1,8 +1,10 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from fastapi import HTTPException
+from sqlalchemy import func
 from software.database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.estoque import Estoque
 from ...models.medicamento import Medicamento
+from ...models.quantidade_bin import QuantidadeBin  
 
 estoque_routes = Blueprint('estoque', __name__, url_prefix="/estoque")
 
@@ -182,4 +184,30 @@ def read_estoque_id():
         return {"error": str(e)}, 500
     finally:
         db.close()
-    
+
+@estoque_routes.route("/bin-quantidade/read", methods=["GET"])
+def read_quantidade_por_bin():
+    db = SessionLocal()
+    try:
+        resultados = db.query(
+            Estoque.bin,
+            Medicamento.nome.label("medicamento_nome"),
+            func.sum(Estoque.quantidade).label("quantidade_total")
+        ).join(Medicamento, Medicamento.id == Estoque.id_medicamento
+        ).group_by(Estoque.bin, Medicamento.nome).all()
+
+        if not resultados:
+            return {"message": "Nenhum resultado encontrado"}, 200
+
+        dados = [{
+            "bin": r.bin,
+            "medicamento": r.medicamento_nome,
+            "quantidade": r.quantidade_total
+        } for r in resultados]
+
+        return jsonify(dados), 200
+
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
