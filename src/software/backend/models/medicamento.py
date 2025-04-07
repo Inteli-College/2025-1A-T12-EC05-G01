@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import relationship
 from ...database.db_conexao import Base, engine
 
 class Medicamento(Base):
@@ -9,6 +10,8 @@ class Medicamento(Base):
     dosagem = Column(String, nullable=False)
     peso = Column(Float, nullable=False)
     qr_code = Column(String, nullable=False, unique=False)
+
+    quantidades_bin = relationship("QuantidadeBin", back_populates="medicamento")
 
     def __repr__(self):
         return f"<Medicamento(nome={self.nome}, dosagem={self.dosagem}, peso={self.peso})>"
