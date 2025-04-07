@@ -68,6 +68,7 @@ Por fim, é necessário se certificar de dar as permissões necessárias para a 
 chmod +x executar_projeto.sh
 ```
 
+Vale ressaltar que, ao executar o comando, será aberto um único terminal com múltiplas janelas dentro dele, de modo que a navegação entre as janelas é feita por meio do "tmux". Ao fim desse readme, há instruções a respeito dos comandos básicos de navegação do tmux.
 
 ## Execução Manual (Opção alternativa)
 
@@ -152,3 +153,22 @@ Com o robô conectado, basta executar o seguinte código
 ```bash
 python3 -m app_dobot.app_dobot
 ```
+
+
+## Comandos Básicos do Tmux
+O tmux é um multiplexador de terminais que permite gerenciar várias sessões, janelas e painéis dentro de um mesmo terminal. A seguir, listamos alguns comandos essenciais para uma navegação eficiente:
+
+- **Criar nova janela:**
+  - Pressione Ctrl+b seguido de c para criar uma nova janela.
+
+- **Navegar entre janelas:**
+  - Utilize Ctrl+b n para ir para a próxima janela e Ctrl+b p para voltar à janela anterior.
+
+- **Fechar janela ou painel:**
+  - Pressione Ctrl+b x para fechar a janela ou o painel ativo. Confirme a ação se solicitado.
+
+- **Ativar o modo de cópia/scroll:**
+  - Pressione Ctrl+b [ para entrar no modo de cópia, que permite rolar o histórico e copiar textos. 
+  - Para sair desse modo, basta pressionar q.
+
+Para melhor entendimento sobre as demais funcionalidades do tmux, basta acessar a [documentação oficial do tmux](https://tmuxcheatsheet.com/) e consultar outros comandos.
