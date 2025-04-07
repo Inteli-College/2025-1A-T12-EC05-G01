@@ -491,6 +491,7 @@ const FitaBox = styled.div`
   background-color: #2C3E50;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   padding-top: 20px;
@@ -579,6 +580,7 @@ const PageContainer = styled.div`
   width: 100%;
   min-height: 100vh; /* Ensure full viewport height */
   position: relative; /* For footer positioning */
+  align-items: center;
 `;
 
 const PageContent = styled.div`
@@ -590,12 +592,14 @@ const PageContent = styled.div`
   padding: 0 15px;
   margin-top: 70px;
   padding-bottom: 80px;
+  align
   
   .prescricoes {
     width: 90%;
     max-width: 1200px;
     margin: 1rem 0;
     margin-bottom: 2.5rem;
+    align-items: center;
   }
 `;
 
