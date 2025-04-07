@@ -140,6 +140,7 @@ const sidebars = {
         'Sprint 5/Requisitos/Requisitos',
         'Sprint 5/Arquitetura Atualizada/Arquitetura Atualizada',
         'Sprint 5/Analise Financeira/analise_financeira',
+        'Sprint 5/Monitoramento de Acoes/Monitoramento de Acoes',
       ]
     }
   ],
