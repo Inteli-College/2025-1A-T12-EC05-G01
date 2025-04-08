@@ -27,7 +27,7 @@ bus = smbus.SMBus(1)    # Utiliza o barramento I2C 1 (padrão no Raspberry Pi)
 def publicar_acao_mqtt(topico='dobot/qr', qr_code=None):
     """Publica uma ação do Dobot via MQTT com estrutura JSON"""
 
-    current_app.mqtt.publish(topico, qr_code, retain=True)
+    current_app.mqtt.publish(topico, qr_code, retain=False)
 
 def executar_rotina_medicamento(robo, medicamento, medicamentos, delta_z=0, tentativas=0, max_tentativas=3, callback=None):
     if isinstance(medicamento, str):

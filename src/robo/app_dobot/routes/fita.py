@@ -22,6 +22,62 @@ def publicar_acao_mqtt(acao, detalhes=None, topico='dobot/acoes'):
     }
     current_app.mqtt.publish(topico, json.dumps(payload), retain=False)
 
+@fita_bp.route("/bulk_adicionar", methods=["POST"])
+def bulk_adicionar():
+    """
+    Recebe um JSON com mapeamento medicamento->quantidade e adiciona todos na fita.
+    Exemplo de body: { "med1": 2, "med2": 1 }
+    """
+    global fita
+
+    # Tenta extrair o JSON do corpo da requisição
+    try:
+        dados = request.get_json(force=True)
+        if not isinstance(dados, dict):
+            raise ValueError
+    except Exception:
+        return jsonify({
+            "status": "error",
+            "message": "JSON inválido. Deve ser um objeto mapeando medicamento->quantidade."
+        }), 400
+
+    # Para cada par medicamento->quantidade no JSON, converte e adiciona
+    for med, qtd in dados.items():
+        try:
+            qtd_int = int(qtd)
+        except (ValueError, TypeError):
+            return jsonify({
+                "status": "error",
+                "message": f"Quantidade para '{med}' deve ser um número inteiro."
+            }), 400
+
+        if med not in fita:
+            fita[med] = qtd_int
+        else:
+            fita[med] += qtd_int
+
+        # Publica ação individualmente (opcional)
+        publicar_acao_mqtt(
+            "medicamento_adicionado",
+            {"medicamento": med, "quantidade": qtd_int}
+        )
+
+    # Log único de bulk
+    data = {
+        "level": "INFO",
+        "origin": "sistema",
+        "action": "BULK_ADD_MEDICATION",
+        "description": f"Added bulk medications: {dados}",
+        "status": "SUCCESS"
+    }
+    requests.post(f"{DATABASE_URL}/logs/create", json=data)
+
+    return jsonify({
+        "status": "success",
+        "message": "Medicamentos adicionados em bulk com sucesso.",
+        "fita": fita
+    }), 200
+
 @fita_bp.route("/adicionar/<medicamento>/<quantidade>", methods=["POST"])
 def adicionar_medicamento(medicamento, quantidade):
     global fita
