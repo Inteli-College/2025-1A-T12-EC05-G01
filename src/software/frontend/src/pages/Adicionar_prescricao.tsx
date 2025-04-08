@@ -270,14 +270,14 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
                       </option>
                     ))}
                   </MedicationSelect>
-                  <QuantityInput
+                  <QuantityInputWithMax
+                    medicationId={med.id_medicamento}
                     type="number"
                     placeholder="Quantidade"
                     value={med.quantity}
-                    min="1" 
-                    onChange={(e) =>
-                      handleMedicationChange(index, "quantity", e.target.value)
-                    }
+                    min="1"
+                    max={HandleMedicationQuantity(med.id_medicamento)}
+                    onChange={(e) => handleMedicationChange(index, "quantity", e.target.value)}
                     required
                   />
                 </MedicationRow>
@@ -300,7 +300,47 @@ const handlePrescriptionSubmit = async (e: React.FormEvent) => {
   );
 }
 
-/* Styled Components (novo padrão) */
+const HandleMedicationQuantity = async (id_medicamento) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/estoque/bin-quantidade/read/${id_medicamento}`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    if (data.message === "Nenhum resultado encontrado") {
+      return 0;
+    }
+    
+    if (data.medicamento && data.medicamento.length > 0) {
+      const firstMed = data.medicamento[0];
+      console.log(firstMed.quantidade);
+      return firstMed.quantidade;
+    }
+    
+    return 0; 
+       
+  } catch (error) {
+    return {"error": error};
+  }
+};
+
+const QuantityInputWithMax = ({ medicationId, ...props }) => {
+  const [maxQuantity, setMaxQuantity] = useState(1);
+
+  useEffect(() => {
+    const fetchMaxQuantity = async () => {
+      const quantity = await HandleMedicationQuantity(medicationId);
+      setMaxQuantity(quantity);
+    };
+    
+    fetchMaxQuantity();
+  }, [medicationId]);
+
+  return <QuantityInput {...props} max={maxQuantity} />;
+};
 
 const PageContainer = styled.div`
   display: flex;
