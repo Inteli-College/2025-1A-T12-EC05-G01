@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -26,6 +25,15 @@ interface MqttMessage {
   type: 'info' | 'warning' | 'error' | 'success';
 }
 
+const MEDICAMENTOS_FIXOS: { [key: string]: number } = {
+  'Paracetamol 500mg': 1,
+  'Dipirona 1g': 2,
+  'Amoxicilina 500mg': 3,
+  'Omeprazol 20mg': 4
+};
+
+const DOBOT_API_URL = "http://localhost:5000/dobot/fita";
+
 const formatMqttMessage = (message: MqttMessage) => {
   const { acao, detalhes } = message.payload || {};
   const hora = new Date(message.timestamp).toLocaleTimeString('pt-BR', { 
@@ -34,7 +42,6 @@ const formatMqttMessage = (message: MqttMessage) => {
     second: '2-digit'
   });
 
-  // Safe access functions to prevent "cannot read property of undefined" errors
   const safeGetCoord = (coord: 'x' | 'y') => {
     if (detalhes?.coordenadas) {
       return detalhes.coordenadas[coord];
@@ -85,9 +92,64 @@ function FilaSeparacao() {
   const [latestMessage, setLatestMessage] = useState<MqttMessage | null>(null);
   const [mqttConnected, setMqttConnected] = useState(false);
   const [dobotStatus, setDobotStatus] = useState<'conectado' | 'desconectado'>('desconectado');
+  const [currentPayload, setCurrentPayload] = useState<Record<number, number> | null>(null);
+  const [montagemLoading, setMontagemLoading] = useState(false);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const mqttClientRef = useRef<mqtt.MqttClient | null>(null);
   const refreshInterval = 3;
+
+  const traduzirFitaParaPayload = (fita: Fita) => {
+    const resultado: Record<number, number> = {};
+    fita.medicamentos
+      .filter(med => med.status === 'aprovado')
+      .forEach(med => {
+        const idFixado = MEDICAMENTOS_FIXOS[med.medicamento];
+        if (idFixado) {
+          resultado[idFixado] = med.quantidade;
+        } else {
+          console.error(`Medicamento não mapeado: ${med.medicamento}`);
+        }
+      });
+    return resultado;
+  };
+
+  const iniciarSeparacaoFitaCompleta = async (fita: Fita) => {
+    try {
+      setMontagemLoading(true);
+      setCurrentPayload(null);
+      const novoPayload = traduzirFitaParaPayload(fita);
+      setCurrentPayload(novoPayload);
+
+      const bulkResponse = await fetch(`${DOBOT_API_URL}/bulk_adicionar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(novoPayload),
+      });
+
+      if (!bulkResponse.ok) {
+        throw new Error('Falha ao adicionar medicamentos');
+      }
+
+      const finalizarResponse = await fetch(`${DOBOT_API_URL}/finalizar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!finalizarResponse.ok) {
+        throw new Error('Falha ao finalizar montagem');
+      }
+
+      await fetchFitas();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+    } finally {
+      setMontagemLoading(false);
+    }
+  };
 
   useEffect(() => {
     const client = mqtt.connect('ws://broker.emqx.io:8083/mqtt', {
@@ -100,8 +162,6 @@ function FilaSeparacao() {
     client.on('connect', () => {
       console.log('Conectado ao broker MQTT');
       setMqttConnected(true);
-      
-      // Subscribe to both topics
       client.subscribe(['dobot/acoes', 'dobot/status'], (err) => {
         if (!err) console.log('Subscrito nos tópicos MQTT');
       });
@@ -110,21 +170,15 @@ function FilaSeparacao() {
     client.on('message', (topic, message) => {
       try {
         const payload = JSON.parse(message.toString());
-        
-        // Handle dobot status updates
         if (topic === 'dobot/status') {
           setDobotStatus(payload.status.toLowerCase());
           return;
         }
-        
-        // Handle action messages
         if (topic === 'dobot/acoes') {
-          // Validate the payload has the expected structure
           if (!payload || typeof payload !== 'object') {
             console.error('Invalid MQTT payload format:', payload);
             return;
           }
-          
           const newMessage: MqttMessage = {
             topic,
             timestamp: new Date().toISOString(),
@@ -144,7 +198,6 @@ function FilaSeparacao() {
     });
 
     mqttClientRef.current = client;
-
     return () => {
       client.end();
     };
@@ -180,7 +233,6 @@ function FilaSeparacao() {
 
   useEffect(() => {
     fetchFitas();
-    
     pollingRef.current = setInterval(() => {
       fetchFitas();
     }, refreshInterval * 1000);
@@ -224,43 +276,6 @@ function FilaSeparacao() {
     }
   };
 
-  const iniciarSeparacaoFitaCompleta = async (fita: Fita) => {
-    try {
-      const medicamentosAprovados = fita.medicamentos.filter(
-        med => med.status === 'aprovado'
-      );
-      
-      if (medicamentosAprovados.length === 0) {
-        setError('Não há medicamentos disponíveis para separar nesta fita');
-        return;
-      }
-      
-      setFitas(prevFitas => 
-        prevFitas.map(f => {
-          if (f.id === fita.id) {
-            return {
-              ...f,
-              medicamentos: f.medicamentos.map(med => 
-                med.status === 'aprovado' ? { ...med, status: 'em_separacao' } : med
-              )
-            };
-          }
-          return f;
-        })
-      );
-      
-      const atualizacoes = medicamentosAprovados.map(medicamento => 
-        atualizarStatusMedicamento(medicamento.id, 'em_separacao')
-      );
-      
-      await Promise.all(atualizacoes);
-      
-    } catch (err) {
-      setError('Erro ao iniciar separação da fita');
-      console.error('Erro ao iniciar separação da fita:', err);
-    }
-  };
-
   const getStatusAndamento = (medicamentos: Medicamento[]) => {
     if (medicamentos.length === 0) return "aguardando";
     if (medicamentos.every(med => med.status === 'separado')) return "separado";
@@ -272,133 +287,87 @@ function FilaSeparacao() {
     return medicamentos.some(med => med.status === 'aprovado');
   };
 
+  
   return (
     <PageContainer>
-      <nav><Header /></nav>
-      
+      <Header />
+
       <MqttSidePanel>
-        <MqttHeader>
-          Status do Robô - {mqttConnected ? 'Conectado' : 'Desconectado'}
-          <StatusIndicator connected={mqttConnected} />
-        </MqttHeader>
-        
         <DobotStatusBar>
-          Dobot: <DobotStatusIndicator status={dobotStatus}>{dobotStatus}</DobotStatusIndicator>
+          Status do Robô - 
+          <StatusIndicator connected={mqttConnected} />
+          <DobotStatusIndicator status={dobotStatus}>
+            {dobotStatus}
+          </DobotStatusIndicator>
         </DobotStatusBar>
 
-        <CurrentMessageContainer>
-          {latestMessage && (
-            <MessageBubble type={latestMessage.type}>
-              <MessageHeader>
-                <TimeStamp>{formatMqttMessage(latestMessage).hora}</TimeStamp>
-                <StatusTag type={latestMessage.type}>
-                  {latestMessage.type.toUpperCase()}
-                </StatusTag>
-              </MessageHeader>
-              
-              <MessageContent>
-                <MessageIcon>
-                  {formatMqttMessage(latestMessage).icon}
-                </MessageIcon>
-                {formatMqttMessage(latestMessage).text}
-              </MessageContent>
-
-              {latestMessage.payload?.detalhes && Object.keys(latestMessage.payload.detalhes).length > 0 && (
-                <DetailsBox>
-                  {Object.entries(latestMessage.payload.detalhes).map(([key, value]) => (
-                    typeof value === 'object' && value !== null ? 
-                      // Handle nested objects
-                      Object.entries(value as Record<string, any>).map(([subKey, subValue]) => (
-                        <DetailItem key={`${key}-${subKey}`}>
-                          <DetailLabel>{subKey}:</DetailLabel>
-                          <DetailValue>{String(subValue)}</DetailValue>
-                        </DetailItem>
-                      ))
-                    : 
-                      // Handle simple key-value pairs
-                      <DetailItem key={key}>
-                        <DetailLabel>{key}:</DetailLabel>
-                        <DetailValue>{String(value)}</DetailValue>
-                      </DetailItem>
-                  ))}
-                </DetailsBox>
-              )}
-            </MessageBubble>
-          )}
-        </CurrentMessageContainer>
+        {latestMessage && (
+          <MessageBubble type={latestMessage.type}>
+            <MessageHeader>
+              <TimeStamp>{formatMqttMessage(latestMessage).hora}</TimeStamp>
+              <StatusTag type={latestMessage.type}>
+                {latestMessage.type.toUpperCase()}
+              </StatusTag>
+            </MessageHeader>
+            <MessageContent>
+              <MessageIcon>{formatMqttMessage(latestMessage).icon}</MessageIcon>
+              {formatMqttMessage(latestMessage).text}
+            </MessageContent>
+          </MessageBubble>
+        )}
       </MqttSidePanel>
 
       <PageContent>
         <PageHeader>
           <h1>Fila de Separação</h1>
         </PageHeader>
-        
+
         <ControlsContainer>
           <PauseButton disabled={dobotStatus !== 'conectado'}>
             ⏸️ Pausar Montagem
           </PauseButton>
         </ControlsContainer>
-        
-        <LoadingArea>
-          <MessageContainer visible={loading}>
-            <LoadingMessage>Carregando fitas...</LoadingMessage>
-          </MessageContainer>
-          <MessageContainer visible={!!error}>
-            <ErrorMessage>{error}</ErrorMessage>
-          </MessageContainer>
-        </LoadingArea>
-        
+
         <ContentSection>
-          {fitas.length === 0 && !loading && (
-            <NoItemsMessage>
-              Não há fitas aguardando separação no momento
-            </NoItemsMessage>
-          )}
-          
-          {fitas.map((fita) => (
+
+          {fitas.map(fita => (
             <FitaBox key={fita.id}>
-              <div className='topo-fita'>
-                <div className="dados">
+              <div className="topo-fita">
+                <div>
                   <h3>{fita.nome}</h3>
                   <p>Início: {fita.dateTime}</p>
                 </div>
-
                 <div className="controles-fita">
                   <div className="andamento">
                     {getStatusAndamento(fita.medicamentos)}
                   </div>
-                  
                   {fitaPodeIniciarSeparacao(fita.medicamentos) && (
-                    <FitaButton 
+                    <FitaButton
                       onClick={() => iniciarSeparacaoFitaCompleta(fita)}
                       disabled={dobotStatus !== 'conectado'}
                     >
-                      Iniciar Separação da Fita
+                      Iniciar Separação
                     </FitaButton>
                   )}
                 </div>
               </div>
-              
-              {fita.medicamentos.map((medicamento) => (
-                <StatusBox key={medicamento.id} status={medicamento.status || 'aprovado'}>
+
+              {fita.medicamentos.map(med => (
+                <StatusBox key={med.id} status={med.status}>
                   <div className="informacoes">
-                    <span>{medicamento.medicamento}</span>
-                    <p>Quantidade: {medicamento.quantidade}</p>
+                    <span>{med.medicamento}</span>
+                    <p>Quantidade: {med.quantidade}</p>
                   </div>
                   <div className="status-controls">
-                    <div className="status">{medicamento.status || 'aprovado'}</div>
-                    {(medicamento.status !== 'separado') && (
-                      <div className="action-buttons">
-                        {medicamento.status === 'em_separacao' && (
-                          <StatusButton 
-                            status="separado" 
-                            onClick={() => atualizarStatusMedicamento(medicamento.id, 'separado')}
-                            disabled={dobotStatus !== 'conectado'}
-                          >
-                            Finalizar separação
-                          </StatusButton>
-                        )}
-                      </div>
+                    <span className="status">{med.status}</span>
+                    {med.status === 'em_separacao' && (
+                      <StatusButton
+                        status="separado"
+                        onClick={() => atualizarStatusMedicamento(med.id, 'separado')}
+                        disabled={dobotStatus !== 'conectado'}
+                      >
+                        Finalizar
+                      </StatusButton>
                     )}
                   </div>
                 </StatusBox>
@@ -407,13 +376,17 @@ function FilaSeparacao() {
           ))}
         </ContentSection>
       </PageContent>
-      
+
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
     </PageContainer>
   );
 }
+
+
+
+import styled from 'styled-components';
 
 const DobotStatusBar = styled.div`
   display: flex;
@@ -854,3 +827,32 @@ const StatusIndicator = styled.div<{ connected: boolean }>`
 `;
 
 export default FilaSeparacao;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
