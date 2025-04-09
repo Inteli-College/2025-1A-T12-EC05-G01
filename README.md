@@ -57,16 +57,15 @@ Dentre os arquivos e pastas presentes na raiz do projeto, definem-se:
 
 - <b>README.md</b>: arquivo que serve como guia e explicação geral sobre o projeto (o mesmo que você está lendo agora).
 
-## 🔧 Instalação
+### Guia de Como Rodar a Documentação do Projeto
 
-### Guia de Como Rodar a CLI do Robô
+A documentação do projeto foi feita utilizando a ferramenta Docusaurus, que é útil quando se é necessário criar artefatos de documentação visualmente agradáveis em um curto espaço de tempo. Assim, esse guia explica como configurar o ambiente e rodar o código da documentação, que consiste em uma aplicação web contendo tudo o que foi desenvolvido durante as 5 sprints de projeto.
 
-Este breve guia explica como configurar e executar o projeto: Dose Certa localmente, tendo assim acesso à CLI para controle do robô desenvolvido pelo grupo ao longo da sprint 2.  
 
 #### **Pré-requisitos**  
 Antes de começar, certifique-se de ter os seguintes programas instalados:  
 - [Visual Studio Code (VSCode)](https://code.visualstudio.com/)  
-- [Python 3](https://www.python.org/downloads/) e [pip](https://pip.pypa.io/en/stable/installation/)  
+- [Node JS v18.0 ou superior](https://nodejs.org/pt/download)
 - [Git](https://git-scm.com/downloads)  
 
 #### **Passo a Passo**  
@@ -78,59 +77,37 @@ Abra o terminal e execute o comando:
 git clone https://github.com/Inteli-College/2025-1A-T12-EC05-G01
 ```
 
-##### 2. Criar um ambiente virtual  
-Entre na raiz do projeto e crie um ambiente virtual:  
+##### 2. Entre na pasta de documentação  
+No VsCode, abra um terminal na raíz (pasta inicial do projeto) e rode o comando:  
 
 ```bash
-python3 -m venv venv
+cd docs
 ```
 
-##### 3. Ativar o ambiente virtual  
-Dependendo do sistema operacional, use um dos comandos abaixo:  
-
-**Windows (Prompt de Comando ou PowerShell):**  
-```bash
-venv\Scripts\activate
-```
-
-**Mac/Linux:**  
-```bash
-source venv/bin/activate
-```
-
-##### 4. Acessar o diretório do projeto  
-
-Estando em "C:/Users/Seu-Usuário/Caminho-para-pasta/2025-1A-T12-EC05-G01>
- 
-Entre na pasta principal do projeto:  
+##### 3. Instalando dependências  
+Para instalar as dependências, no mesmo terminal do passo anterior, rode:  
 
 ```bash
-cd src/robo
+npm install
 ```
 
-##### 5. Instalar as dependências  
-Baixe e instale todas as bibliotecas necessárias:  
+Caso não possua o npm, em sistemas Linux/Ubuntu/Debian, rode:
 
 ```bash
-pip install -r requirements.txt
+sudo apt install npm
 ```
 
-##### 6. Executar o projeto  
-Por fim, para rodar o projeto, use o comando:  
+Note que para sistemas como Windows (e normalmente também em Linux e MacOS) o npm já é instalado junto com o Node. 
+
+##### 4. Rodando a documentação  
+
+Estando em "C:/Users/Seu-Usuário/Caminho-para-pasta/2025-1A-T12-EC05-G01/docs>, ou seja, na pasta ```docs``` do projeto, rode, no mesmo terminal dos passos anteriores, o seguinte comando:
 
 ```bash
-python3 -m CLI.CLI
+npm start
 ```
 
-
-### 📋 **Pré-requisitos**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Pré-requisitos para execução do projeto.
-
-### 📜 **Manual de Instruções**
-
-&nbsp;&nbsp;&nbsp;&nbsp;Manual de instruções do projeto.
-
+Após rodar este comando, você verá algumas informações no terminal. A primeira vez rodando a documentação pode levar alguns minutos, então tenha paciência. Caso tudo ocorra corretamente, ao final da inicialização será possível acessar a documentação no navegador através da url [localhost:3000](localhost:3000). Conseguindo visualizar a documentação, você será capaz de ver tudo o que foi desenvolvido em cada sprint do projeto.
 ## 🗃 Histórico de lançamentos
 
 ### 0.5.0 - 11/04/2025
