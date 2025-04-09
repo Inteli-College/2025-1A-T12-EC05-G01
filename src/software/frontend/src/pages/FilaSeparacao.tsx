@@ -143,6 +143,21 @@ function FilaSeparacao() {
         throw new Error('Falha ao finalizar montagem');
       }
 
+      const atualizarStatusFita = await fetch(`${DOBOT_API_URL}/prescricao_aceita/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "id": fita.id,
+          "status_prescricao": "aguardando_selagem"
+        })
+      });
+
+      if (!atualizarStatusFita.ok) {
+        throw new Error('Falha ao finalizar montagem');
+      }
+
       await fetchFitas();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
