@@ -11,6 +11,8 @@ fita_bp = Blueprint('fita', __name__)
 DATABASE_URL = "http://127.0.0.1:3000"
 fita = {}
 
+
+estado_pausado = {"fita": None, "pausado": False}
 def publicar_acao_mqtt(acao, detalhes=None, topico='dobot/acoes'):
     """Publica uma ação do Dobot via MQTT com estrutura JSON"""
     if detalhes is None:
@@ -163,3 +165,32 @@ def finalizar_montagem_endpoint():
 def visualizar_fita():
     global fita
     return jsonify({"status": "success", "fita": fita}), 200
+
+@fita_bp.route("/pausar", methods=["POST"])
+def pausar_montagem():
+    global fita, estado_pausado
+
+    if estado_pausado["pausado"]:
+        return jsonify({"status": "error", "message": "Montagem já está pausada"}), 400
+
+    estado_pausado["fita"] = fita.copy()
+    estado_pausado["pausado"] = True
+
+    publicar_acao_mqtt("montagem_pausada")
+
+    return jsonify({"status": "success", "message": "Montagem pausada com sucesso"}), 200
+
+@fita_bp.route("/retomar", methods=["POST"])
+def retomar_montagem():
+    global fita, estado_pausado
+
+    if not estado_pausado["pausado"]:
+        return jsonify({"status": "error", "message": "Montagem não está pausada"}), 400
+
+    fita = estado_pausado["fita"].copy()
+    estado_pausado["fita"] = None
+    estado_pausado["pausado"] = False
+
+    publicar_acao_mqtt("montagem_retomada")
+
+    return jsonify({"status": "success", "message": "Montagem retomada com sucesso"}), 200
