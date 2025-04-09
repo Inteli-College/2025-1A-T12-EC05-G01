@@ -19,47 +19,31 @@ def FitasAguardandoSelagem():
             joinedload(PrescricaoAceita.prescricao_on_hold).joinedload(PrescricaoOnHold.paciente),
             joinedload(PrescricaoAceita.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
         ).filter(
-            # Incluindo múltiplos status possíveis
-            PrescricaoAceita.status_prescricao.in_(['aguardando_selagem', 'aprovado', 'aguardando_separacao'])
+            PrescricaoAceita.status_prescricao.in_(['aguardando_selagem'])
         ).all()
 
         fitas = []
         
         for prescricao in prescricoes_aceitas:
-            # Verificar se há medicamentos válidos para esta prescrição
-            medicamentos_validos = [
-                pm for pm in prescricao.prescricoes_medicamentos
-                if pm.status_medicamento in ['aprovado', 'em_separacao', 'separado', 'pendente']
-            ]
-            
-            # Só adiciona a fita se tiver medicamentos válidos
-            if medicamentos_validos:
-                fitas.append({
-                    'id': prescricao.id,
-                    'nome': prescricao.prescricao_on_hold.paciente.nome,
-                    'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
-                    'medicamentos': [
-                        {
-                            'id': pm.id,
-                            'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
-                            'quantidade': pm.quantidade,
-                            'status': pm.status_medicamento
-                        }
-                        for pm in medicamentos_validos
-                    ]
-                })
+            fitas.append({
+                'id': prescricao.id,
+                'nome': prescricao.prescricao_on_hold.paciente.nome,
+                'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                'medicamentos': [
+                    {
+                        'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                        'quantidade': pm.quantidade
+                    }
+                    for pm in prescricao.prescricoes_medicamentos
+                    if pm.status_medicamento in ['aprovado']
+                ]
+            })
 
-        # Depuração: imprimir quantas fitas foram encontradas
-        print(f"Total de fitas encontradas: {len(fitas)}")
-        for i, fita in enumerate(fitas):
-            print(f"Fita {i+1}: ID={fita['id']}, paciente={fita['nome']}, medicamentos={len(fita['medicamentos'])}")
-
-        return {"fitas": fitas}, 200
+            return {"fitas": fitas}, 200
        
     except HTTPException as e:
         return {"error": e.detail}, e.status_code
     except Exception as e:
-        print(f"Erro ao buscar fitas: {str(e)}")
         return {"error": str(e)}, 500
     finally:
         db.close()
@@ -101,6 +85,47 @@ def FitasAguardandoTriagem():
                     'hc_paciente': prescricao.paciente.hc,
                     'nome_medico': prescricao.medico.nome,
                     'dateTime': prescricao.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
+                    'medicamentos': medicamentos
+                })
+
+        return {"fitas": fitas}, 200
+       
+    except HTTPException as e:
+        return {"error": e.detail}, e.status_code
+    except Exception as e:
+        return {"error": str(e)}, 500
+    finally:
+        db.close()
+
+@fitas_routes.route("/aguardando-separacao", methods=["GET"])
+def FitasAguardandoSeparacao():
+    db = SessionLocal()
+    try:
+        prescricoes_aceitas = db.query(PrescricaoAceita).options(
+            joinedload(PrescricaoAceita.prescricao_on_hold).joinedload(PrescricaoOnHold.paciente),
+            joinedload(PrescricaoAceita.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
+        ).filter(
+            PrescricaoAceita.status_prescricao.in_(['aguardando_separacao']),
+            PrescricaoMedicamento.status_medicamento == "aprovado"
+        ).all()
+
+        fitas = []
+        
+        for prescricao in prescricoes_aceitas:
+
+            medicamentos = [
+                {
+                    'medicamento': f"{pm.medicamento.nome} {pm.medicamento.dosagem}",
+                    'quantidade': pm.quantidade
+                }
+                for pm in prescricao.prescricoes_medicamentos
+            ]
+
+            if medicamentos:
+                fitas.append({
+                    'id': prescricao.id,
+                    'nome': prescricao.prescricao_on_hold.paciente.nome,
+                    'dateTime': prescricao.prescricao_on_hold.data_prescricao.strftime('%d/%m/%Y, %H:%M'),
                     'medicamentos': medicamentos
                 })
 

@@ -206,7 +206,7 @@ function FilaSeparacao() {
   const fetchFitas = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-selagem`);
+      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-separacao`);
       const data = await response.json();
       
       if (response.ok) {
