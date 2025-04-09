@@ -206,7 +206,7 @@ function FilaSeparacao() {
   const fetchFitas = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-selagem`);
+      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-separacao`);
       const data = await response.json();
       
       if (response.ok) {
@@ -214,8 +214,8 @@ function FilaSeparacao() {
           ...fita,
           medicamentos: fita.medicamentos.map((med: Medicamento) => ({
             ...med,
-            id: med.id || Math.random(),
-            status: med.status || 'aprovado'
+            id: med.id,
+            status: med.status
           }))
         })); 
         setFitas(fitasComStatus);
@@ -456,29 +456,6 @@ const ControlsContainer = styled.div`
   margin: 0 auto 1rem;
 `;
 
-const LoadingArea = styled.div`
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
-  height: 50px;
-  position: relative;
-  margin-bottom: 1rem;
-`;
-
-const MessageContainer = styled.div<{ visible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: ${props => props.visible ? 1 : 0};
-  transition: opacity 0.2s ease-in-out;
-  pointer-events: ${props => props.visible ? 'auto' : 'none'};
-`;
-
 const PauseButton = styled.button`
   background-color: #E87722; 
   color: white; 
@@ -659,30 +636,6 @@ const StatusButton = styled.button<StatusButtonProps>`
   }
 `;
 
-const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 15px;
-  color: #3498db;
-  font-weight: 500;
-`;
-
-const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 15px;
-  color: #e74c3c;
-  background-color: rgba(231, 76, 60, 0.1);
-  border-radius: 5px;
-  width: 100%;
-`;
-
-const NoItemsMessage = styled.div`
-  text-align: center;
-  padding: 30px 15px;
-  color: #7f8c8d;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-`;
-
 const FooterWrapper = styled.div`
   width: 100%;
   position: relative;
@@ -700,13 +653,6 @@ const MqttSidePanel = styled.div`
   overflow-y: auto;
   padding: 15px;
   box-shadow: -2px 0 8px rgba(0,0,0,0.05);
-`;
-
-const CurrentMessageContainer = styled.div`
-  height: calc(100% - 50px);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 `;
 
 const MessageBubble = styled.div<{ type: string }>`
@@ -777,47 +723,6 @@ const MessageContent = styled.div`
 const MessageIcon = styled.span`
   font-size: 1.4em;
 `;
-
-const DetailsBox = styled.div`
-  margin-top: 15px;
-  padding: 12px;
-  background-color: rgba(255,255,255,0.9);
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
-`;
-
-const DetailItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 8px 0;
-  font-size: 0.9em;
-`;
-
-const DetailLabel = styled.span`
-  font-weight: 500;
-  color: #34495e;
-`;
-
-const DetailValue = styled.span`
-  color: #7f8c8d;
-  max-width: 60%;
-  text-align: right;
-  word-break: break-word;
-`;
-
-const MqttHeader = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  padding: 15px;
-  background-color: #34495e;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 8px;
-  margin-bottom: 20px;
-`;
-
 const StatusIndicator = styled.div<{ connected: boolean }>`
   width: 12px;
   height: 12px;
