@@ -105,7 +105,7 @@ def FitasAguardandoSeparacao():
             joinedload(PrescricaoAceita.prescricao_on_hold).joinedload(PrescricaoOnHold.paciente),
             joinedload(PrescricaoAceita.prescricoes_medicamentos).joinedload(PrescricaoMedicamento.medicamento)
         ).filter(
-            PrescricaoAceita.status_prescricao.in_(['aguardando_separacao']),
+            PrescricaoAceita.status_prescricao.in_(['aguardando_separacao', 'erro_separacao']),
             PrescricaoMedicamento.status_medicamento == "aprovado"
         ).all()
 
