@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Header from "../components/sidebar/Navbar";
 import { useState, useEffect } from 'react'
+import { FaQuestionCircle} from "react-icons/fa";
 
 const PageContainer = styled.div`
     display: flex;
@@ -15,6 +16,48 @@ const PageContainer = styled.div`
     color: #34495E;
     font-size: clamp(20px, 5vw, 28px);
     font-weight: 900;
+  }
+
+  .container-duvida {
+    margin-top: 25px;
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .icone-duvida {
+    font-size: 20px;
+    color: #34495E;
+    cursor: pointer;
+  }
+
+  .link-duvida {
+    visibility: hidden; /* Inicialmente oculto */
+    width: 150px; /* Largura do balão */
+    background-color: #34495E;
+    color: #ECF0F1;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px; /* Espaçamento interno */
+    font-size: 12px; /* Tamanho da fonte */
+    position: absolute;
+    z-index: 1;
+    top: 125%; /* Posiciona abaixo do ícone */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  .link-duvida a {
+    color: #ECF0F1;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .container-duvida .link-duvida.show {
+    visibility: visible; /* Torna visível */
+    opacity: 1; /* Torna visível */
   }
 
   > button {
@@ -197,6 +240,11 @@ function AdicionarBin() {
   const [medicamentoId, setMedicamentoId] = useState('');
   const [pontos, setPontos] = useState<Ponto[]>([]);
   const [existingBins, setExistingBins] = useState<Medicamento[]>([]);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const toggleTooltip = () => {
+    setShowTooltip(!showTooltip); // Alterna entre visível e invisível
+  };
 
   const fetchExistingBins = () => {
     fetch(`${DOBOT_URL}/dobot/bin/visualizar`)
@@ -388,6 +436,14 @@ function AdicionarBin() {
       <nav><Header /> </nav>
       <div className="topo">
         <h1>Adicionar novo bin</h1>
+        <div className="container-duvida">
+          <FaQuestionCircle className="icone-duvida" onClick={toggleTooltip} />
+          <div className={`link-duvida ${showTooltip ? "show" : ""}`}>
+            <a href="https://youtu.be/9m67qT3E-Og" target="_blank" rel="noopener noreferrer">
+              Clique aqui para dúvidas ao adicionar bin
+            </a>
+          </div>
+        </div>
       </div>
       
       <div className="ponto">
