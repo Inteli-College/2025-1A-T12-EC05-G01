@@ -54,6 +54,10 @@ slug: /telas-finais
 <sup>Fonte: Material produzido pelos autores (2025)</sup>
 </div>
 
+&emsp;&emsp; A seguir está um vídeo do sistema completo funcional e sua interação com o robô.
+
+[Demonstração do Sistema Completo](https://youtu.be/0IkuhlxcgwE)
+
 ---
 
 &nbsp;&nbsp;&nbsp;&nbsp;Com essas alterações, o sistema atinge um novo nível de robustez e usabilidade, atendendo de forma mais eficaz os fluxos reais de trabalho identificado junto ao Hospital das Clínicas da Unicamp.
