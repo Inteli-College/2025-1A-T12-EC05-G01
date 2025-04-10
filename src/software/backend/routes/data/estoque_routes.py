@@ -212,7 +212,7 @@ def read_quantidade_por_bin(id):
             "quantidade": r.quantidade_total
         } for r in resultados]
 
-        return {"medicamento": dados}, 200
+        return {"dados": dados, "medicamento": dados}, 200
 
     except Exception as e:
         return {"error": str(e)}, 500

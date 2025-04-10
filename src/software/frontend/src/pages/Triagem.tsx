@@ -109,10 +109,15 @@ const Prescricoes = () => {
   const handleSave = async (fitaId: string) => {
     try {
       setLoading(true);
-
+      setError(null);
+  
       const id_farmaceutico = await getIdFarmaceuticoLogged();
-
-      const res = await fetch(`${API_BASE_URL}/prescricao_aceita/create`, {
+      if (!id_farmaceutico) {
+        setError("Não foi possível identificar o farmacêutico");
+        return;
+      }
+  
+      const prescricaoRes = await fetch(`${API_BASE_URL}/prescricao_aceita/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -122,15 +127,20 @@ const Prescricoes = () => {
         }),
       });
   
-      const data = await res.json();
-      const id_prescricao_aceita = data.id;
-
-      if (!res.ok) {
-        const errorData = await res.json();
+      if (!prescricaoRes.ok) {
+        const errorData = await prescricaoRes.json().catch(() => ({}));
         setError(errorData.error || 'Erro ao criar registro de prescrição aceita');
         return;
       }
-    
+  
+      const prescricaoData = await prescricaoRes.json();
+      const id_prescricao_aceita = prescricaoData.id;
+  
+      if (!id_prescricao_aceita) {
+        setError('ID da prescrição aceita não retornado');
+        return;
+      }
+  
       const fitaToUpdate = fitas.find(fita => fita.id_prescricao === fitaId);
       if (!fitaToUpdate) {
         setError('Prescrição não encontrada');
@@ -153,7 +163,7 @@ const Prescricoes = () => {
         });
   
         if (!response.ok) {
-          const data = await response.json();
+          const data = await response.json().catch(() => ({}));
           throw new Error(data.error || `Erro ao atualizar medicamento ${med.medicamento}`);
         }
   
@@ -161,10 +171,10 @@ const Prescricoes = () => {
       });
   
       await Promise.all(medicationUpdatePromises);
-  
       window.location.reload();
   
     } catch (err) {
+      console.error('Error in handleSave:', err);
       setError(err instanceof Error ? err.message : 'Erro ao conectar ao backend');
     } finally {
       setLoading(false);
