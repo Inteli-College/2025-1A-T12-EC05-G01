@@ -204,6 +204,7 @@ def read_medicamentos_id():
 <sub>Figura 2 - Medicamentos cadastrados no banco de dados</sub>
 
 ![Imagem do banco de dados](../../../docs/static/img/medicamentos_db.png)
+
 <sup>Fonte: Material produzido pelos autores (2025)</sup>
 </div>
 
