@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import mqtt, { MqttClient } from 'mqtt';
 
 const medicamentos = [
   '1',
@@ -14,6 +15,52 @@ const Fita: React.FC = () => {
   const [medicamento, setMedicamento] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [fita, setFita] = useState<{medicamento: string; quantidade: string}[]>([]);
+  const [mqttClient, setMqttClient] = useState<MqttClient | null>(null);
+
+  useEffect(() => {
+    const client = mqtt.connect('ws://broker.emqx.io:8083/mqtt', {
+      clientId: `webClient_${Math.random().toString(16).substr(2, 8)}`,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30000,
+    });
+
+    client.on('connect', () => {
+      console.log('Conectado ao broker MQTT na tela Fita');
+      client.subscribe('dobot/qr', (err) => {
+        if (!err) console.log('Inscrito no tópico dobot/qr');
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      if (topic === 'dobot/qr') {
+        try {
+          const qrData = JSON.parse(message.toString());
+          
+          const medicamento = qrData.medicamento;
+          const principio = qrData.principio;
+          const peso = qrData.peso;
+          const lote = qrData.lote;
+    
+          adicionarSaida(1);
+    
+        } catch (error) {
+          console.error('Erro ao processar QR code:', error);
+          alert('Formato de QR code inválido');
+        }
+      }
+    });
+
+    client.on('error', (err) => {
+      console.error('Erro MQTT na tela Fita:', err);
+    });
+
+    setMqttClient(client);
+
+    return () => {
+      client.end();
+    };
+  }, []);
 
   const handleClearAlarms = async (): Promise<void> => {
     try {
@@ -32,120 +79,113 @@ const Fita: React.FC = () => {
   const handlePegarMedicamento = async (med: string, qty: string): Promise<void> => {
     try {
         const response = await fetch(`http://localhost:5000/dobot/medicamento/${med}`, {
-            method: 'POST', // Certifique-se de que o método está correto (GET ou POST)
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ quantidade: qty }), // Envia a quantidade no corpo da requisição
+            body: JSON.stringify({ quantidade: qty }),
         });
 
         if (!response.ok) {
-            const errorMessage = await response.text(); // Captura a mensagem de erro do backend
+            const errorMessage = await response.text();
             throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
         }
 
         const data: { message: string } = await response.json();
-        alert(data.message); // Exibe a mensagem de sucesso do backend
+        alert(data.message);
     } catch (error) {
         alert('Erro ao pegar medicamento. Verifique o console para mais detalhes.');
         console.error('Erro:', error);
     }
-};
+  };
 
-const handleAdicionarMedicamento = async (): Promise<void> => {
-  try {
-    if (!medicamento || !quantidade) {
-      alert("Selecione um medicamento e insira uma quantidade válida.");
-      return;
-    }
+  const handleAdicionarMedicamento = async (): Promise<void> => {
+    try {
+      if (!medicamento || !quantidade) {
+        alert("Selecione um medicamento e insira uma quantidade válida.");
+        return;
+      }
 
-    const medicamentoExistente = fita.find((item) => item.medicamento === medicamento);
+      const medicamentoExistente = fita.find((item) => item.medicamento === medicamento);
 
-    if (medicamentoExistente) {
-      // Atualiza a quantidade do medicamento existente
-      setFita((prevFita) =>
-        prevFita.map((item) =>
-          item.medicamento === medicamento
-            ? { ...item, quantidade: (parseInt(item.quantidade as string) + parseInt(quantidade)).toString() }
-            : item
-        )
-      );
-    } else {
-      // Adiciona um novo medicamento à fita
-      setFita((prevFita) => [...prevFita, { medicamento, quantidade }]);
-    }
+      if (medicamentoExistente) {
+        setFita((prevFita) =>
+          prevFita.map((item) =>
+            item.medicamento === medicamento
+              ? { ...item, quantidade: (parseInt(item.quantidade as string) + parseInt(quantidade)).toString() }
+              : item
+          )
+        );
+      } else {
+        setFita((prevFita) => [...prevFita, { medicamento, quantidade }]);
+      }
 
-    const response = await fetch(`http://127.0.0.1:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
-    }
-
-    const data: { message: string } = await response.json();
-    alert(data.message); // Exibe a mensagem de sucesso do backend
-  } catch (error) {
-    alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
-    console.error('Erro:', error);
-  }
-};
-
-const handleCancelarMontagem = async (): Promise<void> => {
-  try {
-      const response = await fetch('http://127.0.0.1:5000/dobot/fita/cancelar', {
-          method: 'POST',
+      const response = await fetch(`http://127.0.0.1:5000/dobot/fita/adicionar/${medicamento}/${quantidade}`, {
+        method: 'POST',
       });
 
       if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+        const errorMessage = await response.text();
+        throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
       }
 
       const data: { message: string } = await response.json();
-      alert(data.message); // Exibe a mensagem de sucesso do backend
-
-      // Limpa o estado da fita na interface
-      setFita([]);
-  } catch (error) {
-      alert('Erro ao cancelar montagem. Verifique o console para mais detalhes.');
+      alert(data.message);
+    } catch (error) {
+      alert('Erro ao adicionar medicamento. Verifique o console para mais detalhes.');
       console.error('Erro:', error);
-  }
-};
+    }
+  };
 
-const handleFinalizarMontagem = async (): Promise<void> => {
-  try {
-      const response = await fetch('http://127.0.0.1:5000/dobot/fita/finalizar', {
-          method: 'POST',
-      });
+  const handleCancelarMontagem = async (): Promise<void> => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/dobot/fita/cancelar', {
+            method: 'POST',
+        });
 
-      if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
-      }
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+        }
 
-      const data: { message: string } = await response.json();
-      
-      alert(data.message); // Exibe a mensagem de sucesso do backend
-      setFita([]);
-  } catch (error) {
-      alert('Erro ao finalizar montagem. Verifique o console para mais detalhes.');
-      console.error('Erro:', error);
-  }
-};
+        const data: { message: string } = await response.json();
+        alert(data.message);
+        setFita([]);
+    } catch (error) {
+        alert('Erro ao cancelar montagem. Verifique o console para mais detalhes.');
+        console.error('Erro:', error);
+    }
+  };
+
+  const handleFinalizarMontagem = async (): Promise<void> => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/dobot/fita/finalizar', {
+            method: 'POST',
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Erro HTTP: ${response.status} - ${errorMessage}`);
+        }
+
+        const data: { message: string } = await response.json();
+        alert(data.message);
+        setFita([]);
+    } catch (error) {
+        alert('Erro ao finalizar montagem. Verifique o console para mais detalhes.');
+        console.error('Erro:', error);
+    }
+  };
 
   return (
     <PageContainer>
       <nav><Header /></nav>
       <PageContent>
-        {/* Cabeçalho */}
         <PageHeader>
           <h1>Fitas</h1>
           <button onClick={handleClearAlarms}>Limpar alarmes</button>
         </PageHeader>
 
-        {/* Formulário para montar fita */}
         <MontarFitaContainer>
           <h2>Enviar fita</h2>
           <DropdownContainer>
@@ -180,7 +220,6 @@ const handleFinalizarMontagem = async (): Promise<void> => {
           </FitaContainer>
         )}
 
-        {/* Lista de medicamentos disponíveis */}
         <BuscarMedicamentoContainer>
           <h2>Buscar medicamento</h2>
           {medicamentos.map((med) => (
@@ -198,6 +237,7 @@ const handleFinalizarMontagem = async (): Promise<void> => {
   );
 };
 
+// Estilos mantidos exatamente como estavam
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -364,5 +404,25 @@ const FooterWrapper = styled.div`
   left: 0;
   right: 0;
 `;
+
+async function adicionarSaida(quantidade: number) {
+  try {
+    const res = await fetch("http://127.0.0.1:3000/saidas/create",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ "id_estoque": 1, "id_paciente": 1, "quantidade": quantidade })
+      });
+    const data = await res.json();
+    if (res.ok) {
+      console.log("Saida adicionada com sucesso:", data);
+    } else {
+      console.error("Erro ao adicionar saida:", data.error || res.statusText);
+    }
+  } catch (error) {
+    console.error("Erro ao adicionar saida:", error);
+  }
+} 
+
 
 export default Fita;

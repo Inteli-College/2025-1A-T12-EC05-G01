@@ -118,9 +118,9 @@ function Header() {
                     </Connection>
                     <ActionButton onClick={reconnect}>Reconectar</ActionButton>
                     <ActionButton onClick={addBin}>+ Adicionar Bin</ActionButton>
-                    <BellIcon onClick={() => navigate('/fita')}>
-                        <StyledFaBell />
-                    </BellIcon>
+                    <ActionButton onClick={() => navigate('/fita')}>
+                        Montagem de Fita
+                    </ActionButton>
                 </RoboStatus>
 
                 <UserIconWrapper onClick={handleUserClick}>

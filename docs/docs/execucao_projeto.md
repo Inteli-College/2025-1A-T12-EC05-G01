@@ -1,3 +1,9 @@
+---
+title: Guia de como executar o sistema
+sidebar_position: 1
+slug: /execucao-projeto
+---
+
 # Guia de Como Rodar o Sistema
 
 Este guia explica como configurar e executar o projeto **Dose Certa**, incluindo o backend, frontend, CLI e conexão com o robô.

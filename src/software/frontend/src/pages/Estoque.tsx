@@ -1,13 +1,76 @@
 import Popup from 'reactjs-popup';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import alertaImg from '../assets/alerta.png';
-import maisImg from '../assets/mais.png';
 import menosImg from '../assets/menos.png';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
+import API_BASE_URL from '../config/api';
 
 export default function Estoque() {
+
+  const [medicamentosEstoque, setMedicamentosEstoque] = useState([]);
+  const [medicamentosRetirados, setMedicamentosRetirados] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchMedicamentosEstoque() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/estoque/bin-quantidade/read`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+        const data = await response.json();
+        setMedicamentosEstoque(data.dados || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    async function getMedicamentosRetirados() {
+      try {
+        const hoje = new Date();
+        const dataFormatada = hoje.toISOString().split('T')[0];
+        
+        const response = await fetch(`${API_BASE_URL}/saidas/read-all`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "data_saida": dataFormatada
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch retirados');
+        }
+        
+        const data = await response.json();
+        return data.saidas || [];
+      } catch (err) {
+        console.error("Erro ao buscar medicamentos retirados:", err);
+        return [];
+      }
+    }
+  
+    async function fetchData() {
+      setLoading(true);
+      try {
+        await fetchMedicamentosEstoque();
+        const medicamentosRetirados = await getMedicamentosRetirados();
+        setMedicamentosRetirados(medicamentosRetirados);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    fetchData();
+  }, []);
+
     return (
         <PageContainer>
             <nav><Header /></nav>
@@ -27,23 +90,7 @@ export default function Estoque() {
                                 medicamento={medicamento.medicamento} 
                                 bin={medicamento.bin} 
                                 classe={ClasseUnidades({ unidades: medicamento.unidades })} 
-                                unidades={medicamento.unidades} 
-                            />
-                        )}
-                    </SectionContent>
-                </SectionWrapper>
-
-                <SectionWrapper>
-                    <SectionTitle>Últimas Adições</SectionTitle>
-                    <SectionContent>
-                        {medicamentosAdicionados.map((medicamento, index) =>
-                            <AlertaMedicamento 
-                                key={index}
-                                imagem={maisImg} 
-                                medicamento={medicamento.nome} 
-                                bin={medicamento.bin} 
-                                classe={"quantidade-remedio-add"} 
-                                unidades={medicamento.unidades} 
+                                unidades={medicamento.medicamento.quantidade} 
                             />
                         )}
                     </SectionContent>
@@ -56,10 +103,9 @@ export default function Estoque() {
                             <AlertaMedicamento 
                                 key={index}
                                 imagem={menosImg} 
-                                medicamento={medicamento.nome} 
-                                bin={medicamento.bin} 
+                                medicamento={medicamento.medicamento.nome + " " + medicamento.medicamento.dosagem} 
                                 classe={"quantidade-remedio"} 
-                                unidades={medicamento.unidades} 
+                                unidades={medicamento.quantidade} 
                             />
                         )}
                     </SectionContent>
@@ -73,8 +119,8 @@ export default function Estoque() {
                             <MedicamentoQuadro 
                                 key={index}
                                 bin={medicamento.bin} 
-                                nome={medicamento.nome} 
-                                unidades={medicamento.unidades} 
+                                nome={medicamento.medicamento} 
+                                unidades={medicamento.quantidade} 
                             />
                         ))}
                     </QuadroContainer>
@@ -89,50 +135,326 @@ export default function Estoque() {
 }
 
 function PopupAdicionarMedicamentos() {
-    return (
-            <Popup 
-                trigger={
-                    <AddMedicamentoButton>
-                        Adicionar<br />Medicamentos
-                        <MaisSpan>+</MaisSpan>
-                    </AddMedicamentoButton>
-                } 
-                modal 
-                nested
-                contentStyle={{ 
-                    width: '100%',
-                    maxWidth: '700px',
-                    padding: 0,
-                    border: 'none',
-                    background: 'transparent' 
-                }}
-                overlayStyle={{
-                    background: 'rgba(0, 0, 0, 0.7)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [formData, setFormData] = useState([{ 
+    id_medicamento: '', 
+    quantidade: '', 
+    lote: '',
+    validade: '',
+    bin: ''
+  }]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    async function fetchMedicamentos() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/medicamento/read-all`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch medicamentos');
+        }
+        const data = await response.json();
+        setMedicamentos(data.medicamentos || []);
+      } catch (err) {
+        console.error("Erro ao buscar medicamentos:", err);
+      }
+    }
+    
+    fetchMedicamentos();
+  }, []);
+
+  const handleInputChange = (index, field, value) => {
+    const newFormData = [...formData];
+    newFormData[index] = { ...newFormData[index], [field]: value };
+    setFormData(newFormData);
+  };
+
+  const addMoreFields = () => {
+    setFormData([...formData, { 
+      id_medicamento: '', 
+      quantidade: '', 
+      lote: '',
+      validade: '',
+      bin: ''
+    }]);
+  };
+
+  const removeFields = (index) => {
+    const newFormData = [...formData];
+    newFormData.splice(index, 1);
+    setFormData(newFormData);
+  };
+
+  const handleSubmit = async (closePopup) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const hasEmptyFields = formData.some(item => 
+        !item.id_medicamento || 
+        !item.quantidade || 
+        isNaN(item.quantidade) || 
+        item.quantidade <= 0 ||
+        !item.lote ||
+        !item.validade ||
+        !item.bin ||
+        isNaN(item.bin)
+      );
+      
+      if (hasEmptyFields) {
+        throw new Error('Preencha todos os campos corretamente');
+      }
+
+      const promises = formData.map(item => 
+        fetch(`${API_BASE_URL}/estoque/create`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id_medicamento: item.id_medicamento,
+            quantidade: item.quantidade,
+            lote: item.lote,
+            validade: item.validade,
+            bin: item.bin,
+            fornecedor: "Fornecedor Padrão"
+          })
+        })
+      );
+
+      const responses = await Promise.all(promises);
+      const allOk = responses.every(response => response.ok);
+      
+      if (!allOk) {
+        throw new Error('Alguns itens não foram salvos corretamente');
+      }
+
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        closePopup();
+        setFormData([{ 
+          id_medicamento: '', 
+          quantidade: '', 
+          lote: '',
+          validade: '',
+          bin: ''
+        }]);
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Popup 
+      trigger={
+        <AddMedicamentoButton>
+          Adicionar<br />Medicamentos
+          <MaisSpan>+</MaisSpan>
+        </AddMedicamentoButton>
+      } 
+      modal 
+      nested
+      contentStyle={{ 
+        width: '100%',
+        maxWidth: '700px',
+        padding: 0,
+        border: 'none',
+        background: 'transparent' 
+      }}
+      overlayStyle={{
+        background: 'rgba(0, 0, 0, 0.7)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {(close) => (
+        <PopupContainer>
+          <PopupHeader>Adicionar Medicamentos</PopupHeader>
+          <PopupContent>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {success && <SuccessMessage>Medicamentos adicionados com sucesso!</SuccessMessage>}
+            
+            {formData.map((item, index) => (
+              <MedicamentoFormContainer key={index}>
+                <Row>
+                  <FormGroup>
+                    <TextoDadosMedicamento>Medicamento:</TextoDadosMedicamento>
+                    <SelectDadosMedicamento
+                      value={item.id_medicamento}
+                      onChange={(e) => handleInputChange(index, 'id_medicamento', e.target.value)}
+                    >
+                      <option value="" disabled>Selecione</option>
+                      {medicamentos.map(med => (
+                        <option key={med.id} value={med.id}>
+                          {med.nome} {med.dosagem}
+                        </option>
+                      ))}
+                    </SelectDadosMedicamento>
+                  </FormGroup>
+                  
+                  <FormGroup>
+                    <TextoDadosMedicamento>Quantidade:</TextoDadosMedicamento>
+                    <InputNumber 
+                      type="number" 
+                      min="1"
+                      value={item.quantidade}
+                      onChange={(e) => handleInputChange(index, 'quantidade', e.target.value)}
+                      placeholder="0"
+                    />
+                  </FormGroup>
+                </Row>
+                
+                <Row>
+                  <FormGroup>
+                    <TextoDadosMedicamento>Lote:</TextoDadosMedicamento>
+                    <InputText 
+                      type="text"
+                      value={item.lote}
+                      onChange={(e) => handleInputChange(index, 'lote', e.target.value)}
+                      placeholder="Número do lote"
+                    />
+                  </FormGroup>
+                  
+                  <FormGroup>
+                    <TextoDadosMedicamento>Validade:</TextoDadosMedicamento>
+                    <InputDate 
+                      type="date"
+                      value={item.validade}
+                      onChange={(e) => handleInputChange(index, 'validade', e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                  </FormGroup>
+                </Row>
+                
+                <Row>
+                  <FormGroup>
+                    <TextoDadosMedicamento>Bin:</TextoDadosMedicamento>
+                    <InputNumber 
+                      type="number" 
+                      min="1"
+                      value={item.bin}
+                      onChange={(e) => handleInputChange(index, 'bin', e.target.value)}
+                      placeholder="Número do bin"
+                    />
+                  </FormGroup>
+                  
+                  {formData.length > 1 && (
+                    <RemoveButtonContainer>
+                      <RemoveButton onClick={() => removeFields(index)}>
+                        ×
+                      </RemoveButton>
+                    </RemoveButtonContainer>
+                  )}
+                </Row>
+              </MedicamentoFormContainer>
+            ))}
+            
+            <BtnAddMais onClick={addMoreFields}>
+              Adicionar Mais
+            </BtnAddMais>
+          </PopupContent>
+          
+          <BotoesPopupContainer>
+            <BotaoCancelar onClick={() => {
+              setFormData([{ 
+                id_medicamento: '', 
+                quantidade: '', 
+                lote: '',
+                validade: '',
+                bin: ''
+              }]);
+              close();
+            }}>
+              Cancelar
+            </BotaoCancelar>
+            <BotaoSalvar 
+              onClick={() => handleSubmit(close)}
+              disabled={loading}
             >
-                {
-                    (close: () => void) => (
-                        <PopupContainer>
-                            <PopupHeader>Adicionar Medicamentos</PopupHeader>
-                            <PopupContent>
-                                <DadosMedicamentos />
-                                <BotaoAddMais />
-                            </PopupContent>
-                            <BotoesPopupContainer>
-                                <BotaoCancelar onClick={() => close()}>
-                                    Cancelar
-                                </BotaoCancelar>
-                                <BotaoSalvar>Salvar</BotaoSalvar>
-                            </BotoesPopupContainer>
-                        </PopupContainer>
-                    )
-                }
-            </Popup>
-    )
-};
+              {loading ? 'Salvando...' : 'Salvar'}
+            </BotaoSalvar>
+          </BotoesPopupContainer>
+        </PopupContainer>
+      )}
+    </Popup>
+  );
+}
+
+const MedicamentoFormContainer = styled.div`
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const FormGroup = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputText = styled.input`
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: 'Montserrat';
+  font-size: 14px;
+`;
+
+const InputNumber = styled(InputText)`
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
+
+const InputDate = styled(InputText)`
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+  }
+`;
+
+const RemoveButtonContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+`;
+
+const RemoveButton = styled.button`
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  
+  &:hover {
+    background-color: #c0392b;
+  }
+`;
 
 function DadosMedicamentos(){
     return(
@@ -193,14 +515,13 @@ interface MedicamentoProps {
     unidades: number;
 }
 
-function AlertaMedicamento ({imagem, medicamento, bin, classe, unidades}: MedicamentoProps){
+function AlertaMedicamento ({imagem, medicamento, classe, unidades}: MedicamentoProps){
     return (
         <AlertaMedicamentoContainer>
             <img src={imagem} alt="Alerta" />
             <TextosAlertasContainer>
                 <LinhaContainer>
                     <NomeRemedio>{medicamento}</NomeRemedio>
-                    <BinText>Bin {bin}</BinText>
                 </LinhaContainer>
                 {classe === "quantidade-remedio" && <QuantidadeRemedio>{unidades} unidades</QuantidadeRemedio>}
                 {classe === "quantidade-remedio-critico" && <QuantidadeRemedioCritico>{unidades} unidades</QuantidadeRemedioCritico>}
@@ -245,69 +566,34 @@ function ClasseUnidades ({ unidades }: { unidades: number }): string {
     }
 }
 
-const medicamentosReabastecer = [{
-    medicamento: "Paracetamol 750mg",
-    bin: 4,
-    unidades: 6
-},
-{
-    medicamento: "Dipirona 1g",
-    bin: 3,
-    unidades: 12
-},
-{
-    medicamento: "Loratadina 10mg",
-    bin: 1,
-    unidades: 13
-}]
+const getMedicamentosEstoque = async () => {
+  const response = await fetch(`${API_BASE_URL}/estoque/bin-quantidade/read`);
+  const data = await response.json();
+  return data.dados;
+}
 
-const medicamentosAdicionados = [{
-    bin: 2,
-    nome: "Miosan 10mg", 
-    unidades: 60
-},
-{
-    bin: 5,
-    nome: "Sertralina 50mg", 
-    unidades: 75
-}]
+const medicamentosEstoque = await getMedicamentosEstoque();
 
-const medicamentosRetirados = [{
-    bin: 4,
-    nome: "Paracetamol 750mg",
-    unidades: -3
-},
-{
-    bin: 3,
-    nome: "Dipirona 1g",
-    unidades: -4
-}]
+const medicamentosReabastecer = medicamentosEstoque.filter(
+  medicamento => medicamento.quantidade <= 10
+);
 
-const medicamentosEstoque = [{
-    bin: 1,
-    nome: "Loratadina 10mg",
-    unidades: 13
-},
-{
-    bin: 2,
-    nome: "Miosan 10mg",
-    unidades: 76
-},
-{
-    bin: 3,
-    nome: "Dipirona 1g",
-    unidades: 12
-},
-{
-    bin: 4,
-    nome: "Paracetamol 750mg",
-    unidades: 6
-},
-{
-    bin: 5,
-    nome: "Sertralina 50mg",
-    unidades: 81
-}]
+const getMedicamentosRetirados = async () => {
+  const hoje = new Date();
+  const dataFormatada = hoje.toISOString().split('T')[0];
+  
+  const response = await fetch(`${API_BASE_URL}/saidas/read-all`, {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      "data_saida": dataFormatada
+    })
+  });
+  
+  const data = await response.json();
+  return data.saidas;
+}
+const medicamentosRetirados = await getMedicamentosRetirados();
 
 // Styled Components
 const PageContainer = styled.div`
@@ -398,8 +684,6 @@ const AlertaMedicamentoContainer = styled.div`
     }
   }
 `;
-
-
 
 const AddMedicamentoButton = styled.button`
   background-color: #2ECC71;

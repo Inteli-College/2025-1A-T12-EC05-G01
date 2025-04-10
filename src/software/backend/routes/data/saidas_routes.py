@@ -1,5 +1,10 @@
+import datetime
 from flask import request, Blueprint
 from fastapi import HTTPException
+from sqlalchemy import func
+
+from software.backend.models.estoque import Estoque
+from software.backend.models.medicamento import Medicamento
 from ....database.db_conexao import engine, Base, get_db, SessionLocal
 from ...models.saida import Saidas
 
@@ -82,30 +87,55 @@ def update_saida():
     finally:
         db.close()
 
+from datetime import datetime
+
 @saida_routes.route("/read-all", methods=["GET", "POST"])
 def read_all_saidas():
     db = SessionLocal()
     try:
         if request.method == "GET":
-            saidas = db.query(Saidas).all()
+            saidas = db.query(
+                Saidas,
+                Estoque,
+                Medicamento
+            ).join(
+                Estoque, Saidas.id_estoque == Estoque.id
+            ).join(
+                Medicamento, Estoque.id_medicamento == Medicamento.id
+            ).all()
 
             if not saidas:
                 return {"message": "No rows found"}, 200
             
-            saidas = [{
-                "id": row.id,
-                "id_estoque": row.id_estoque,
-                "id_paciente": row.id_paciente,
-                "quantidade": row.quantidade,
-                "data_saida": row.data_saida.isoformat() if row.data_saida else None
-            } for row in saidas]
+            saidas_formatadas = [{
+                "id": saida.id,
+                "id_estoque": saida.id_estoque,
+                "id_paciente": saida.id_paciente,
+                "quantidade": saida.quantidade,
+                "data_saida": saida.data_saida.isoformat() if saida.data_saida else None,
+                "medicamento": {
+                    "nome": medicamento.nome,
+                    "dosagem": medicamento.dosagem
+                }
+            } for saida, estoque, medicamento in saidas]
             
-            return {"saidas": saidas}, 200
+            return {"saidas": saidas_formatadas}, 200
         
         elif request.method == "POST":
-            filters = request.json
-            query = db.query(Saidas)
-            
+            filters = request.get_json()
+            if not filters:
+                return {"saidas": []}, 200
+                
+            query = db.query(
+                Saidas,
+                Estoque,
+                Medicamento
+            ).join(
+                Estoque, Saidas.id_estoque == Estoque.id
+            ).join(
+                Medicamento, Estoque.id_medicamento == Medicamento.id
+            )
+
             if "id_estoque" in filters:
                 query = query.filter(Saidas.id_estoque == filters["id_estoque"])
             if "id_paciente" in filters:
@@ -113,19 +143,32 @@ def read_all_saidas():
             if "quantidade" in filters:
                 query = query.filter(Saidas.quantidade == filters["quantidade"])
             if "data_saida" in filters:
-                query = query.filter(Saidas.data_saida == filters["data_saida"])
+                try:
+                    if isinstance(filters["data_saida"], str):
+                        if 'T' in filters["data_saida"]:
+                            data_filtro = datetime.fromisoformat(filters["data_saida"]).date()
+                        else:
+                            data_filtro = datetime.strptime(filters["data_saida"], "%Y-%m-%d").date()
+                    query = query.filter(func.date(Saidas.data_saida) == data_filtro)
+                except ValueError as e:
+                    return {"error": f"Invalid date format: {str(e)}"}, 400
             
             saidas = [{
-                "id": s.id,
-                "id_estoque": s.id_estoque,
-                "id_paciente": s.id_paciente,
-                "quantidade": s.quantidade,
-                "data_saida": s.data_saida.isoformat() if s.data_saida else None
-            } for s in query.all()]
+                "id": saida.id,
+                "id_estoque": saida.id_estoque,
+                "id_paciente": saida.id_paciente,
+                "quantidade": saida.quantidade,
+                "data_saida": saida.data_saida.isoformat() if saida.data_saida else None,
+                "medicamento": {
+                    "nome": medicamento.nome,
+                    "dosagem": medicamento.dosagem
+                }
+            } for saida, estoque, medicamento in query.all()]
             
             return {"saidas": saidas}, 200
             
     except Exception as e:
+        db.rollback()
         return {"error": str(e)}, 500
     finally:
         db.close()
