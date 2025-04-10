@@ -21,7 +21,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Funcionamento e Configuração
 
-&emsp;O leitor MH-ET Live Scanner V3.0 utiliza comunicação serial com protocolo UART através de interface TTL de 3.3V, padrão compatível diretamente com o Raspberry Pi utilizado no projeto. O módulo oferece diversos modos de leitura, incluindo modo contínuo, modo por indução e modo por comandos. <br />
+&emsp;O leitor MH-ET Live Scanner V3.0 utiliza comunicação serial com protocolo UART através de interface TTL de 3.3V, padrão compatível diretamente com o Raspberry Pi utilizado no projeto. O módulo oferece diversos modos de leitura, incluindo modo contínuo, modo por indução e modo por comandos. Para consultar toda a documentação do sensor, baste clicar [neste link](https://www.usinainfo.com.br/outros-modulos-arduino/mh-et-live-scanner-v30-leitor-de-codigo-de-barras-e-qr-code-5840.html?srsltid=AfmBOori1wdrNtQUkP5eZCxvYhJK2PjnkOLYXKvmsLD1dASxEtKinxzg), onde é possível baixar os arquivos de manual de instruções e de configurações. <br />
 &emsp;Para configuração inicial, o leitor utiliza uma série de comandos enviados através da porta serial. Esses comandos são necessários para ativar o modo desejado de operação e definir parâmetros específicos de leitura. A configuração padrão escolhida foi o modo contínuo, em que o leitor realiza a leitura automaticamente em intervalos definidos. <br />
 &emsp;Os comandos configurados no dispositivo foram definidos no arquivo `comandos.py` como mostrado a seguir:
 

@@ -19,7 +19,7 @@ Como uma das principais dores do parceiro quanto ao processo atual de montagem d
   <p>Fonte: [Link para a imagem](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.huinfinito.com.br%2Fhome%2F1040-sensor-optico-reflexivo-ir-tcrt5000.html&psig=AOvVaw3tFHpQ_z5UvI_QTfcGl3sW&ust=1742136303200000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCIwc2pjIwDFQAAAAAdAAAAABAE)</p>
 </div>
 
-Para isso ser possível, o sensor TCRT precisou ser conectado em um Arduíno NANO, que por sua vez foi conectado ao Raspberry Pi por via I2C. A seguir, será possível visualizar o código de leitura e envio de dados do infravermelho no arduíno:
+Para isso ser possível, o sensor TCRT5000 precisou ser conectado em um Arduíno NANO, que por sua vez foi conectado ao Raspberry Pi por via I2C. A seguir, será possível visualizar o código de leitura e envio de dados do infravermelho no arduíno:
 
 ```c++
 #include <Wire.h>
@@ -90,5 +90,5 @@ if pontos_medicamento['suctionCup'].lower() == 'on':
 ```
 
 :::tip
-Na seção de Hardware, é possível ver o sensor infravermelho sendo utilizado para mostrar o uso das funcionalidades citadas nesta seção
+Na seção de Hardware, é possível ver o sensor infravermelho sendo utilizado para mostrar o uso das funcionalidades citadas nesta seção. Para mais informações do sensor, basta consultar [este site](https://www.alldatasheet.com/view.jsp?Searchword=Tcrt5000&gad_source=1&gclid=CjwKCAjwtdi_BhACEiwA97y8BIxddRTdIPn4RAxf28i4gTs7ILjMrBg7NiFQf49P5WKcCmGPUDBpSRoCYuUQAvD_BwE).
 :::
