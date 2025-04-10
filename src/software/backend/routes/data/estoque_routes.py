@@ -185,16 +185,22 @@ def read_estoque_id():
     finally:
         db.close()
 
-@estoque_routes.route("/bin-quantidade/read", methods=["GET"])
-def read_quantidade_por_bin():
+@estoque_routes.route("/bin-quantidade/read", defaults={'id': None}, methods=["GET"])
+@estoque_routes.route("/bin-quantidade/read/<int:id>", methods=["GET"])
+def read_quantidade_por_bin(id):
     db = SessionLocal()
     try:
-        resultados = db.query(
+        query = db.query(
             Estoque.bin,
             Medicamento.nome.label("medicamento_nome"),
+            Medicamento.id.label("id_medicamento"),
             func.sum(Estoque.quantidade).label("quantidade_total")
-        ).join(Medicamento, Medicamento.id == Estoque.id_medicamento
-        ).group_by(Estoque.bin, Medicamento.nome).all()
+        ).join(Medicamento, Medicamento.id == Estoque.id_medicamento)
+        
+        if id is not None:
+            query = query.filter(Medicamento.id == id)
+            
+        resultados = query.group_by(Estoque.bin, Medicamento.nome, Medicamento.id).all()
 
         if not resultados:
             return {"message": "Nenhum resultado encontrado"}, 200
@@ -202,10 +208,11 @@ def read_quantidade_por_bin():
         dados = [{
             "bin": r.bin,
             "medicamento": r.medicamento_nome,
+            "id_medicamento": r.id_medicamento,
             "quantidade": r.quantidade_total
         } for r in resultados]
 
-        return {"dados": dados}, 200
+        return {"dados": dados, "medicamento": dados}, 200
 
     except Exception as e:
         return {"error": str(e)}, 500

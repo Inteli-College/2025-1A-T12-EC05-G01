@@ -142,8 +142,10 @@ const sidebars = {
         'Sprint 5/Analise Financeira/analise_financeira',
         'Sprint 5/Monitoramento de Acoes/Monitoramento de Acoes',
         'Sprint 5/Fila de Separacao/Fila de Separacao',
+        'Sprint 5/Integracao Final/Integracao Final',
       ]
-    }
+    },
+    'execucao_projeto'
   ],
 };
 

@@ -603,6 +603,8 @@ const PageContent = styled.div`
   margin-top: 70px;
   padding-bottom: 80px;
   align
+
+
   
   .prescricoes {
     width: 90%;
@@ -611,6 +613,16 @@ const PageContent = styled.div`
     margin-bottom: 2.5rem;
     align-items: center;
   }
+
+  h2 {
+    color: #34495E;
+    font-size: clamp(24px, 5vw, 36px);
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px
+
 `;
 
 const PageHeader = styled.div`

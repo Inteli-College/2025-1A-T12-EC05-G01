@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import API_BASE_URL from '../config/api';
 import mqtt from 'mqtt';
+import axios from 'axios';
 
 interface Medicamento {
   id: number;
@@ -97,6 +98,8 @@ function FilaSeparacao() {
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const mqttClientRef = useRef<mqtt.MqttClient | null>(null);
   const refreshInterval = 3;
+  const [isPaused, setIsPaused] = useState(false);
+
 
   const traduzirFitaParaPayload = (fita: Fita) => {
     const resultado: Record<number, number> = {};
@@ -140,6 +143,21 @@ function FilaSeparacao() {
       });
 
       if (!finalizarResponse.ok) {
+        throw new Error('Falha ao finalizar montagem');
+      }
+
+      const atualizarStatusFita = await fetch(`${API_BASE_URL}/prescricao_aceita/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "id": fita.id,
+          "status_prescricao": "aguardando_selagem"
+        })
+      });
+
+      if (!atualizarStatusFita.ok) {
         throw new Error('Falha ao finalizar montagem');
       }
 
@@ -206,7 +224,7 @@ function FilaSeparacao() {
   const fetchFitas = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-selagem`);
+      const response = await fetch(`${API_BASE_URL}/fitas/aguardando-separacao`);
       const data = await response.json();
       
       if (response.ok) {
@@ -287,6 +305,18 @@ function FilaSeparacao() {
     return medicamentos.some(med => med.status === 'aprovado');
   };
 
+
+  const handlePauseResume = async () => {
+    try {
+      const endpoint = isPaused ? "/retomar" : "/pausar";
+      const response = await axios.post(`http://127.0.0.1:5000/dobot/fita${endpoint}`);
+      if (response.status === 200) {
+        setIsPaused(!isPaused);
+      }
+    } catch (error) {
+      console.error("Erro ao alternar pausa/retomada:", error);
+    }
+  };
   
   return (
     <PageContainer>
@@ -323,8 +353,8 @@ function FilaSeparacao() {
         </PageHeader>
 
         <ControlsContainer>
-          <PauseButton disabled={dobotStatus !== 'conectado'}>
-            ⏸️ Pausar Montagem
+          <PauseButton onClick={handlePauseResume}>
+            {isPaused ? "Retomar Montagem": "Pausar Montagem"}
           </PauseButton>
         </ControlsContainer>
 
@@ -827,32 +857,3 @@ const StatusIndicator = styled.div<{ connected: boolean }>`
 `;
 
 export default FilaSeparacao;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
