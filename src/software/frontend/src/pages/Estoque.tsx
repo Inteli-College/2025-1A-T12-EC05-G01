@@ -1,13 +1,76 @@
 import Popup from 'reactjs-popup';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import alertaImg from '../assets/alerta.png';
-import maisImg from '../assets/mais.png';
 import menosImg from '../assets/menos.png';
 import Header from '../components/sidebar/Navbar';
 import Footer from '../components/Footer';
+import API_BASE_URL from '../config/api';
 
 export default function Estoque() {
+
+  const [medicamentosEstoque, setMedicamentosEstoque] = useState([]);
+  const [medicamentosRetirados, setMedicamentosRetirados] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchMedicamentosEstoque() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/estoque/bin-quantidade/read`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch');
+        }
+        const data = await response.json();
+        setMedicamentosEstoque(data.dados || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    async function getMedicamentosRetirados() {
+      try {
+        const hoje = new Date();
+        const dataFormatada = hoje.toISOString().split('T')[0];
+        
+        const response = await fetch(`${API_BASE_URL}/saidas/read-all`, {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "data_saida": dataFormatada
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch retirados');
+        }
+        
+        const data = await response.json();
+        return data.saidas || [];
+      } catch (err) {
+        console.error("Erro ao buscar medicamentos retirados:", err);
+        return [];
+      }
+    }
+  
+    async function fetchData() {
+      setLoading(true);
+      try {
+        await fetchMedicamentosEstoque();
+        const medicamentosRetirados = await getMedicamentosRetirados();
+        setMedicamentosRetirados(medicamentosRetirados);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    fetchData();
+  }, []);
+
     return (
         <PageContainer>
             <nav><Header /></nav>
@@ -27,23 +90,7 @@ export default function Estoque() {
                                 medicamento={medicamento.medicamento} 
                                 bin={medicamento.bin} 
                                 classe={ClasseUnidades({ unidades: medicamento.unidades })} 
-                                unidades={medicamento.unidades} 
-                            />
-                        )}
-                    </SectionContent>
-                </SectionWrapper>
-
-                <SectionWrapper>
-                    <SectionTitle>Últimas Adições</SectionTitle>
-                    <SectionContent>
-                        {medicamentosAdicionados.map((medicamento, index) =>
-                            <AlertaMedicamento 
-                                key={index}
-                                imagem={maisImg} 
-                                medicamento={medicamento.nome} 
-                                bin={medicamento.bin} 
-                                classe={"quantidade-remedio-add"} 
-                                unidades={medicamento.unidades} 
+                                unidades={medicamento.medicamento.quantidade} 
                             />
                         )}
                     </SectionContent>
@@ -56,10 +103,9 @@ export default function Estoque() {
                             <AlertaMedicamento 
                                 key={index}
                                 imagem={menosImg} 
-                                medicamento={medicamento.nome} 
-                                bin={medicamento.bin} 
+                                medicamento={medicamento.medicamento.nome + " " + medicamento.medicamento.dosagem} 
                                 classe={"quantidade-remedio"} 
-                                unidades={medicamento.unidades} 
+                                unidades={medicamento.quantidade} 
                             />
                         )}
                     </SectionContent>
@@ -73,8 +119,8 @@ export default function Estoque() {
                             <MedicamentoQuadro 
                                 key={index}
                                 bin={medicamento.bin} 
-                                nome={medicamento.nome} 
-                                unidades={medicamento.unidades} 
+                                nome={medicamento.medicamento} 
+                                unidades={medicamento.quantidade} 
                             />
                         ))}
                     </QuadroContainer>
@@ -193,14 +239,13 @@ interface MedicamentoProps {
     unidades: number;
 }
 
-function AlertaMedicamento ({imagem, medicamento, bin, classe, unidades}: MedicamentoProps){
+function AlertaMedicamento ({imagem, medicamento, classe, unidades}: MedicamentoProps){
     return (
         <AlertaMedicamentoContainer>
             <img src={imagem} alt="Alerta" />
             <TextosAlertasContainer>
                 <LinhaContainer>
                     <NomeRemedio>{medicamento}</NomeRemedio>
-                    <BinText>Bin {bin}</BinText>
                 </LinhaContainer>
                 {classe === "quantidade-remedio" && <QuantidadeRemedio>{unidades} unidades</QuantidadeRemedio>}
                 {classe === "quantidade-remedio-critico" && <QuantidadeRemedioCritico>{unidades} unidades</QuantidadeRemedioCritico>}
@@ -245,69 +290,34 @@ function ClasseUnidades ({ unidades }: { unidades: number }): string {
     }
 }
 
-const medicamentosReabastecer = [{
-    medicamento: "Paracetamol 750mg",
-    bin: 4,
-    unidades: 6
-},
-{
-    medicamento: "Dipirona 1g",
-    bin: 3,
-    unidades: 12
-},
-{
-    medicamento: "Loratadina 10mg",
-    bin: 1,
-    unidades: 13
-}]
+const getMedicamentosEstoque = async () => {
+  const response = await fetch(`${API_BASE_URL}/estoque/bin-quantidade/read`);
+  const data = await response.json();
+  return data.dados;
+}
 
-const medicamentosAdicionados = [{
-    bin: 2,
-    nome: "Miosan 10mg", 
-    unidades: 60
-},
-{
-    bin: 5,
-    nome: "Sertralina 50mg", 
-    unidades: 75
-}]
+const medicamentosEstoque = await getMedicamentosEstoque();
 
-const medicamentosRetirados = [{
-    bin: 4,
-    nome: "Paracetamol 750mg",
-    unidades: -3
-},
-{
-    bin: 3,
-    nome: "Dipirona 1g",
-    unidades: -4
-}]
+const medicamentosReabastecer = medicamentosEstoque.filter(
+  medicamento => medicamento.quantidade <= 10
+);
 
-const medicamentosEstoque = [{
-    bin: 1,
-    nome: "Loratadina 10mg",
-    unidades: 13
-},
-{
-    bin: 2,
-    nome: "Miosan 10mg",
-    unidades: 76
-},
-{
-    bin: 3,
-    nome: "Dipirona 1g",
-    unidades: 12
-},
-{
-    bin: 4,
-    nome: "Paracetamol 750mg",
-    unidades: 6
-},
-{
-    bin: 5,
-    nome: "Sertralina 50mg",
-    unidades: 81
-}]
+const getMedicamentosRetirados = async () => {
+  const hoje = new Date();
+  const dataFormatada = hoje.toISOString().split('T')[0];
+  
+  const response = await fetch(`${API_BASE_URL}/saidas/read-all`, {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      "data_saida": dataFormatada
+    })
+  });
+  
+  const data = await response.json();
+  return data.saidas;
+}
+const medicamentosRetirados = await getMedicamentosRetirados();
 
 // Styled Components
 const PageContainer = styled.div`

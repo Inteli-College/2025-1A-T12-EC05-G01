@@ -205,7 +205,7 @@ def read_quantidade_por_bin():
             "quantidade": r.quantidade_total
         } for r in resultados]
 
-        return jsonify(dados), 200
+        return {"dados": dados}, 200
 
     except Exception as e:
         return {"error": str(e)}, 500
