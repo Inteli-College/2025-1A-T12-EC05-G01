@@ -108,6 +108,9 @@ npm start
 ```
 
 Após rodar este comando, você verá algumas informações no terminal. A primeira vez rodando a documentação pode levar alguns minutos, então tenha paciência. Caso tudo ocorra corretamente, ao final da inicialização será possível acessar a documentação no navegador através da url [localhost:3000](localhost:3000). Conseguindo visualizar a documentação, você será capaz de ver tudo o que foi desenvolvido em cada sprint do projeto.
+
+Ou acesse através do link: https://inteli-college.github.io/2025-1A-T12-EC05-G01/
+
 ## 🗃 Histórico de lançamentos
 
 ### 0.5.0 - 11/04/2025
